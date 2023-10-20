@@ -1,6 +1,7 @@
 // Insertion Sort
 // O(n^2)
 // Adaptive and Stable
+// Method: Insertion
 void insertionSort(int A[], int n)
 {
   int j, x;

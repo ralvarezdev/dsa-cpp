@@ -1,6 +1,8 @@
 // Bubble Sort
 // O(n^2)
 // Stable
+// Method: Exchanging
+// Good for Already Sorted Arrays
 void bubbleSort(int A[], int n)
 {
 
