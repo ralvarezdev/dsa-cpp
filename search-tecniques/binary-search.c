@@ -8,17 +8,11 @@ int binarySearch(int A[], int num)
     int mid = startA + (endA - startA) / 2;
 
     if (A[mid] == num)
-    {
       return mid;
-    }
     else if (A[mid] < num)
-    {
       startA = mid + 1;
-    }
     else
-    {
       endA = mid - 1;
-    }
   }
   return -1;
 }
