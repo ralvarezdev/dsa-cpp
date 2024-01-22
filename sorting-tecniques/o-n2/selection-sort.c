@@ -9,12 +9,9 @@ void selectionSort(int A[], int n)
   for (i = 0; i < n - 1; i++)
   {
     for (j = k = i; j < n; j++)
-    {
       if (A[j] < A[k])
-      {
         k = j;
-      }
-    }
+
     swap(&A[i], &A[k]);
   }
 }

@@ -9,10 +9,8 @@ int findMax(int A[], int n)
   int i;
 
   for (i = 0; i < n; i++)
-  {
     if (A[i] > max)
       max = A[i];
-  }
 
   return max;
 }
@@ -33,15 +31,11 @@ void countSort(int A[], int n)
   i = 0;
   j = 0;
   while (j < max + 1)
-  {
     if (c[j] > 0)
     {
       A[i++] = j;
       c[j]--;
     }
     else
-    {
       j++;
-    }
-  }
 }

@@ -12,10 +12,8 @@ void insertionSort(int A[], int n)
     x = A[i];
 
     while (j > -1 && A[j] > x)
-    {
-      A[j + 1] = A[j];
-      j--;
-    }
+      A[j + 1] = A[j--];
+
     A[j + 1] = x;
   }
 }

@@ -8,12 +8,11 @@ void merge(int A[], int l, int mid, int h)
   int B[100];
 
   while (i <= mid && j <= h)
-  {
     if (A[i] < A[j])
       B[k++] = A[i++];
     else
       B[k++] = A[j++];
-  }
+
   for (; i <= mid; i++)
     B[k++] = A[i];
   for (; j <= h; j++)
@@ -36,6 +35,7 @@ void iterMergeSort(int A[], int n)
       mid = (l + h) / 2;
       merge(A, l, mid, h);
     }
+
     if (n - i > p / 2)
     {
       l = i;
