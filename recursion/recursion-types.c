@@ -60,6 +60,50 @@ void treeDecrease(int n)
   }
 }
 
+// Indirect Recursion
+// Prints: 20 19 9 8 4 2 1
+
+void indirectA(int n);
+void indirectB(int n);
+
+void indirectA(int n)
+{
+  if (n > 0)
+  {
+    printf("%d ", n);
+    indirectB(n - 1);
+  }
+}
+
+void indirectB(int n)
+{
+  if (n > 1)
+  {
+    printf("%d ", n);
+    indirectA(n / 2);
+  }
+}
+
+// Nested Recursion
+// Prints: 106 96 107 97 108 98 109 99 110 100 111 101 91
+int nested(int n)
+{
+  int x;
+
+  if (n > 100)
+  {
+    x = n - 10;
+    printf("%d ", x);
+
+    return x;
+  }
+
+  x = n + 11;
+  printf("%d ", x);
+
+  return nested(nested(x));
+}
+
 int main()
 {
   int x = 3;
@@ -69,6 +113,14 @@ int main()
   increase(x);
   printf("%c", '\n');
   treeDecrease(x);
+  printf("%c", '\n');
+
+  x = 20;
+  indirectA(x);
+  printf("%c", '\n');
+
+  x = 95;
+  nested(x);
 
   return 0;
 }
