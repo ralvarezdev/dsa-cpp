@@ -62,17 +62,22 @@ public:
 
   // Public Methods
   bool isEmpty();
-  void insertFirst(int);
   void insert(int);
+  void push_back(int);
   void insertAt(int, int);
   int removeFirst();
   void print();
+  void print(NodePtr);
   void printReverse();
+  void printReverse(NodePtr);
   int getLength();
   void setHeadAsCurrent();
   int total();
+  int total(NodePtr);
   int max();
+  int max(NodePtr);
   NodePtr linearSearch(int);
+  NodePtr linearSearch(NodePtr, int);
 };
 
 // Linked List Constructors
@@ -161,7 +166,7 @@ LinkedList::~LinkedList()
 }
 
 // Method to Insert Node Next to Head
-void LinkedList::insertFirst(int num)
+void LinkedList::insert(int num)
 {
   NodePtr n, p;
 
@@ -181,7 +186,7 @@ void LinkedList::insertAt(int num, int pos)
 {
   if (pos == 0)
   {
-    this->insertFirst(num); // Insert Next to Head
+    this->insert(num); // Insert Next to Head
     return;
   }
 
@@ -190,7 +195,7 @@ void LinkedList::insertAt(int num, int pos)
 
   if (pos >= this->length)
   {
-    this->insert(num); // Insert at Tail
+    this->push_back(num); // Insert at Tail
     return;
   }
 
@@ -218,7 +223,7 @@ void LinkedList::insertAt(int num, int pos)
 }
 
 // Method to Insert Node at Tail
-void LinkedList::insert(int num)
+void LinkedList::push_back(int num)
 {
   NodePtr p = new Node(num);
 
@@ -235,12 +240,16 @@ int LinkedList::removeFirst()
   if (this->isEmpty())
     return -1;
 
-  NodePtr temp = this->head->next;
-  int num = temp->num;
+  // Get Node Next to Head
+  NodePtr n = this->head->next;
+  int num = n->num;
 
-  head->next = temp->next;
+  // Remove n Node from Linked List
+  head->next = n->next;
 
-  delete[] temp;
+  // Deallocate Memory
+  delete[] n;
+
   decreaseLength();
 
   return num;
@@ -281,41 +290,48 @@ void LinkedList::setHeadAsCurrent()
   this->curr = this->head;
 }
 
-// Print Nodes Method
-void LinkedList::print()
+// Print Nodes Method from Head to Tail
+void LinkedList::print(NodePtr p)
 {
   int n = 0;
-  NodePtr p = this->head->next;
 
   // Prints from Head to Tail
+  cout << setw(6) << left << setfill(' ') << "Index" << setw(10) << "Node" << '\n';
   while (p != NULL)
   {
-    cout << setw(6) << left << n++ << "| " << p->num << '\n';
+    cout << setw(6) << n++ << p->num << '\n';
     p = p->next;
   }
 }
 
-// Print Nodes with a Recursive Method
-void LinkedList::printReverse()
+// Method Overload
+void LinkedList::print()
 {
-  static int n = 0;
-  NodePtr p = this->curr;
+  this->print(this->head->next); // Set Head Node as p Node
+}
+
+// Print Nodes with a Recursive Method from Tail to Head
+void LinkedList::printReverse(NodePtr p)
+{
+  static int n = this->length;
 
   // Prints from Tail to Head
   // NOTE: If the Print Statement is before the Recursive Function Call, Nodes will be Printed from Head to Tail
 
-  if (p->next != NULL) // Same Expression as !p or p==0
+  if (p != NULL) // Same Expression as !p or p==0
   {
-    p = p->next;
-    this->curr = p;
-    this->printReverse();
-    cout << setw(6) << left << n++ << "| " << p->num << '\n';
+    this->printReverse(p->next);
+    cout << setw(6) << n-- << p->num << '\n';
 
     return;
   }
+  cout << setw(6) << left << setfill(' ') << "Index" << setw(10) << "Node" << '\n';
+}
 
-  // Set Head Node as Current Node
-  this->setHeadAsCurrent();
+// Method Overload
+void LinkedList::printReverse()
+{
+  this->printReverse(this->head->next); // Set Head Node as p Node
 }
 
 /*
@@ -339,9 +355,8 @@ int LinkedList::getLength()
 }
 
 // Method that Returns the Sum of All Node's Data Field
-int LinkedList::total()
+int LinkedList::total(NodePtr p)
 {
-  NodePtr p = this->head->next;
   int sum = 0;
 
   while (p != NULL)
@@ -353,14 +368,20 @@ int LinkedList::total()
   return sum;
 }
 
+// Method Overload
+int LinkedList::total()
+{
+  return this->total(this->head->next); // Set Head Node as p Node
+}
+
 // Method that Returns the Highest Number in Linked List
-int LinkedList::max()
+int LinkedList::max(NodePtr p)
 {
   static int m = INT_MIN;
-  NodePtr p = this->head->next;
 
   while (p != NULL)
   {
+    // Node Number Value is Bigger
     if (p->num > m)
       m = p->num;
 
@@ -368,6 +389,12 @@ int LinkedList::max()
   }
 
   return m;
+}
+
+// Method Overload
+int LinkedList::max()
+{
+  return this->max(this->head->next); // Set Head Node as p Node
 }
 
 /*
@@ -393,12 +420,9 @@ int LinkedList::max()
 */
 
 // Method that Checks if the Given Number is Inside Linked List
-NodePtr LinkedList::linearSearch(int key)
+NodePtr LinkedList::linearSearch(NodePtr p, int key)
 {
   NodePtr q;
-
-  // Get Node Next to Head
-  NodePtr p = this->head->next;
 
   while (p != NULL)
   {
@@ -424,6 +448,12 @@ NodePtr LinkedList::linearSearch(int key)
   // Set Head Node as Current Node
   this->setHeadAsCurrent();
   return NULL;
+}
+
+// Method Overload
+NodePtr LinkedList::linearSearch(int key)
+{
+  return this->linearSearch(this->head->next, key); // Set Head Node as p Node
 }
 
 /*
@@ -517,14 +547,14 @@ int main()
   list.print();
 
   // Insert Node
-  list.insertFirst(55);   // Next to Head
+  list.insert(55);        // Next to Head
   list.insertAt(100, 6);  // At Index 6
-  list.insert(33);        // At Tail
+  list.push_back(33);     // At Tail
   list.insertAt(77, -1);  // At Tail
   list.insertAt(400, -2); // Before Tail
   list.insertAt(898, 20); // At Tail
   list.insertAt(999, -1); // At Tail
-  list.insertFirst(13);   // Next to Head
+  list.insert(13);        // Next to Head
 
   cout << "\nNodes after Insertion:\n";
   list.print();
