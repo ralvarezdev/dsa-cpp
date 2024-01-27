@@ -185,13 +185,13 @@ int main()
 
   resultTaylor = e(x, n);
 
-  printf("e^%d Taylor Serie of %d Terms\nResult: %f\n\n", x, n + 1, resultTaylor);
+  printf("e^%d Taylor Serie of %d Terms\nResult: %lf\n\n", x, n + 1, resultTaylor);
 
   x = 5, n = 25;
 
   resultTaylor = e(x, n);
 
-  printf("e^%d Taylor Serie of %d Terms\nResult: %f", x, n + 1, resultTaylor);
+  printf("e^%d Taylor Serie of %d Terms\nResult: %lf", x, n + 1, resultTaylor);
 
   return 0;
 }
