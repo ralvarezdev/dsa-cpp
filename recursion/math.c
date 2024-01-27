@@ -121,6 +121,25 @@ int powerByHalf(int m, int n)
 // fact(n-1) * n
 // power(x, n-1) * x
 
+// Iterative Version
+double eR(int x, int n)
+{
+  double s, num, den;
+  int i;
+
+  s = num = den = 1;
+
+  for (i = 1; i <= n; i++)
+  {
+    num *= x;
+    den *= i;
+    s += num / den;
+  }
+
+  return s;
+}
+
+// Recursive Version
 double e(int x, int n)
 {
   static double p, f; // Power and Factorial Temp VARIABLES
@@ -144,6 +163,45 @@ double e(int x, int n)
 // 3.) n=2: 1 + x/1 + x^2/2
 // 4.) n=3: 1 + x/1 + x^2/2 + x^3/6
 // Result: 2.666667
+
+// --- TAYLOR SERIES USING HORNER'S RULE
+
+// Taylor Series Number of Multiplications
+
+// e^x = 1 + x/1 +x^2/2! + x^3/3! + ... n terms
+// 0 0 2 4 6 ... n terms
+// 2(1 + 2 + 3 + ... n terms)
+// 2*n*(n+1)/2 = n*(n+1)
+// O(n^2) Multiplications
+
+// Taylor Series Number of Multiplications Using Horner's Rule
+
+// e^x = 1 + x/1 +x^2/2! + x^3/3! + ... n terms
+// e^x = 1 + x/1 * (1 + x/2 * (1 + x/3 * (...)))
+// O(n) Multiplications
+
+// Iterative Version
+double eHorner(int x, int n)
+{
+  double s = 1;
+
+  for (; n > 0; n--)
+    s = 1 + x * s / n;
+
+  return s;
+}
+
+// Recursive Version
+double eHornerR(int x, int n)
+{
+  static double s = 1;
+
+  if (n == 0)
+    return s;
+
+  s = 1 + x * s / n;
+  return eHornerR(x, n - 1);
+}
 
 int main()
 {
@@ -191,7 +249,14 @@ int main()
 
   resultTaylor = e(x, n);
 
-  printf("e^%d Taylor Serie of %d Terms\nResult: %lf", x, n + 1, resultTaylor);
+  printf("e^%d Taylor Serie of %d Terms\nResult: %lf\n\n", x, n + 1, resultTaylor);
+
+  // With Horner's Rule
+  x = 1, n = 3;
+
+  resultTaylor = eHornerR(x, n);
+
+  printf("e^%d Taylor Serie of %d Terms Using Horner\'s Rule\nResult: %lf", x, n + 1, resultTaylor);
 
   return 0;
 }
