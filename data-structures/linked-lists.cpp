@@ -22,6 +22,7 @@ public:
   // Constructor
   Node();
   Node(int);
+  Node(int, Node *);
 };
 
 // Node Class Constructors
@@ -33,6 +34,12 @@ Node::Node()
 Node::Node(int num)
 {
   this->num = num;
+}
+
+Node::Node(int num, Node *next)
+{
+  this->num = num;
+  this->next = next;
 }
 
 typedef Node *NodePtr;
@@ -52,6 +59,7 @@ private:
   void increaseLength(int);
   void decreaseLength();
   void setCurrent(NodePtr);
+  NodePtr move(NodePtr, int);
 
 public:
   // Constructors
@@ -65,7 +73,11 @@ public:
   void insert(int);
   void push_back(int);
   void insertAt(int, int);
-  int removeFirst();
+  int remove();
+  int pop();
+  int removeAt(int);
+  int change(int, int);
+  int get(int);
   void print();
   void print(NodePtr);
   void printReverse();
@@ -85,10 +97,10 @@ public:
 // Add Head with Next Node as NULL
 LinkedList::LinkedList()
 {
-  NodePtr p = new Node();
+  NodePtr p;
 
   // Add Node as Head and Tail
-  this->head = this->tail = p;
+  this->head = this->tail = p = new Node();
 
   // Set Head as Current Node
   this->setHeadAsCurrent();
@@ -97,18 +109,16 @@ LinkedList::LinkedList()
 // Add Head with Only One Next Node
 LinkedList::LinkedList(int num)
 {
-  NodePtr p = new Node();
+  NodePtr p;
 
-  // Add Node as Head
-  this->head = p;
+  // Add Head
+  this->head = p = new Node();
 
   // Add Next Node
-  p = new Node();
-  p->num = num;
-  this->head->next = p;
+  p = new Node(num);
 
-  // Add Node as Tail
-  this->tail = p;
+  // Add Node as Head Next Node and as Tail
+  this->tail = this->head->next = p;
 
   // Increase Length
   this->increaseLength();
@@ -120,24 +130,21 @@ LinkedList::LinkedList(int num)
 // Add Head and Multiple Next Nodes
 LinkedList::LinkedList(int nums[], int length)
 {
-  NodePtr p = new Node();
+  NodePtr p;
 
-  // Add Node to Head
-  this->head = p;
+  // Add Head
+  this->head = p = new Node();
 
-  // Set Head as Current Node
+  // Add Node to Head and Set Head as Current Node
   this->curr = this->head;
 
   // Add Next Nodes
   for (int i = 0; i < length; i++)
   {
-    p = new Node();
-    p->num = nums[i];
-
     // Add Node
-    this->curr->next = p;
+    this->curr->next = p = new Node(nums[i]);
 
-    // Set Current Node
+    // Set as Current Node
     this->curr = this->curr->next;
   }
 
@@ -156,13 +163,28 @@ LinkedList::~LinkedList()
 {
   // Remove Node Next to Head if It isn't Empty
   while (!isEmpty())
-    this->removeFirst();
+    this->remove();
 
   // Remove Head Node
   NodePtr temp = this->head;
   this->head = NULL;
 
   delete[] temp;
+}
+
+// Method to Move to Next Node N Times
+NodePtr LinkedList::move(NodePtr p, int n)
+{
+  // Move to Next N Nodes
+  for (int i = 0; i < n; i++)
+  {
+    // Check if Next Node is NULL
+    if (p->next == NULL)
+      return NULL;
+
+    p = p->next;
+  }
+  return p;
 }
 
 // Method to Insert Node Next to Head
@@ -172,8 +194,7 @@ void LinkedList::insert(int num)
 
   // Get Node Next to Head
   n = this->head->next;
-  p = new Node(num);
-  p->next = n;
+  p = new Node(num, n);
 
   // Set Node Next to Head
   this->head->next = p;
@@ -184,9 +205,10 @@ void LinkedList::insert(int num)
 // Method to Insert Node at Given Position
 void LinkedList::insertAt(int num, int pos)
 {
+  // Check pos
   if (pos == 0)
   {
-    this->insert(num); // Insert Next to Head
+    this->insert(num); // Insert Node Next to Head
     return;
   }
 
@@ -195,7 +217,7 @@ void LinkedList::insertAt(int num, int pos)
 
   if (pos >= this->length)
   {
-    this->push_back(num); // Insert at Tail
+    this->push_back(num); // Insert Node at Tail
     return;
   }
 
@@ -204,20 +226,22 @@ void LinkedList::insertAt(int num, int pos)
   // Get Head
   m = this->head;
 
-  // Create New Node
-  p = new Node(num);
+  // Move to Next Node pos Times
+  m = this->move(m, pos);
 
-  // Move to Node at Given Position
-  for (int i = 0; i < pos; i++)
-    m = m->next;
+  // pos is Out of Range
+  if (m == NULL)
+    return;
 
   // Perform Last Node Move
-  q = m;
+  p = m;
   m = m->next;
 
+  // Create New Node and Set m as Next Node
+  q = new Node(num, m);
+
   // Set Node at Given Position
-  q->next = p;
-  p->next = m;
+  p->next = q;
 
   this->increaseLength();
 }
@@ -229,13 +253,15 @@ void LinkedList::push_back(int num)
 
   // Set Node at Tail
   this->tail->next = p;
+
+  // Set Tail
   this->tail = p;
 
   this->increaseLength();
 }
 
 // Method to Remove Node Next to Head
-int LinkedList::removeFirst()
+int LinkedList::remove()
 {
   if (this->isEmpty())
     return -1;
@@ -253,6 +279,157 @@ int LinkedList::removeFirst()
   decreaseLength();
 
   return num;
+}
+
+// Method to Remove Node at Tail
+int LinkedList::pop()
+{
+  if (this->isEmpty())
+    return -1;
+
+  NodePtr t, p;
+
+  this->decreaseLength();
+
+  // Move to Tail Previous Node
+  p = this->move(this->head, this->length);
+
+  // Get Tail
+  t = p->next;
+  int num = t->num;
+  p->next = NULL;
+
+  // Set Previous Node as Tail
+  this->tail = p;
+
+  // Deallocate Memory
+  delete[] t;
+
+  return num;
+}
+
+// Method to Remove Node at Given Index
+int LinkedList::removeAt(int pos)
+{
+  // Check pos
+  if (pos == 0)
+    return this->remove(); // Remove Node Next to Head
+
+  if (pos < 0)
+    pos = this->length + pos; // Get Position
+
+  if (pos > this->length)
+    return -1; // Node not Found
+
+  if (pos == this->length)
+    return this->pop(); // Remove Tail
+
+  NodePtr m, p, q;
+
+  this->decreaseLength();
+
+  // Move to Next Node pos Times
+  m = this->move(this->head, pos);
+
+  // pos is Out of Range
+  if (m == NULL)
+    return -1;
+
+  // Perform Last Node Move
+  p = m;
+  m = m->next;
+
+  // Remove Node
+  q = m->next;
+  int num = m->num;
+  p->next = q;
+
+  // Deallocate Memory
+  delete[] m;
+
+  return num;
+}
+
+// Method to Modify Node Value at Given Position
+int LinkedList::change(int num, int pos)
+{
+  NodePtr n;
+  int old;
+
+  if (pos == 0)
+  {
+    old = this->head->next->num;
+    this->head->next->num = num; // Change Value to Node Next to Head
+    return old;
+  }
+
+  if (pos < 0)
+    pos = this->length + pos; // Get Position
+  pos += 1;
+
+  if (pos > this->length)
+    return -1; // Node not Found
+
+  if (pos == this->length)
+  {
+    old = this->tail->num;
+    this->tail->num = num; // Change Value to Tail
+    return old;
+  }
+
+  if (this->isEmpty())
+    return -1;
+
+  // Set Head to n
+  n = this->head;
+
+  // Move to Node
+  n = this->move(n, pos);
+
+  // pos is Out of Range
+  if (n == NULL)
+    return -1;
+
+  // Assign New Value
+  old = n->num;
+  n->num = num;
+
+  return num;
+}
+
+// Method to Get Node at Given Position
+int LinkedList::get(int pos)
+{
+  // Check pos
+  if (pos == 0)
+    return this->head->next->num; // Get Node Next to Head
+
+  if (pos < 0)
+    pos = this->length + pos; // Get Position
+  pos += 1;
+
+  if (pos > this->length)
+    return -1; // Node not Found
+
+  if (pos == this->length)
+    return this->tail->num; // Get Tail
+
+  if (this->isEmpty())
+    return -1;
+
+  NodePtr n;
+
+  n = this->head;
+
+  // Move to Node
+  n = this->move(n, pos);
+
+  // pos is Out of Range
+  if (n == NULL)
+    return -1;
+
+  // Return Value
+  return n->num;
 }
 
 // Method to Check if Linked List is Empty
@@ -517,7 +694,7 @@ int main()
   list.print();
 
   cout << "\nFirst Node Removed:\n";
-  list.removeFirst();
+  list.remove();
   list.print();
 
   cout << "\nNodes (Reverse):\n";
@@ -557,5 +734,32 @@ int main()
   list.insert(13);        // Next to Head
 
   cout << "\nNodes after Insertion:\n";
+  list.print();
+
+  // Remove Node
+  list.remove();     // Remove Node Next to Head
+  list.removeAt(8);  // At Index 6
+  list.removeAt(-4); // At Index -4
+  list.pop();        // Remove Tail
+
+  cout << "\nNodes after Deletion:\n";
+  list.print();
+
+  // Get Node
+  int pos;
+
+  pos = 13;
+  cout << "\nGet Node at Index \'" << pos << "\': " << list.get(pos) << '\n';
+
+  pos = 20;
+  cout << "Get Node at Index \'" << pos << "\': " << list.get(pos) << '\n';
+
+  pos = -5;
+  cout << "Get Node at Index \'" << pos << "\': " << list.get(pos) << '\n';
+
+  // Modify Node
+  list.change(19, 4);
+
+  cout << "\nNodes after Change:\n";
   list.print();
 }
