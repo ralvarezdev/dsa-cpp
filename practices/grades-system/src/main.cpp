@@ -1,7 +1,7 @@
 #include <string>
 #include <iostream>
 
-#include "../../data-structures/linked-lists.h"
+#include "../../../data-structures/linked-lists.h"
 
 using std::cin;
 using std::cout;
