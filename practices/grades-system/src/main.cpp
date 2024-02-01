@@ -9,9 +9,10 @@
 using namespace std;
 
 // --- Function Prototypes
+void helpMessage();
 void changeCwdToData();
 
-int main()
+int main(int argc, char **argv)
 {
   // Desynchronize C++ Streams from C I/O Operations to Increase Performance
   std::ios::sync_with_stdio(false);
@@ -35,13 +36,124 @@ int main()
   // Create Title Linked List
   ColLinkedList titleList(cols, 11, Col());
 
+  // Create Student Linked List
   StudentLinkedList studentList = StudentLinkedList(Student());
 
-  titleList.print();
-  studentList.print();
+  // Read students.csv
+  studentList.readFile();
+
+  // - Program Status Variables
+  bool exit;
+  string inputWord;
+  int intCmd, timesExec = 0;
+  students::cmds cmd;
+
+  while (!exit) // Main While Loop of the Program
+  {
+    // Check if Invoke Command Contains Program's Commands
+    if (timesExec == 0 && argc > 1)
+    { // Checks if it's a Command
+      inputWord = argv[1];
+      try
+      {
+        // Try to Get Command
+        cmd = students::cmds(stoi(inputWord));
+      }
+      catch (...)
+      {
+        // Throw Error Message
+        pressEnterToCont("ERROR: Command not Found", true);
+        break;
+      }
+    }
+    else
+    {
+      // Print Help Message
+      helpMessage();
+
+      // Print New Line
+      cout << '\n';
+
+      // Get Command
+      intCmd = getInteger("Enter Command", 1, cmds::cmdNull);
+      cmd = cmds(intCmd);
+    }
+
+    // Increase Counter
+    timesExec++;
+
+    switch (cmd)
+    {
+    case students::printAll:
+      // Clear Terminal
+      cout << clear;
+
+      // Print Columns Header
+      titleList.print();
+
+      // Print Students
+      studentList.print();
+
+      // Print New Line
+      cout << '\n';
+
+      pressEnterToCont("Press ENTER to Continue");
+      break;
+
+    case students::printTop10:
+      // Clear Terminal
+      cout << clear;
+
+      // Print Columns Header
+      titleList.print();
+
+      // Print Students
+      studentList.print(10);
+
+      // Print New Line
+      cout << '\n';
+
+      pressEnterToCont("Press ENTER to Continue");
+      break;
+
+    case students::generateStudentFile:
+      break;
+
+    case students::removeStudent:
+      break;
+
+    case students::help:
+      break;
+
+    case students::exit:
+      // Confirmation Message
+      exit = booleanQuestion("Are you SURE to Exit");
+      break;
+
+    default:
+      // Command not Found
+      pressEnterToCont("ERROR: Command not Found", true);
+      break;
+    }
+  }
 }
 
 // --- Functions
+
+// Function to Print Help Message in the Terminal
+void helpMessage()
+{
+  cout << clear;
+  printTitle("WELCOME TO EDUCA V2.0");
+  cout << "Database Manipulation Commands\n"
+       << tab1 << addBrackets<int>(students::printAll) << " Print Students\n"
+       << tab1 << addBrackets<int>(students::printTop10) << " Print Top 10 Students\n"
+       << tab1 << addBrackets<int>(students::generateStudentFile) << " Generate Student File\n"
+       << tab1 << addBrackets<int>(students::removeStudent) << " Remove Student\n"
+       << "Other Commands:\n"
+       << tab1 << addBrackets<int>(students::help) << " Help\n"
+       << tab1 << addBrackets<int>(students::exit) << " Exit\n";
+}
 
 // Function to Change Current Working Directory to 'src/data'
 void changeCwdToData()

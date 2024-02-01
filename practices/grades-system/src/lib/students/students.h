@@ -2,12 +2,15 @@
 #include <sstream>
 #include <algorithm>
 #include <iostream>
+#include <limits.h>
 #include <iomanip>
 #include <fstream>
 
-#include "../namespaces.h"
 #include "../terminal/input.h"
 #include "../../../../../data-structures/linked-lists/base.h"
+#include "../namespaces.h"
+
+using namespace std;
 
 using std::cout;
 using std::fill;
@@ -35,7 +38,7 @@ private:
   string firstName = "";
   string lastName = "";
   string email = "";
-  students::genders gender = genderNull;
+  students::genders gender = students::genders::genderNull;
   int grades[nCourses] = {-1};
   float prom = -1;
 
@@ -53,7 +56,7 @@ public:
   int getGrade(int);
   float getProm();
   void setGender(string);
-  // void createFile();
+  void createFile(string);
 };
 
 // STUDENT LINKED LIST CLASS
@@ -66,7 +69,7 @@ public:
 
   // Public Methods
   void insertionSort(Student);
-  void print();
+  void print(int);
   void readFile();
 };
 
@@ -151,11 +154,11 @@ void Student::setGender(string gender)
 
   // Check Gender
   if (genderLower == "female")
-    this->gender = genders::female;
+    this->gender = students::genders::female;
   if (genderLower == "male")
-    this->gender = genders::male;
+    this->gender = students::genders::male;
   else
-    this->gender = genders::nonBinary;
+    this->gender = students::genders::nonBinary;
 };
 
 // void createFile();
@@ -213,7 +216,7 @@ void StudentLinkedList::insertionSort(Student student)
 }
 
 // Method to Print Students
-void StudentLinkedList::print()
+void StudentLinkedList::print(int max = INT_MAX)
 {
   // Read students.csv
   if (this->length == 0)
@@ -224,11 +227,12 @@ void StudentLinkedList::print()
 
   Student student;
   students::genders gender;
+  int n = 0;
 
   message << left;
 
-  // Prints from Head to Tail
-  while (p != NULL)
+  // Prints from Head to Tail or max Students
+  while (p != NULL && n < max)
   {
     student = p->data;
 
@@ -239,9 +243,9 @@ void StudentLinkedList::print()
 
     // Add Gender
     gender = student.getGender();
-    if (student.getGender() == genders::female)
+    if (student.getGender() == students::genders::female)
       message << setw(nGender) << setfill(' ') << "Female";
-    else if (student.getGender() == genders::male)
+    else if (student.getGender() == students::genders::male)
       message << setw(nGender) << setfill(' ') << "Male";
     else
       message << setw(nGender) << setfill(' ') << "Other";
@@ -255,6 +259,7 @@ void StudentLinkedList::print()
     message << '\n';
 
     p = p->next;
+    n++; // Increase Counter
   }
 
   cout << message.str();
@@ -324,7 +329,11 @@ void StudentLinkedList::readFile()
       // Save Grades
       Student *newStudent = new Student(id, firstName, lastName, email, gender, grades);
 
+      // Insert Student
       this->insertionSort(*newStudent);
+
+      // Increment Counter
+      this->length += 1;
     }
     catch (...)
     {

@@ -25,7 +25,7 @@ void printTitle(string message, bool warning = false)
   if (terminal::applyBg)
     sgr.append((!warning) ? sgrBg : sgrBgError);
   if (terminal::applyFg)
-    sgr.append((!warning) ? sgrFgCmd : sgrFgError);
+    sgr.append((!warning) ? sgrFg : sgrFgError);
 
   cout << sgr << setw(nChar) << setfill(' ') << left << message << reset << '\n';
 }

@@ -2,6 +2,14 @@
 
 using std::string;
 
+#ifndef NAMESPACES_H
+#define NAMESPACES_H
+
+namespace ascii
+{
+  const int intDiff = 48; // ASCII Code Difference between Chars and Integers
+}
+
 namespace files
 {
   const char sep = ','; // Separators
@@ -23,8 +31,8 @@ namespace terminal
   // --- Color Command Created Using ralvarezdev's Minigrep. URL: https://github.com/ralvarezdev/minigrep
 
   // - Normal State
-  const string sgrBg = "\x1b[48;2;153;204;255";  // Command to Change Text Background Color
-  const string sgrFgCmd = "\x1b[38;2;32;32;32m"; // Command to Change Text Foreground Color
+  const string sgrBg = "\x1b[48;2;153;204;255m"; // Command to Change Text Background Color
+  const string sgrFg = "\x1b[38;2;32;32;32m";    // Command to Change Text Foreground Color
 
   // - Warning (On Error)
   const string sgrBgError = "\x1b[48;2;255;153;153m";
@@ -42,7 +50,8 @@ namespace terminal
 }
 
 namespace students
-{ // Enums Should be at the Beginning
+{
+  // Enums Should be at the Beginning
   // - Genders
   enum genders
   {
@@ -52,9 +61,23 @@ namespace students
     genderNull
   };
 
+  // - Commands
+  enum cmds
+  {
+    printAll = 1,
+    printTop10,
+    generateStudentFile,
+    removeStudent,
+    help,
+    exit,
+    cmdNull
+  };
+
   // - Number of Courses
   const int nCourses = 5;
 
   // - File Name
   const string studentFilename = "students.csv";
 }
+
+#endif
