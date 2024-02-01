@@ -30,7 +30,7 @@ using namespace students;
 
 class Student
 {
-public:
+private:
   int id = -1;
   string firstName = "";
   string lastName = "";
@@ -39,12 +39,20 @@ public:
   int grades[nCourses] = {-1};
   float prom = -1;
 
+public:
   // Constructors
   Student();
   Student(int, string, string, string, string, int *);
 
   // Public Methods
-  void getGender(string);
+  int getId();
+  string getFirstName();
+  string getLastName();
+  string getEmail();
+  students::genders getGender();
+  int getGrade(int);
+  float getProm();
+  void setGender(string);
   // void createFile();
 };
 
@@ -57,6 +65,7 @@ public:
   using LinkedList<Student>::LinkedList;
 
   // Public Methods
+  void insertionSort(Student);
   void print();
   void readFile();
 };
@@ -78,7 +87,7 @@ Student::Student(int id, string firstName, string lastName, string email, string
   this->email = email;
 
   // Assign Gender
-  this->getGender(gender);
+  this->setGender(gender);
 
   // Assign Grades
   float sum;
@@ -91,15 +100,59 @@ Student::Student(int id, string firstName, string lastName, string email, string
   this->prom = sum / nCourses;
 }
 
+// Getters
+
+// Method to Get ID
+int Student::getId()
+{
+  return this->id;
+}
+
+// Method to Get First name
+string Student::getFirstName()
+{
+  return this->firstName;
+}
+
+// Method to Get Last Name
+string Student::getLastName()
+{
+  return this->lastName;
+}
+
+// Method to Get Email
+string Student::getEmail()
+{
+  return this->email;
+}
+
 // Method to Get Gender
-void Student::getGender(string gender)
+students::genders Student::getGender()
+{
+  return this->gender;
+}
+
+// Method to Get Grade at Given Index
+int Student::getGrade(int index)
+{
+  return this->grades[index];
+}
+
+// Method to Get Prom
+float Student::getProm()
+{
+  return this->prom;
+}
+
+// Method to Set Gender
+void Student::setGender(string gender)
 {
   string genderLower = getLower(gender);
 
   // Check Gender
   if (genderLower == "female")
     this->gender = genders::female;
-  else if (genderLower == "male")
+  if (genderLower == "male")
     this->gender = genders::male;
   else
     this->gender = genders::nonBinary;
@@ -108,6 +161,56 @@ void Student::getGender(string gender)
 // void createFile();
 
 // STUDENT LINKED LIST CLASS
+
+// Method to Insert in a Sorted Student Linked List
+void StudentLinkedList::insertionSort(Student student)
+{
+  NodePtr<Student> p, q, n;
+  float pProm, studentProm;
+  int compareFirstName, compareLastName;
+
+  p = this->head;
+  q = NULL;
+
+  while (true)
+  {
+    q = p;
+    p = p->next;
+
+    // Reached Tail Node
+    if (p == NULL)
+      break;
+
+    pProm = p->data.getProm();
+    studentProm = student.getProm();
+
+    // pProm is Less
+    if (pProm < studentProm)
+      break;
+    // pProm is Equal is Equal to studentProm
+    else if (pProm == studentProm)
+    {
+      compareFirstName = student.getLastName().compare(p->data.getLastName()) < 0;
+
+      // Student whose Last Name is being Compared Must Go First
+      if (compareFirstName < 0)
+        break;
+      // Student whose First Name is being Compared Must Go First
+      else if (compareFirstName > 0)
+      {
+        compareLastName = student.getLastName().compare(p->data.getLastName());
+
+        if (compareLastName < 0)
+          break;
+      }
+    }
+  }
+
+  // Create new Node, and Insert between q and p Node
+  n = new Node(student);
+  q->next = n;
+  n->next = p;
+}
 
 // Method to Print Students
 void StudentLinkedList::print()
@@ -120,6 +223,7 @@ void StudentLinkedList::print()
   ostringstream message;
 
   Student student;
+  students::genders gender;
 
   message << left;
 
@@ -129,24 +233,23 @@ void StudentLinkedList::print()
     student = p->data;
 
     // Add Student Data
-    message << setw(nId) << setfill(' ') << student.id
-            << setw(nFirstName) << setfill(' ') << student.firstName
-            << setw(nLastName) << setfill(' ') << student.lastName;
+    message << setw(nId) << setfill(' ') << student.getId()
+            << setw(nFirstName) << setfill(' ') << student.getFirstName()
+            << setw(nLastName) << setfill(' ') << student.getLastName();
 
     // Add Gender
-    if (student.gender == genders::female)
-      message
-          << setw(nGender) << setfill(' ') << "Female";
-    else if (student.gender == genders::male)
-      message
-          << setw(nGender) << setfill(' ') << "Male";
+    gender = student.getGender();
+    if (student.getGender() == genders::female)
+      message << setw(nGender) << setfill(' ') << "Female";
+    else if (student.getGender() == genders::male)
+      message << setw(nGender) << setfill(' ') << "Male";
     else
       message << setw(nGender) << setfill(' ') << "Other";
 
     // Add Course Grades
-    message << setw(nProm) << setfill(' ') << student.prom;
+    message << setw(nProm) << setfill(' ') << student.getProm();
     for (int i = 0; i < nCourses; i++)
-      message << setw(nCourse) << setfill(' ') << student.grades[i];
+      message << setw(nCourse) << setfill(' ') << student.getGrade(i);
 
     // Add New Line
     message << '\n';
@@ -221,7 +324,7 @@ void StudentLinkedList::readFile()
       // Save Grades
       Student *newStudent = new Student(id, firstName, lastName, email, gender, grades);
 
-      this->push_back(*newStudent);
+      this->insertionSort(*newStudent);
     }
     catch (...)
     {

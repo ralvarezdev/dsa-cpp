@@ -52,7 +52,7 @@ public:
   // Public Methods
   bool isEmpty();
   void insert(T);
-  void push_back(T);
+  void pushBack(T);
   void insertAt(T, int);
   T remove();
   T pop();
@@ -228,7 +228,7 @@ void LinkedList<T>::insertAt(T data, int pos)
 
   if (pos >= this->length)
   {
-    this->push_back(data); // Insert Node at Tail
+    this->pushBack(data); // Insert Node at Tail
     return;
   }
 
@@ -259,7 +259,7 @@ void LinkedList<T>::insertAt(T data, int pos)
 
 // Method to Insert Node at Tail
 template <class T>
-void LinkedList<T>::push_back(T data)
+void LinkedList<T>::pushBack(T data)
 {
   NodePtr<T> p = new Node<T>(data);
 
