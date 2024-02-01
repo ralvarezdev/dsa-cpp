@@ -34,6 +34,7 @@ protected:
   NodePtr<T> curr;
 
   int length = 0;
+  T error;
 
   // Private Methods
   void increaseLength();
@@ -43,9 +44,9 @@ protected:
 
 public:
   // Constructors
-  LinkedList();
   LinkedList(T);
-  LinkedList(T[], int);
+  LinkedList(T, T);
+  LinkedList(T[], int, T);
   ~LinkedList();
 
   // Public Methods
@@ -90,9 +91,12 @@ Node<T>::Node(T data, Node<T> *next)
 
 // Add Head with Next Node as NULL
 template <class T>
-LinkedList<T>::LinkedList()
+LinkedList<T>::LinkedList(T error)
 {
   NodePtr<T> p;
+
+  // Default Error Value
+  this->error = error;
 
   // Add Node as Head and Tail
   this->head = this->tail = p = new Node<T>();
@@ -103,9 +107,12 @@ LinkedList<T>::LinkedList()
 
 // Add Head with Only One Next Node
 template <class T>
-LinkedList<T>::LinkedList(T data)
+LinkedList<T>::LinkedList(T data, T error)
 {
   NodePtr<T> p;
+
+  // Default Error Value
+  this->error = error;
 
   // Add Head
   this->head = p = new Node<T>();
@@ -125,9 +132,12 @@ LinkedList<T>::LinkedList(T data)
 
 // Add Head and Multiple Next Nodes
 template <class T>
-LinkedList<T>::LinkedList(T data[], int length)
+LinkedList<T>::LinkedList(T data[], int length, T error)
 {
   NodePtr<T> p;
+
+  // Default Error Value
+  this->error = error;
 
   // Add Head
   this->head = p = new Node<T>();
@@ -267,7 +277,7 @@ template <class T>
 T LinkedList<T>::remove()
 {
   if (this->isEmpty())
-    return -1;
+    return this->error;
 
   // Get Node Next to Head
   NodePtr<T> n = this->head->next;
