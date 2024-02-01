@@ -22,11 +22,11 @@ string isNull(NodePtr<T> p)
 int main()
 {
   // Memory Allocation
-  int numbers[11] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 25};
+  double numbers[11] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 25};
 
   // NumberLinkedList list = NumberLinkedList();
   // NumberLinkedList list = NumberLinkedList(1);
-  NumberLinkedList<int> list(numbers, 11);
+  NumberLinkedList<double> list(numbers, 11);
 
   // Check if it's Empty
   string isEmpty = list.isEmpty() ? "True" : "False";
@@ -37,7 +37,7 @@ int main()
   cout << "List Length: " << length << "\n\n";
 
   // Get Total
-  int total = list.total();
+  double total = list.total();
   cout << "List Total: " << total << "\n\n";
 
   // Print Nodes
@@ -55,20 +55,20 @@ int main()
   cout << "\nMax Number: " << list.max() << '\n';
 
   // Search for Number in Linked List
-  NodePtr<int> nodeFound;
-  int key;
+  NodePtr<double> nodeFound;
+  double key;
 
   key = 24;
   nodeFound = list.linearSearch(key);
-  cout << "Search for Key '" << key << "': " << isKey<int>(nodeFound) << '\n';
+  cout << "Search for Key '" << key << "': " << isKey<double>(nodeFound) << '\n';
 
   key = 25;
   nodeFound = list.linearSearch(key);
-  cout << "Search for Key '" << key << "': " << isKey<int>(nodeFound) << '\n';
+  cout << "Search for Key '" << key << "': " << isKey<double>(nodeFound) << '\n';
 
   key = 6;
   nodeFound = list.linearSearch(key);
-  cout << "Search for Key '" << key << "': " << isKey<int>(nodeFound) << '\n';
+  cout << "Search for Key '" << key << "': " << isKey<double>(nodeFound) << '\n';
 
   // Print Nodes (Now, Node whose Key was Found is Next to Head)
   cout << "\nNodes after Linear Search:\n";

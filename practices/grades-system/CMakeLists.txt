@@ -8,8 +8,8 @@ project(GradesSystem LANGUAGES CXX)
 add_executable(${PROJECT_NAME} ./src/main.cpp)
 
 add_library(linked-lists SHARED
-  ${CMAKE_CURRENT_SOURCE_DIR}/../../data-structures/linked-lists.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/../../data-structures/linked-lists.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/../../data-structures/linked-lists/base.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../../data-structures/linked-lists/base.cpp
 )
 
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src/lib)
