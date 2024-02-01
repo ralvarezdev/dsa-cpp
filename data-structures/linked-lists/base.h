@@ -13,7 +13,7 @@ public:
   T data;
   Node *next = NULL;
 
-  // Constructor
+  // Constructors
   Node();
   Node(T);
   Node(T, Node *);
@@ -28,7 +28,7 @@ using NodePtr = Node<T> *;
 template <class T>
 class LinkedList
 {
-private:
+protected:
   NodePtr<T> head;
   NodePtr<T> tail;
   NodePtr<T> curr;
@@ -60,22 +60,8 @@ public:
   T get(int);
   void setCurrent(NodePtr<T>);
   void setCurrent();
-  void print();
-  void print(NodePtr<T>);
-  void printReverse();
-  void printReverse(NodePtr<T>);
   // int count(NodePtr<T>);
   int getLength();
-  // int total();
-  // int total(NodePtr<T>);
-  // int max();
-  // int max(NodePtr<T>);
-  NodePtr<T> linearSearch(T);
-  NodePtr<T> linearSearch(NodePtr<T>, T);
 };
-
-// Explicit Template Initialization
-template class Node<int>;
-template class LinkedList<int>;
 
 #endif

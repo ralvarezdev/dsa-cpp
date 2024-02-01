@@ -1,16 +1,10 @@
-#include <iostream>
-#include <string>
-#include <limits.h>
 #include <cstdlib>
-#include <iomanip>
 
-#include "linked-lists.h"
+#include "base.h"
 
-using std::cout;
-using std::left;
-using std::setfill;
-using std::setw;
-using std::string;
+// Explicit Template Initialization
+template class Node<int>;
+template class LinkedList<int>;
 
 // NODE CLASS
 // Self-Referential Structure
@@ -145,7 +139,7 @@ void LinkedList<T>::insert(T data)
 
   // Get Node Next to Head
   n = this->head->next;
-  p = new Node(data, n);
+  p = new Node<T>(data, n);
 
   // Set Node Next to Head
   this->head->next = p;
@@ -190,7 +184,7 @@ void LinkedList<T>::insertAt(T data, int pos)
   m = m->next;
 
   // Create New Node and Set m as Next Node
-  q = new Node(data, m);
+  q = new Node<T>(data, m);
 
   // Set Node at Given Position
   p->next = q;
@@ -202,7 +196,7 @@ void LinkedList<T>::insertAt(T data, int pos)
 template <class T>
 void LinkedList<T>::push_back(T data)
 {
-  NodePtr<T> p = new Node(data);
+  NodePtr<T> p = new Node<T>(data);
 
   // Set Node at Tail
   this->tail->next = p;
@@ -431,54 +425,6 @@ void LinkedList<T>::setCurrent()
   this->curr = this->head;
 }
 
-// Print Nodes Method from Head to Tail
-template <class T>
-void LinkedList<T>::print(NodePtr<T> p)
-{
-  int n = 0;
-
-  // Prints from Head to Tail
-  cout << setw(6) << left << setfill(' ') << "Index" << setw(10) << "Node" << '\n';
-  while (p != NULL)
-  {
-    cout << setw(6) << n++ << p->data << '\n';
-    p = p->next;
-  }
-}
-
-// Method Overload
-template <class T>
-void LinkedList<T>::print()
-{
-  this->print(this->head->next); // Set Head Node as p Node
-}
-
-// Print Nodes with a Recursive Method from Tail to Head
-template <class T>
-void LinkedList<T>::printReverse(NodePtr<T> p)
-{
-  static int n = this->length;
-
-  // Prints from Tail to Head
-  // NOTE: If the Print Statement is before the Recursive Function Call, Nodes will be Printed from Head to Tail
-
-  if (p != NULL) // Same Expression as !p or p==0
-  {
-    this->printReverse(p->next);
-    cout << setw(6) << n-- << p->data << '\n';
-
-    return;
-  }
-  cout << setw(6) << left << setfill(' ') << "Index" << setw(10) << "Node" << '\n';
-}
-
-// Method Overload
-template <class T>
-void LinkedList<T>::printReverse()
-{
-  this->printReverse(this->head->next); // Set Head Node as p Node
-}
-
 /*
 // Count Nodes with a Recursive Method
 template <class T>
@@ -500,129 +446,3 @@ int LinkedList<T>::getLength()
 {
   return this->length;
 }
-
-/*
-// Method that Returns the Sum of All Node's Data Field
-int LinkedList::total(NodePtr p)
-{
-  int sum = 0;
-
-  while (p != NULL)
-  {
-    sum += p->data;
-    p = p->next;
-  }
-
-  return sum;
-}
-
-// Method Overload
-int LinkedList::total()
-{
-  return this->total(this->head->next); // Set Head Node as p Node
-}
-
-// Method that Returns the Highest Number in Linked List
-int LinkedList::max(NodePtr p)
-{
-  static int m = INT_MIN;
-
-  while (p != NULL)
-  {
-    // Node Number Value is Bigger
-    if (p->data > m)
-      m = p->data;
-
-    p = p->next;
-  }
-
-  return m;
-}
-
-// Method Overload
-int LinkedList::max()
-{
-  return this->max(this->head->next); // Set Head Node as p Node
-}
-
-// Recursive Method that Returns the Highest Number in Linked List
-int LinkedList::max()
-{
-  static int x = INT_MIN;
-  NodePtr p = this->curr;
-
-  if (p == NULL)
-  {
-    // Set Head Node as Current Node
-    this->setCurrent();
-
-    return INT_MIN;
-  }
-
-  this->curr = this->curr->next;
-  x = this->max();
-
-  return x > p->data ? x : p->data;
-}
-*/
-
-// Method that Checks if the Given Number is Inside Linked List
-template <class T>
-NodePtr<T> LinkedList<T>::linearSearch(NodePtr<T> p, T key)
-{
-  NodePtr<T> q;
-
-  while (p != NULL)
-  {
-    if (key == p->data)
-    {
-      // Set p Node as Tail
-      if (p->next == NULL)
-        this->tail = q;
-
-      // Move Node whose Key Matched Next to Head in Order to Improve Performance
-      q->next = p->next;
-      p->next = this->head->next;
-      this->head->next = p;
-
-      // Set Head Node as Current Node
-      this->setCurrent();
-      return p;
-    }
-    q = p;
-    p = p->next;
-  }
-
-  // Set Head Node as Current Node
-  this->setCurrent();
-  return NULL;
-}
-
-// Method Overload
-template <class T>
-NodePtr<T> LinkedList<T>::linearSearch(T key)
-{
-  return this->linearSearch(this->head->next, key); // Set Head Node as p Node
-}
-
-/*
-// Recursive Method that Checks if the Given Number is Inside Linked List
-NodePtr LinkedList::linearSearch(int key)
-{
-  // Get Current Node
-  NodePtr p = this->curr;
-
-  if (p == NULL)
-  {
-    // Set Head Node as Current Node
-    this->setCurrent();
-    return NULL;
-  }
-
-  if (key == p->data)
-    return p;
-
-  this->curr = this->curr->next;
-  return this->linearSearch(key);
-}
-*/
