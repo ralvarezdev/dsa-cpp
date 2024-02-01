@@ -12,6 +12,7 @@ using namespace terminal;
 
 // --- Function Prototypes
 void pressEnterToCont(string message, bool warning);
+string getLower(string word);
 
 // --- Functions
 
@@ -22,5 +23,15 @@ void pressEnterToCont(string message, bool warning = false)
 
   printTitle(message, warning);
   getline(cin, _);
-  // ignoreInput();
+}
+
+// Function to Get a Lowercase String
+string getLower(string word)
+{
+  string wordToLower;
+
+  for (int i = 0; i < word.length(); i++)
+    wordToLower += tolower(word[i]); // Append Character in Lowercase
+
+  return wordToLower;
 }

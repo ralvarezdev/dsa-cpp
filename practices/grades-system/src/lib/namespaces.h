@@ -2,6 +2,12 @@
 
 using std::string;
 
+namespace files
+{
+  const char sep = ','; // Separators
+  const int newLine = '\n';
+}
+
 namespace terminal
 {
   // - ANSI Escape Code
@@ -26,12 +32,13 @@ namespace terminal
 
   // - Number of Characters
   const int nChar = 100; // Max Number of Characters being Printed on Each Line
-  const int id = 5;
-  const int firstName = 12;
-  const int lastName = 12;
-  const int email = 12;
-  const int gender = 8;
-  const int course = 5;
+  const int nId = 5;
+  const int nFirstName = 16;
+  const int nLastName = 16;
+  const int nEmail = 12;
+  const int nGender = 8;
+  const int nProm = 10;
+  const int nCourse = 5;
 }
 
 namespace students
@@ -41,6 +48,13 @@ namespace students
   {
     female,
     male,
-    nonBinary // To get the number of Fields. SHOULD BE AT THE END
+    nonBinary,
+    genderNull
   };
+
+  // - Number of Courses
+  const int nCourses = 5;
+
+  // - File Name
+  const string studentFilename = "students.csv";
 }

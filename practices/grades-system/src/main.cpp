@@ -4,28 +4,44 @@
 
 #include "lib/terminal/cols.h"
 #include "lib/terminal/input.h"
+#include "lib/students/students.h"
 
 using namespace std;
 
+// --- Function Prototypes
+void changeCwdToData();
+
 int main()
 {
+  // Desynchronize C++ Streams from C I/O Operations to Increase Performance
+  std::ios::sync_with_stdio(false);
+
+  // Change Path to 'src/data'
+  changeCwdToData();
+
   // Students Header
-  Col cols[10] = {
-      Col("Id", terminal::id),
-      Col("First Name", terminal::firstName),
-      Col("Last Name", terminal::lastName),
-      Col("Email", terminal::email),
-      Col("Gender", terminal::gender),
-      Col("OOP", terminal::course),
-      Col("DSA", terminal::course),
-      Col("DB", terminal::course),
-      Col("Math", terminal::course),
-      Col("Stats", terminal::course)};
+  Col cols[11] = {
+      Col("Id", terminal::nId),
+      Col("First Name", terminal::nFirstName),
+      Col("Last Name", terminal::nLastName),
+      Col("Gender", terminal::nGender),
+      Col("Prom", terminal::nProm),
+      Col("OOP", terminal::nCourse),
+      Col("DSA", terminal::nCourse),
+      Col("DB", terminal::nCourse),
+      Col("Math", terminal::nCourse),
+      Col("Stats", terminal::nCourse)};
 
-  ColLinkedList title(cols, 10, Col("", 0));
+  // Create Title Linked List
+  ColLinkedList titleList(cols, 11, Col());
 
-  title.print();
+  StudentLinkedList studentList = StudentLinkedList(Student());
+
+  titleList.print();
+  studentList.print();
 }
+
+// --- Functions
 
 // Function to Change Current Working Directory to 'src/data'
 void changeCwdToData()

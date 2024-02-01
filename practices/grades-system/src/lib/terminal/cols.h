@@ -2,7 +2,6 @@
 #include <sstream>
 #include <iomanip>
 
-#include "../namespaces.h"
 #include "../../../../../data-structures/linked-lists/base.h"
 #include "ansiEsc.h"
 
@@ -10,8 +9,6 @@ using std::left;
 using std::ostringstream;
 using std::setfill;
 using std::setw;
-
-using namespace students;
 
 #ifndef COLS_LINKED_LISTS
 #define COLS_LINKED_LISTS
@@ -21,8 +18,8 @@ using namespace students;
 class Col
 {
 private:
-  string name;
-  int width;
+  string name = "";
+  int width = - 1;
 
 public:
   // Constructors

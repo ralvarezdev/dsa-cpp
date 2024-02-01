@@ -7,5 +7,6 @@ using std::string;
 
 // --- Functions
 void pressEnterToCont(string message, bool warning = false);
+string getLower(string word);
 
 #endif
