@@ -2,27 +2,29 @@
 #include <iostream>
 #include <filesystem>
 
-#include "../../../data-structures/linked-lists/base.h"
+#include "lib/terminal/cols.h"
 #include "lib/terminal/input.h"
 
 using namespace std;
 
-// Function to Check if Key was Found
-template <typename T>
-string isKey(NodePtr<T> p)
-{
-  return p ? "Key Found" : "Key not Found";
-}
-
-// Method to Check if Node is not NULL
-template <typename T>
-string isNull(NodePtr<T> p)
-{
-  return p ? "Node is NULL" : "Node is not NULL";
-}
-
 int main()
 {
+  // Students Header
+  Col cols[10] = {
+      Col("Id", terminal::id),
+      Col("First Name", terminal::firstName),
+      Col("Last Name", terminal::lastName),
+      Col("Email", terminal::email),
+      Col("Gender", terminal::gender),
+      Col("OOP", terminal::course),
+      Col("DSA", terminal::course),
+      Col("DB", terminal::course),
+      Col("Math", terminal::course),
+      Col("Stats", terminal::course)};
+
+  ColLinkedList title(cols, 10, Col("", 0));
+
+  title.print();
 }
 
 // Function to Change Current Working Directory to 'src/data'
