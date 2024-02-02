@@ -30,6 +30,7 @@ bool booleanQuestion(string message)
     getline(cin, input);
 
     c = tolower(input[0]);
+    cout << c;
 
     if (c == 'y')
     {
@@ -63,7 +64,7 @@ int getInteger(string message, int low, int high)
       if (amount >= low && amount <= high)
         return amount;
       else
-      // Number Out of Range
+        // Number Out of Range
         throw(-1);
     }
     catch (...)

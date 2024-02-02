@@ -6,8 +6,9 @@
 #include <iomanip>
 #include <fstream>
 
-#include "../terminal/input.h"
 #include "../../../../../data-structures/linked-lists/base.h"
+#include "../terminal/input.h"
+#include "../terminal/ansiEsc.h"
 #include "../namespaces.h"
 
 using namespace std;
@@ -38,8 +39,9 @@ private:
   string firstName = "";
   string lastName = "";
   string email = "";
-  students::genders gender = students::genders::genderNull;
-  int grades[nCourses] = {-1};
+  string gender = "";
+  students::genders genderAbb = students::genders::genderNull;
+  int grades[students::nCourses] = {-1};
   float prom = -1;
 
 public:
@@ -52,11 +54,11 @@ public:
   string getFirstName();
   string getLastName();
   string getEmail();
-  students::genders getGender();
+  string getGender();
+  students::genders getGenderAbb();
   int getGrade(int);
   float getProm();
-  void setGender(string);
-  void createFile(string);
+  void setGenderAbb();
 };
 
 // STUDENT LINKED LIST CLASS
@@ -71,6 +73,10 @@ public:
   void insertionSort(Student);
   void print(int);
   void readFile();
+  int linearSearch(int);
+  int linearSearch(NodePtr<Student>, int);
+  void generateStudentFile(int);
+  void overwriteCSV();
 };
 
 // STUDENT CLASS
@@ -88,19 +94,20 @@ Student::Student(int id, string firstName, string lastName, string email, string
   this->firstName = firstName;
   this->lastName = lastName;
   this->email = email;
+  this->gender = gender;
 
-  // Assign Gender
-  this->setGender(gender);
+  // Assign Gender Abbreviation
+  this->setGenderAbb();
 
   // Assign Grades
   float sum;
-  for (int i = 0; i < nCourses; i++)
+  for (int i = 0; i < students::nCourses; i++)
   {
     this->grades[i] = grades[i];
     sum += grades[i];
   }
 
-  this->prom = sum / nCourses;
+  this->prom = sum / students::nCourses;
 }
 
 // Getters
@@ -130,9 +137,15 @@ string Student::getEmail()
 }
 
 // Method to Get Gender
-students::genders Student::getGender()
+string Student::getGender()
 {
   return this->gender;
+}
+
+// Method to Get Gender Abbreviation
+students::genders Student::getGenderAbb()
+{
+  return this->genderAbb;
 }
 
 // Method to Get Grade at Given Index
@@ -147,21 +160,19 @@ float Student::getProm()
   return this->prom;
 }
 
-// Method to Set Gender
-void Student::setGender(string gender)
+// Method to Set Gender Abbreviation
+void Student::setGenderAbb()
 {
-  string genderLower = getLower(gender);
+  string genderLower = this->gender;
 
   // Check Gender
   if (genderLower == "female")
-    this->gender = students::genders::female;
+    this->genderAbb = students::genders::female;
   if (genderLower == "male")
-    this->gender = students::genders::male;
+    this->genderAbb = students::genders::male;
   else
-    this->gender = students::genders::nonBinary;
+    this->genderAbb = students::genders::nonBinary;
 };
-
-// void createFile();
 
 // STUDENT LINKED LIST CLASS
 
@@ -226,7 +237,7 @@ void StudentLinkedList::print(int max = INT_MAX)
   ostringstream message;
 
   Student student;
-  students::genders gender;
+  students::genders genderAbb;
   int n = 0;
 
   message << left;
@@ -241,18 +252,18 @@ void StudentLinkedList::print(int max = INT_MAX)
             << setw(nFirstName) << setfill(' ') << student.getFirstName()
             << setw(nLastName) << setfill(' ') << student.getLastName();
 
-    // Add Gender
-    gender = student.getGender();
-    if (student.getGender() == students::genders::female)
+    // Add Gender Abbreviation
+    genderAbb = student.getGenderAbb();
+    if (genderAbb == students::genders::female)
       message << setw(nGender) << setfill(' ') << "Female";
-    else if (student.getGender() == students::genders::male)
+    else if (genderAbb == students::genders::male)
       message << setw(nGender) << setfill(' ') << "Male";
     else
       message << setw(nGender) << setfill(' ') << "Other";
 
     // Add Course Grades
     message << setw(nProm) << setfill(' ') << student.getProm();
-    for (int i = 0; i < nCourses; i++)
+    for (int i = 0; i < students::nCourses; i++)
       message << setw(nCourse) << setfill(' ') << student.getGrade(i);
 
     // Add New Line
@@ -269,12 +280,12 @@ void StudentLinkedList::print(int max = INT_MAX)
 void StudentLinkedList::readFile()
 {
   string firstName, lastName, email, gender;
-  int id, grades[nCourses];
+  int id, grades[students::nCourses];
 
   string line, word;
   int count, i;
 
-  ifstream studentCSV(students::studentFilename);
+  ifstream studentCSV(students::studentsFilename);
 
   if (!studentCSV.is_open()) // Couldn't Access to studentCSV
   {
@@ -292,7 +303,7 @@ void StudentLinkedList::readFile()
       if (line.length() == 0)
         continue;
 
-      fill(grades, grades + nCourses, 0);
+      fill(grades, grades + students::nCourses, 0);
 
       stringstream file(line);
 
@@ -341,6 +352,113 @@ void StudentLinkedList::readFile()
     }
 
   studentCSV.close();
+}
+
+// Method that Checks if the Given ID is Inside Linked List
+int StudentLinkedList::linearSearch(NodePtr<Student> p, int id)
+{
+  int pos = 0;
+  Student student;
+
+  while (p != NULL)
+  {
+    if (id == p->data.getId())
+    {
+      cout << '\n';
+      printTitle("Student Found");
+
+      // Get Student
+      student = p->data;
+
+      cout << "ID: " << id << '\n'
+           << "First Name: " << student.getFirstName() << '\n'
+           << "Second Name: " << student.getLastName() << '\n'
+           << "Email: " << student.getEmail();
+
+      return pos;
+    }
+    p = p->next;
+    pos++;
+  }
+
+  return -1;
+}
+
+// Method Overload
+int StudentLinkedList::linearSearch(int id)
+{
+  return this->linearSearch(this->head->next, id); // Set Head Node as p Node
+}
+
+// Method to Generate Student File
+void StudentLinkedList::generateStudentFile(int pos)
+{
+  NodePtr<Student> p;
+  Student student;
+
+  ostringstream content, filename;
+
+  // Move pos Nodes
+  p = this->move(this->head->next, pos);
+  // Get Student
+  student = p->data;
+
+  // Get Filename
+  filename << student.getId() << '-' << student.getFirstName() << '-' << student.getLastName() << ".txt";
+  ofstream studentFile(filename.str());
+
+  // Add Student Data
+  content << "ID: " << student.getId() << '\n'
+          << "First Name: " << student.getFirstName() << '\n'
+          << "Last Name: " << student.getLastName() << '\n'
+          << "Email: " << student.getEmail() << '\n'
+          << "Gender: " << student.getGender() << '\n'
+          << "Prom: " << student.getProm() << '\n'
+          << "OOP: " << student.getGrade(0) << '\n'
+          << "DSA: " << student.getGrade(1) << '\n'
+          << "Databases: " << student.getGrade(2) << '\n'
+          << "Math: " << student.getGrade(3) << '\n'
+          << "Statistics: " << student.getGrade(4);
+
+  studentFile << content.str(); // Write Content to Student File
+  studentFile.close();
+}
+
+// Method to Overwite students.csv
+void StudentLinkedList::overwriteCSV()
+{
+  NodePtr<Student> p;
+  Student student;
+
+  ostringstream content;
+  ofstream studentsCSV(students::studentsFilename);
+
+  // Get Initial Nodes
+  p = this->head->next;
+
+  content << "id,first_name,last_name,email,gender,oop,dsa,databases,math,statistics\n"; // Overwrite Header
+  while (p != NULL)
+  {
+    student = p->data; // Get Student
+
+    // Add Student Data
+    content << student.getId() << sep
+            << student.getFirstName() << sep
+            << student.getLastName() << sep
+            << student.getEmail() << sep
+            << student.getGender();
+
+    for (int i = 0; i < students::nCourses; i++)
+      content << sep << student.getGrade(i);
+
+    content << '\n';
+
+    // Move to Next Node
+    p = p->next;
+  }
+
+  studentsCSV << content.str(); // Write Content to students.csv
+  studentsCSV.close();
 }
 
 #endif

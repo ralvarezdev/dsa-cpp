@@ -287,7 +287,7 @@ T LinkedList<T>::remove()
   head->next = n->next;
 
   // Deallocate Memory
-  delete[] n;
+  delete n;
 
   decreaseLength();
 
@@ -299,7 +299,7 @@ template <class T>
 T LinkedList<T>::pop()
 {
   if (this->isEmpty())
-    return -1;
+    return this->error;
 
   NodePtr<T> t, p;
 
@@ -310,14 +310,14 @@ T LinkedList<T>::pop()
 
   // Get Tail
   t = p->next;
-  int data = t->data;
+  T data = t->data;
   p->next = NULL;
 
   // Set Previous Node as Tail
   this->tail = p;
 
   // Deallocate Memory
-  delete[] t;
+  delete t;
 
   return data;
 }
@@ -334,7 +334,7 @@ T LinkedList<T>::removeAt(int pos)
     pos = this->length + pos; // Get Position
 
   if (pos > this->length)
-    return -1; // Node not Found
+    return this->error; // Node not Found
 
   if (pos == this->length)
     return this->pop(); // Remove Tail
@@ -348,7 +348,7 @@ T LinkedList<T>::removeAt(int pos)
 
   // pos is Out of Range
   if (m == NULL)
-    return -1;
+    return this->error;
 
   // Perform Last Node Move
   p = m;
@@ -360,7 +360,7 @@ T LinkedList<T>::removeAt(int pos)
   p->next = q;
 
   // Deallocate Memory
-  delete[] m;
+  delete m;
 
   return data;
 }

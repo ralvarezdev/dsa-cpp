@@ -43,9 +43,9 @@ int main(int argc, char **argv)
   studentList.readFile();
 
   // - Program Status Variables
-  bool exit;
+  bool exit, confirmation;
   string inputWord;
-  int intCmd, timesExec = 0;
+  int id, pos, intCmd, timesExec = 0;
   students::cmds cmd;
 
   while (!exit) // Main While Loop of the Program
@@ -117,9 +117,44 @@ int main(int argc, char **argv)
       break;
 
     case students::generateStudentFile:
+      // Ask for Student ID
+      id = getInteger("Enter Student ID", 1, studentList.getLength());
+
+      // Get Student Position in Linked List
+      pos = studentList.linearSearch(id);
+
+      // Student not Found
+      if (pos == -1)
+      {
+        pressEnterToCont("ERROR: Student not Found", true);
+        break;
+      }
+
+      // Generate Student File
+      studentList.generateStudentFile(pos);
       break;
 
     case students::removeStudent:
+      // Ask for Student ID
+      id = getInteger("Enter Student ID to Remove", 1, studentList.getLength());
+
+      // Get Student Position in Linked List
+      pos = studentList.linearSearch(id);
+
+      // Student not Found
+      if (pos == -1)
+      {
+        pressEnterToCont("ERROR: Student not Found", true);
+        break;
+      }
+
+      // Confirmation Message
+      cout << "\n\n";
+      if (booleanQuestion("Is this the Student you want to Remove?"))
+      {
+        studentList.removeAt(pos);
+        studentList.overwriteCSV();
+      }
       break;
 
     case students::help:

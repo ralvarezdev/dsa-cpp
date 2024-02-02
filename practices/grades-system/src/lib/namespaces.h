@@ -77,7 +77,7 @@ namespace students
   const int nCourses = 5;
 
   // - File Name
-  const string studentFilename = "students.csv";
+  const string studentsFilename = "students.csv";
 }
 
 #endif

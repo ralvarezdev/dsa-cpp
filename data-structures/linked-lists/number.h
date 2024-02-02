@@ -176,8 +176,7 @@ NodePtr<T> NumberLinkedList<T>::linearSearch(NodePtr<T> p, T key)
 
       // Set Head Node as Current Node
       LinkedList<T>::setCurrent();
-      // this->template LinkedList<T>::setCurrent();
-      // this->LinkedList<T>::setCurrent();
+
       return p;
     }
     q = p;
@@ -186,8 +185,7 @@ NodePtr<T> NumberLinkedList<T>::linearSearch(NodePtr<T> p, T key)
 
   // Set Head Node as Current Node
   LinkedList<T>::setCurrent();
-  // this->template LinkedList<T>::setCurrent();
-  // this->LinkedList<T>::setCurrent();
+
   return NULL;
 }
 
