@@ -35,9 +35,10 @@ public:
   T max(SingleNodePtr<T>);
   SingleNodePtr<T> linearSearch(T);
   SingleNodePtr<T> linearSearch(SingleNodePtr<T>, T);
+  int compare(int, int);
 };
 
-// Print Nodes Method from Head to Tail
+// Method Print Nodes from Head to Tail
 template <class T>
 void NumberLinkedList<T>::print(SingleNodePtr<T> p)
 {
@@ -222,5 +223,33 @@ SingleNodePtr<T> NumberLinkedList<T>::linearSearch(T key)
   return this->linearSearch(key);
 }
 */
+
+// Method to Compare Two Nodes Values
+template <class T>
+int NumberLinkedList<T>::compare(int index1, int index2)
+{
+  /*
+  Possible Results:
+
+  -1: One or Both Nodes are NULL
+  0: Nodes Data are Equal
+  1: Node1 Data is Greater than Node2 Data
+  2: Node2 Data is Greater than Node1 Data
+
+  */
+
+  T value1, value2;
+
+  value1 = this->get(index1);
+  value2 = this->get(index2);
+
+  if (value1 == this->error || value2 == this->error)
+    return -1; // One or Both Indexes don't Exist
+
+  if (index1 == index2)
+    return 0;
+
+  return index1 > index2 ? 1 : 2;
+}
 
 #endif

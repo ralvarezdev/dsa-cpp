@@ -1,7 +1,8 @@
-# ignore ALL .cmake, .a, .dll files
+# ignore ALL .cmake, .a, .dll, .txt files
 *.cmake
 *.a
 *.dll
+*.txt
 
 # ignore Makefile and CMakeCache.txt
 Makefile
