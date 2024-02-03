@@ -175,8 +175,8 @@ SingleNodePtr<T> NumberLinkedList<T>::linearSearch(SingleNodePtr<T> p, T key)
       this->head->next = p;
 
       /*
-            // Set Head Node as Current Node
-            SingleLinkedList<T>::setCurrent();
+        // Set Head Node as Current Node
+        SingleLinkedList<T>::setCurrent();
       */
 
       return p;

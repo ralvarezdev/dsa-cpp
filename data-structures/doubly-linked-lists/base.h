@@ -1,37 +1,41 @@
 #include <cstdlib>
+#include <math.h>
 
-#ifndef SINGLE_LINKED_LISTS
-#define SINGLE_LINKED_LISTS
+using std::abs;
+
+#ifndef DOUBLY_LINKED_LISTS
+#define DOUBLY_LINKED_LISTS
 
 // NODE CLASS
 // Self-Referential Structure
 
 template <class T>
-class SingleNode
+class DoublyNode
 {
 public:
   T data;
-  SingleNode *next = NULL;
+  DoublyNode *prev = NULL;
+  DoublyNode *next = NULL;
 
   // Constructors
-  SingleNode();
-  SingleNode(T);
-  SingleNode(T, SingleNode *);
+  DoublyNode();
+  DoublyNode(T);
+  DoublyNode(T, DoublyNode *);
+  DoublyNode(T, DoublyNode *, DoublyNode *);
 };
 
-// SingleNodePtr Definition
+// DoublyNodePtr Definition
 template <class T>
-using SingleNodePtr = SingleNode<T> *;
+using DoublyNodePtr = DoublyNode<T> *;
 
 // LINKED LIST CLASS
 
 template <class T>
-class SingleLinkedList
+class DoublyLinkedList
 {
 protected:
-  SingleNodePtr<T> head;
-  SingleNodePtr<T> tail;
-  // SingleNodePtr<T> curr;
+  DoublyNodePtr<T> head;
+  DoublyNodePtr<T> tail;
 
   int length = 0;
   T error;
@@ -40,14 +44,14 @@ protected:
   void increaseLength();
   void increaseLength(int);
   void decreaseLength();
-  SingleNodePtr<T> move(SingleNodePtr<T>, int);
+  DoublyNodePtr<T> move(int);
 
 public:
   // Constructors
-  SingleLinkedList(T);
-  SingleLinkedList(T, T);
-  SingleLinkedList(T[], int, T);
-  ~SingleLinkedList();
+  DoublyLinkedList(T);
+  DoublyLinkedList(T, T);
+  DoublyLinkedList(T[], int, T);
+  ~DoublyLinkedList();
 
   // Public Methods
   bool isEmpty();
@@ -60,31 +64,40 @@ public:
   T removeAt(int);
   T change(T, int);
   T get(int);
-  // void setCurrent(SingleNodePtr<T>);
-  // void setCurrent();
-  //  int count(SingleNodePtr<T>);
   int getLength();
-  void concat(SingleLinkedList);
+  void concat(DoublyLinkedList);
 };
 
 // Node Class Constructors
 template <class T>
-SingleNode<T>::SingleNode()
+DoublyNode<T>::DoublyNode()
 {
   return;
 }
 
 template <class T>
-SingleNode<T>::SingleNode(T data)
+DoublyNode<T>::DoublyNode(T data)
 {
   this->data = data;
 }
 
 template <class T>
-SingleNode<T>::SingleNode(T data, SingleNode<T> *next)
+DoublyNode<T>::DoublyNode(T data, DoublyNode<T> *prev)
 {
   this->data = data;
+  this->next = prev;
+
+  prev->next = this;
+}
+
+template <class T>
+DoublyNode<T>::DoublyNode(T data, DoublyNode<T> *prev, DoublyNode<T> *next)
+{
+  this->data = data;
+  this->prev = prev;
   this->next = next;
+
+  next->prev = prev->next = this;
 }
 
 // LINKED LIST CLASS
@@ -93,64 +106,56 @@ SingleNode<T>::SingleNode(T data, SingleNode<T> *next)
 
 // Add Head with Next Node as NULL
 template <class T>
-SingleLinkedList<T>::SingleLinkedList(T error)
+DoublyLinkedList<T>::DoublyLinkedList(T error)
 {
-  SingleNodePtr<T> p;
+  DoublyNodePtr<T> p;
 
   // Default Error Value
   this->error = error;
 
   // Add Node as Head and Tail
-  this->head = this->tail = p = new SingleNode<T>();
-
-  /*
-    // Set Head as Current Node
-    this->setCurrent();
-  */
+  this->head = this->tail = p = new DoublyNode<T>();
 }
 
 // Add Head with Only One Next Node
 template <class T>
-SingleLinkedList<T>::SingleLinkedList(T data, T error)
+DoublyLinkedList<T>::DoublyLinkedList(T data, T error)
 {
-  SingleNodePtr<T> p;
+  DoublyNodePtr<T> p;
 
   // Default Error Value
   this->error = error;
 
   // Add Head
-  this->head = p = new SingleNode<T>();
+  this->head = p = new DoublyNode<T>();
 
-  // Add Next Node
-  p = new SingleNode<T>(data);
+  // Add Next Node, with Head Node as Previous One
+  p = new DoublyNode<T>(data, this->head);
 
   // Add Node as Head Next Node and as Tail
   this->tail = this->head->next = p;
 
   // Increase Length
   this->increaseLength();
-
-  // Set Head as Current Node
-  this->setCurrent();
 }
 
 // Add Head and Multiple Next Nodes
 template <class T>
-SingleLinkedList<T>::SingleLinkedList(T data[], int length, T error)
+DoublyLinkedList<T>::DoublyLinkedList(T data[], int length, T error)
 {
-  SingleNodePtr<T> p;
+  DoublyNodePtr<T> p;
 
   // Default Error Value
   this->error = error;
 
   // Add Head
-  this->head = p = new SingleNode<T>();
+  this->head = p = new DoublyNode<T>();
 
   // Add Next Nodes
   for (int i = 0; i < length; i++)
   {
     // Add Node
-    p->next = new SingleNode<T>(data[i]);
+    p->next = new DoublyNode<T>(data[i], p);
 
     // Move to Next Node
     p = p->next;
@@ -161,23 +166,18 @@ SingleLinkedList<T>::SingleLinkedList(T data[], int length, T error)
 
   // Increase Length
   this->increaseLength(length);
-
-  /*
-    // Set Head as Current Node
-    this->setCurrent();
-  */
 }
 
 // Destructor
 template <class T>
-SingleLinkedList<T>::~SingleLinkedList()
+DoublyLinkedList<T>::~DoublyLinkedList()
 {
   // Remove Node Next to Head if It isn't Empty
   while (!isEmpty())
     this->remove(true);
 
   // Remove Head Node
-  SingleNodePtr<T> temp = this->head;
+  DoublyNodePtr<T> temp = this->head;
   this->head = NULL;
 
   delete[] temp;
@@ -185,39 +185,70 @@ SingleLinkedList<T>::~SingleLinkedList()
 
 // Method to Move to Next Node N Times
 template <class T>
-SingleNodePtr<T> SingleLinkedList<T>::move(SingleNodePtr<T> p, int n)
+DoublyNodePtr<T> DoublyLinkedList<T>::move(int n)
 {
-  // Move to Next N Nodes
-  for (int i = 0; i < n; i++)
-  {
-    // Check if Next Node is NULL
-    if (p->next == NULL)
-      return NULL;
+  DoublyNodePtr<T> p;
+  int mov = n + 1;
+  bool backwards = n < 0;
 
-    p = p->next;
+  // Works only for Negative n Values
+  if (n < 0)
+    if (Math.abs(mov) < this->length / 2)
+      mov = Math.abs(mov); // Get Absolute Value of mov
+    else
+    {
+      backwards = false;
+      mov = this->length + mov;
+    }
+  // Works only for Positive n Values
+  else if (mov > this->length / 2)
+  {
+    backwards = true;
+    mov = this->length - mov;
   }
+
+  // Move from Tail to Head, or from Head to Tail
+  p = backwards ? this->tail : this->head;
+
+  if (backwards)
+    // Move to Previous N Nodes
+    for (int i = 0; i < mov; i++)
+    {
+      // Check if Previous Node is NULL
+      if (p->prev == NULL)
+        return NULL;
+
+      p = p->prev;
+    }
+  else
+    // Move to Next N Nodes
+    for (int i = 0; i < mov; i++)
+    {
+      // Check if Next Node is NULL
+      if (p->next == NULL)
+        return NULL;
+
+      p = p->next;
+    }
   return p;
 }
 
 // Method to Insert Node Next to Head
 template <class T>
-void SingleLinkedList<T>::insert(T data)
+void DoublyLinkedList<T>::insert(T data)
 {
-  SingleNodePtr<T> n, p;
+  DoublyNodePtr<T> n, p;
 
   // Insert Node Next to Head
-  n = this->head->next;
-  p = new SingleNode<T>(data, n);
-
-  // Set Node Next to Head
-  this->head->next = p;
+  p = this->head;
+  n = new DoublyNode<T>(data, p);
 
   this->increaseLength();
 }
 
 // Method to Insert Node at Given Position
 template <class T>
-void SingleLinkedList<T>::insertAt(T data, int pos)
+void DoublyLinkedList<T>::insertAt(T data, int pos)
 {
   // Check pos
   if (pos == 0)
@@ -232,13 +263,13 @@ void SingleLinkedList<T>::insertAt(T data, int pos)
     return;
   }
 
-  if (pos < 0)
-    pos = this->length + pos + 1; // Get Position
+  if (pos > 0)
+    pos -= 1;
 
-  SingleNodePtr<T> p, m, n;
+  DoublyNodePtr<T> p, n;
 
-  // Move to Next Node pos Times
-  p = this->move(this->head, pos);
+  // Move to Next or Prev Node pos Times
+  p = this->move(pos);
 
   // pos is Out of Range
   if (p == NULL)
@@ -247,23 +278,18 @@ void SingleLinkedList<T>::insertAt(T data, int pos)
   // Get Next Node
   n = p->next;
 
-  // Create New Node and Set m as Next Node
-  m = new SingleNode<T>(data, n);
-
-  // Set Node at Given Position
-  p->next = m;
+  // Create New Node
+  new DoublyNode<T>(data, p, n);
 
   this->increaseLength();
 }
 
 // Method to Insert Node at Tail
 template <class T>
-void SingleLinkedList<T>::pushBack(T data)
+void DoublyLinkedList<T>::pushBack(T data)
 {
-  SingleNodePtr<T> n = new SingleNode<T>(data);
-
-  // Set Node at Tail
-  this->tail->next = n;
+  // Create New Node and Assign Old Tail as Previous Node
+  DoublyNodePtr<T> n = new DoublyNode<T>(data, this->tail);
 
   // Set Tail
   this->tail = n;
@@ -273,23 +299,29 @@ void SingleLinkedList<T>::pushBack(T data)
 
 // Method to Remove Node Next to Head
 template <class T>
-T SingleLinkedList<T>::remove(bool destructor)
+T DoublyLinkedList<T>::remove(bool destructor)
 {
+  DoublyNodePtr<T> m, n;
+
   if (this->isEmpty())
     return this->error;
 
   // Get Node Next to Head
-  SingleNodePtr<T> n = this->head->next;
-  T data = n->data;
+  DoublyNodePtr<T> m = this->head->next;
+  T data = m->data;
+
+  // Get Next Node to the One that will be Removed
+  n = m->next;
 
   // Remove n Node from Linked List
-  head->next = n->next;
+  head->next = n;
+  n->prev = head;
 
   // Deallocate Memory
   if (destructor)
-    delete[] n;
+    delete[] m;
   else
-    delete n;
+    delete m;
 
   decreaseLength();
 
@@ -298,24 +330,24 @@ T SingleLinkedList<T>::remove(bool destructor)
 
 // Method Overloads
 template <class T>
-T SingleLinkedList<T>::remove()
+T DoublyLinkedList<T>::remove()
 {
   return this->remove(false);
 }
 
 // Method to Remove Node at Tail
 template <class T>
-T SingleLinkedList<T>::pop()
+T DoublyLinkedList<T>::pop()
 {
   if (this->isEmpty())
     return this->error;
 
-  SingleNodePtr<T> t, p;
+  DoublyNodePtr<T> t, p;
 
   this->decreaseLength();
 
-  // Move to Tail Previous Node
-  p = this->move(this->head, this->length);
+  // Get Tail Previous Node
+  p = this->tail->prev;
 
   // Get Tail
   t = this->tail;
@@ -333,27 +365,26 @@ T SingleLinkedList<T>::pop()
 
 // Method to Remove Node at Given Index
 template <class T>
-T SingleLinkedList<T>::removeAt(int pos)
+T DoublyLinkedList<T>::removeAt(int pos)
 {
   // Check pos
   if (pos == 0)
     return this->remove(); // Remove Node Next to Head
 
-  if (pos < 0)
-    pos = this->length + pos; // Get Position
+  if (pos == this->length)
+    return this->pop(); // Remove Tail
 
   if (pos > this->length)
     return this->error; // Node not Found
 
-  if (pos == this->length)
-    return this->pop(); // Remove Tail
+  pos -= 1;
 
-  SingleNodePtr<T> m, p, q;
+  DoublyNodePtr<T> p, m, n;
 
   this->decreaseLength();
 
   // Move to Next Node pos Times
-  p = this->move(this->head, pos);
+  p = this->move(pos);
 
   // pos is Out of Range
   if (p == NULL)
@@ -366,6 +397,7 @@ T SingleLinkedList<T>::removeAt(int pos)
   n = m->next;
   T data = m->data;
   p->next = n;
+  n->prev = p;
 
   // Deallocate Memory
   delete m;
@@ -375,55 +407,33 @@ T SingleLinkedList<T>::removeAt(int pos)
 
 // Method to Modify Node Value at Given Position
 template <class T>
-T SingleLinkedList<T>::change(T data, int pos)
+T DoublyLinkedList<T>::change(T data, int pos)
 {
-  SingleNodePtr<T> n;
-  T old;
-
-  if (pos == 0)
-  {
-    old = this->head->next->data;
-    this->head->next->data = data; // Change Value to Node Next to Head
-    return old;
-  }
-
-  if (pos < 0)
-    pos = this->length + pos; // Get Position
-  pos += 1;
+  if (this->isEmpty())
+    return this->error;
 
   if (pos > this->length)
     return this->error; // Node not Found
 
-  if (pos == this->length)
-  {
-    old = this->tail->data;
-    this->tail->data = data; // Change Value to Tail
-    return old;
-  }
-
-  if (this->isEmpty())
-    return this->error;
-
-  // Set Head to n
-  n = this->head;
-
   // Move to Node
-  n = this->move(n, pos);
+  DoublyNodePtr<T> m = this->move(pos);
 
   // pos is Out of Range
-  if (n == NULL)
+  if (m == NULL)
     return this->error;
 
+  // Get Old Value
+  T old = m->data;
+
   // Assign New Value
-  old = n->data;
-  n->data = data;
+  m->data = data;
 
   return old;
 }
 
 // Method to Get Node at Given Position
 template <class T>
-T SingleLinkedList<T>::get(int pos)
+T DoublyLinkedList<T>::get(int pos)
 {
   // Check pos
   if (this->isEmpty())
@@ -438,96 +448,58 @@ T SingleLinkedList<T>::get(int pos)
   if (pos > this->length)
     return this->error; // Node not Found
 
-  if (pos < 0)
-    pos = this->length + pos; // Get Position
-  pos += 1;
-
-  SingleNodePtr<T> n;
-
-  n = this->head;
-
   // Move to Node
-  n = this->move(n, pos);
+  DoublyNodePtr<T> m = this->move(pos);
 
   // pos is Out of Range
-  if (n == NULL)
+  if (m == NULL)
     return this->error;
 
   // Return Value
-  return n->data;
+  return m->data;
 }
 
 // Method to Check if Linked List is Empty
 template <class T>
-bool SingleLinkedList<T>::isEmpty()
+bool DoublyLinkedList<T>::isEmpty()
 {
   return this->head->next == NULL;
 }
 
 // Method to Increase Linked List Length
 template <class T>
-void SingleLinkedList<T>::increaseLength()
+void DoublyLinkedList<T>::increaseLength()
 {
   this->length += 1;
 }
 
 template <class T>
-void SingleLinkedList<T>::increaseLength(int length)
+void DoublyLinkedList<T>::increaseLength(int length)
 {
   this->length += length;
 }
 
 // Method to Decrease Linked List Length
 template <class T>
-void SingleLinkedList<T>::decreaseLength()
+void DoublyLinkedList<T>::decreaseLength()
 {
   this->length -= 1;
 }
 
-/*
-// Method to Set Current Node
-template <class T>
-void SingleLinkedList<T>::setCurrent(SingleNodePtr<T> p)
-{
-  this->curr = p;
-}
-
-// Method Overload to Set Head Node as Current Node
-template <class T>
-void SingleLinkedList<T>::setCurrent()
-{
-  this->curr = this->head;
-}
-*/
-
-/*
-// Count Nodes with a Recursive Method
-template <class T>
-int SingleLinkedList<T>::count(SingleNodePtr<T> p)
-{
-  if (p != NULL)
-    return count(p->next) + 1;
-
-  // Set Head Node as Current Node
-  this->setCurrent();
-
-  return 0;
-}
-*/
-
 // Method to Get Linked List Length
 template <class T>
-int SingleLinkedList<T>::getLength()
+int DoublyLinkedList<T>::getLength()
 {
   return this->length;
 }
 
 // Method to Concat Two Linked Lists
 template <class T>
-void SingleLinkedList<T>::concat(SingleLinkedList<T> l)
+void DoublyLinkedList<T>::concat(DoublyLinkedList<T> l)
 {
   // Assign l First Node Next to this Linked List Tail
   this->tail->next = l->head->next;
+  l->head->next->prev = this->tail;
 
   // Save New Tail Node
   this->tail = l->tail;
