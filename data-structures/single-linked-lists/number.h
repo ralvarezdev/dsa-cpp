@@ -18,28 +18,28 @@ using std::string;
 // NUMBER LINKED LIST CLASS
 
 template <class T>
-class NumberLinkedList : public LinkedList<T>
+class NumberLinkedList : public SingleLinkedList<T>
 {
 public:
   // Inherit Constructors
-  using LinkedList<T>::LinkedList;
+  using SingleLinkedList<T>::SingleLinkedList;
 
   // Public Methods
   void print();
-  void print(NodePtr<T>);
+  void print(SingleNodePtr<T>);
   void printReverse();
-  void printReverse(NodePtr<T>);
+  void printReverse(SingleNodePtr<T>);
   T total();
-  T total(NodePtr<T>);
+  T total(SingleNodePtr<T>);
   T max();
-  T max(NodePtr<T>);
-  NodePtr<T> linearSearch(T);
-  NodePtr<T> linearSearch(NodePtr<T>, T);
+  T max(SingleNodePtr<T>);
+  SingleNodePtr<T> linearSearch(T);
+  SingleNodePtr<T> linearSearch(SingleNodePtr<T>, T);
 };
 
 // Print Nodes Method from Head to Tail
 template <class T>
-void NumberLinkedList<T>::print(NodePtr<T> p)
+void NumberLinkedList<T>::print(SingleNodePtr<T> p)
 {
   int n = 0;
 
@@ -61,7 +61,7 @@ void NumberLinkedList<T>::print()
 
 // Print Nodes with a Recursive Method from Tail to Head
 template <class T>
-void NumberLinkedList<T>::printReverse(NodePtr<T> p)
+void NumberLinkedList<T>::printReverse(SingleNodePtr<T> p)
 {
   static int n = this->length;
 
@@ -87,7 +87,7 @@ void NumberLinkedList<T>::printReverse()
 
 // Method that Returns the Sum of All Node's Data Field
 template <class T>
-T NumberLinkedList<T>::total(NodePtr<T> p)
+T NumberLinkedList<T>::total(SingleNodePtr<T> p)
 {
   T sum = 0;
 
@@ -109,7 +109,7 @@ T NumberLinkedList<T>::total()
 
 // Method that Returns the Highest Number in Linked List
 template <class T>
-T NumberLinkedList<T>::max(NodePtr<T> p)
+T NumberLinkedList<T>::max(SingleNodePtr<T> p)
 {
   static T m = -1;
 
@@ -138,12 +138,12 @@ template <class T>
 T NumberLinkedList<T>::max()
 {
   static T m = -1;
-  NodePtr p = this->curr;
+  SingleNodePtr p = this->curr;
 
   if (p == NULL)
   {
     // Set Head Node as Current Node
-    LinkedList<T>::setCurrent();
+    SingleLinkedList<T>::setCurrent();
 
     return -1;
   }
@@ -157,9 +157,9 @@ T NumberLinkedList<T>::max()
 
 // Method that Checks if the Given Number is Inside Linked List
 template <class T>
-NodePtr<T> NumberLinkedList<T>::linearSearch(NodePtr<T> p, T key)
+SingleNodePtr<T> NumberLinkedList<T>::linearSearch(SingleNodePtr<T> p, T key)
 {
-  NodePtr<T> q;
+  SingleNodePtr<T> q;
 
   while (p != NULL)
   {
@@ -174,8 +174,10 @@ NodePtr<T> NumberLinkedList<T>::linearSearch(NodePtr<T> p, T key)
       p->next = this->head->next;
       this->head->next = p;
 
-      // Set Head Node as Current Node
-      LinkedList<T>::setCurrent();
+      /*
+            // Set Head Node as Current Node
+            SingleLinkedList<T>::setCurrent();
+      */
 
       return p;
     }
@@ -183,15 +185,17 @@ NodePtr<T> NumberLinkedList<T>::linearSearch(NodePtr<T> p, T key)
     p = p->next;
   }
 
-  // Set Head Node as Current Node
-  LinkedList<T>::setCurrent();
+  /*
+    // Set Head Node as Current Node
+    SingleLinkedList<T>::setCurrent();
+  */
 
   return NULL;
 }
 
 // Method Overload
 template <class T>
-NodePtr<T> NumberLinkedList<T>::linearSearch(T key)
+SingleNodePtr<T> NumberLinkedList<T>::linearSearch(T key)
 {
   return this->linearSearch(this->head->next, key); // Set Head Node as p Node
 }
@@ -199,15 +203,15 @@ NodePtr<T> NumberLinkedList<T>::linearSearch(T key)
 /*
 // Recursive Method that Checks if the Given Number is Inside Linked List
 template <class T>
-NodePtr<T> NumberLinkedList<T>::linearSearch(T key)
+SingleNodePtr<T> NumberLinkedList<T>::linearSearch(T key)
 {
   // Get Current Node
-  NodePtr<T> p = this->curr;
+  SingleNodePtr<T> p = this->curr;
 
   if (p == NULL)
   {
     // Set Head Node as Current Node
-    LinkedList<T>::setCurrent();
+    SingleLinkedList<T>::setCurrent();
     return NULL;
   }
 

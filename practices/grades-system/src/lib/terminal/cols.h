@@ -2,7 +2,7 @@
 #include <sstream>
 #include <iomanip>
 
-#include "../../../../../data-structures/linked-lists/base.h"
+#include "../../../../../data-structures/single-linked-lists/base.h"
 #include "ansiEsc.h"
 
 using std::left;
@@ -19,7 +19,7 @@ class Col
 {
 private:
   string name = "";
-  int width = - 1;
+  int width = -1;
 
 public:
   // Constructors
@@ -33,11 +33,11 @@ public:
 
 // COL LINKED LIST CLASS
 
-class ColLinkedList : public LinkedList<Col>
+class ColLinkedList : public SingleLinkedList<Col>
 {
 public:
   // Inherit Constructors
-  using LinkedList<Col>::LinkedList;
+  using SingleLinkedList<Col>::SingleLinkedList;
 
   // Public Methods
   void print();
@@ -73,7 +73,7 @@ int Col::getWidth()
 // Method to Print Columns Title, with Customed Width for each Field and Customed Colors
 void ColLinkedList::print()
 {
-  NodePtr<Col> p = this->head->next;
+  SingleNodePtr<Col> p = this->head->next;
   ostringstream message;
 
   int width;

@@ -6,7 +6,7 @@
 #include <iomanip>
 #include <fstream>
 
-#include "../../../../../data-structures/linked-lists/base.h"
+#include "../../../../../data-structures/single-linked-lists/base.h"
 #include "../terminal/input.h"
 #include "../terminal/ansiEsc.h"
 #include "../namespaces.h"
@@ -63,18 +63,18 @@ public:
 
 // STUDENT LINKED LIST CLASS
 
-class StudentLinkedList : public LinkedList<Student>
+class StudentLinkedList : public SingleLinkedList<Student>
 {
 public:
   // Inherit Constructors
-  using LinkedList<Student>::LinkedList;
+  using SingleLinkedList<Student>::SingleLinkedList;
 
   // Public Methods
   void insertionSort(Student);
   void print(int);
   void readFile();
   int linearSearch(int);
-  int linearSearch(NodePtr<Student>, int);
+  int linearSearch(SingleNodePtr<Student>, int);
   void generateStudentFile(int);
   void overwriteCSV();
 };
@@ -179,7 +179,7 @@ void Student::setGenderAbb()
 // Method to Insert in a Sorted Student Linked List
 void StudentLinkedList::insertionSort(Student student)
 {
-  NodePtr<Student> p, q, n;
+  SingleNodePtr<Student> p, q, n;
   float pProm, studentProm;
   int compareFirstName, compareLastName;
 
@@ -221,7 +221,7 @@ void StudentLinkedList::insertionSort(Student student)
   }
 
   // Create new Node, and Insert between q and p Node
-  n = new Node(student);
+  n = new SingleNode(student);
   q->next = n;
   n->next = p;
 }
@@ -233,7 +233,7 @@ void StudentLinkedList::print(int max = INT_MAX)
   if (this->length == 0)
     this->readFile();
 
-  NodePtr<Student> p = this->head->next;
+  SingleNodePtr<Student> p = this->head->next;
   ostringstream message;
 
   Student student;
@@ -355,7 +355,7 @@ void StudentLinkedList::readFile()
 }
 
 // Method that Checks if the Given ID is Inside Linked List
-int StudentLinkedList::linearSearch(NodePtr<Student> p, int id)
+int StudentLinkedList::linearSearch(SingleNodePtr<Student> p, int id)
 {
   int pos = 0;
   Student student;
@@ -393,7 +393,7 @@ int StudentLinkedList::linearSearch(int id)
 // Method to Generate Student File
 void StudentLinkedList::generateStudentFile(int pos)
 {
-  NodePtr<Student> p;
+  SingleNodePtr<Student> p;
   Student student;
 
   ostringstream content, filename;
@@ -427,7 +427,7 @@ void StudentLinkedList::generateStudentFile(int pos)
 // Method to Overwite students.csv
 void StudentLinkedList::overwriteCSV()
 {
-  NodePtr<Student> p;
+  SingleNodePtr<Student> p;
   Student student;
 
   ostringstream content;

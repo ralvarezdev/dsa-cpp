@@ -1,20 +1,20 @@
 #include <string>
 #include <iostream>
 
-#include "../../../linked-lists/number.h"
+#include "../../../single-linked-lists/number.h"
 
 using namespace std;
 
 // Function to Check if Key was Found
 template <typename T>
-string isKey(NodePtr<T> p)
+string isKey(SingleNodePtr<T> p)
 {
   return p ? "Key Found" : "Key not Found";
 }
 
 // Method to Check if Node is not NULL
 template <typename T>
-string isNull(NodePtr<T> p)
+string isNull(SingleNodePtr<T> p)
 {
   return p ? "Node is NULL" : "Node is not NULL";
 }
@@ -55,7 +55,7 @@ int main()
   cout << "\nMax Number: " << list.max() << '\n';
 
   // Search for Number in Linked List
-  NodePtr<double> nodeFound;
+  SingleNodePtr<double> nodeFound;
   double key;
 
   key = 24;
@@ -77,7 +77,7 @@ int main()
   // Insert Node
   list.insert(55);        // Next to Head
   list.insertAt(100, 6);  // At Index 6
-  list.pushBack(33);     // At Tail
+  list.pushBack(33);      // At Tail
   list.insertAt(77, -1);  // At Tail
   list.insertAt(400, -2); // Before Tail
   list.insertAt(898, 20); // At Tail
