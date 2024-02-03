@@ -64,7 +64,7 @@ void NumberLinkedList<T>::print()
 template <class T>
 void NumberLinkedList<T>::printReverse(SingleNodePtr<T> p)
 {
-  static int n = this->length;
+  static int n = this->length - 1;
 
   // Prints from Tail to Head
   // NOTE: If the Print Statement is before the Recursive Function Call, Nodes will be Printed from Head to Tail

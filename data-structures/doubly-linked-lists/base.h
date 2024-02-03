@@ -85,7 +85,7 @@ template <class T>
 DoublyNode<T>::DoublyNode(T data, DoublyNode<T> *prev)
 {
   this->data = data;
-  this->next = prev;
+  this->prev = prev;
 
   if (prev != NULL)
     prev->next = this;
@@ -157,13 +157,8 @@ DoublyLinkedList<T>::DoublyLinkedList(T data[], int length, T error)
 
   // Add Next Nodes
   for (int i = 1; i < length; i++)
-  {
     // Add Node
-    p->next = new DoublyNode<T>(data[i], p);
-
-    // Move to Next Node
-    p = p->next;
-  }
+    p = new DoublyNode<T>(data[i], p);
 
   // Set p Node as Tail
   this->tail = p;
@@ -197,8 +192,8 @@ DoublyNodePtr<T> DoublyLinkedList<T>::move(int n)
 
   // Works only for Negative n Values
   if (n < 0)
-    if (Math.abs(mov) < this->length / 2)
-      mov = Math.abs(mov); // Get Absolute Value of mov
+    if (abs(mov) < this->length / 2)
+      mov = abs(mov); // Get Absolute Value of mov
     else
     {
       backwards = false;
@@ -261,6 +256,12 @@ void DoublyLinkedList<T>::insertAt(T data, int pos)
     return;
   }
 
+  if (pos == -1)
+  {
+    this->pushBack(data); // Insert Node at Tail
+    return;
+  }
+
   if (pos >= this->length)
   {
     this->pushBack(data); // Insert Node at Tail
@@ -311,7 +312,7 @@ T DoublyLinkedList<T>::remove(bool destructor)
     return this->error;
 
   // Get Head Node
-  DoublyNodePtr<T> m = this->head;
+  m = this->head;
   T data = m->data;
 
   // Get Next Node to the One that will be Removed
@@ -373,12 +374,12 @@ T DoublyLinkedList<T>::removeAt(int pos)
 {
   // Check pos
   if (pos == 0)
-    return this->remove(); // Remove Node Next to Head
+    return this->remove(); // Remove Node at Head
 
   if (pos == this->length)
     return this->pop(); // Remove Tail
 
-  if (pos > this->length)
+  if (pos == -1 || pos > this->length)
     return this->error; // Node not Found
 
   pos -= 1;

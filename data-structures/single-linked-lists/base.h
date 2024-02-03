@@ -130,8 +130,10 @@ SingleLinkedList<T>::SingleLinkedList(T data, T error)
   // Increase Length
   this->increaseLength();
 
-  // Set Head as Current Node
-  this->setCurrent();
+  /*
+    // Set Head as Current Node
+    this->setCurrent();
+  */
 }
 
 // Add Head and Multiple Next Nodes
@@ -223,6 +225,12 @@ void SingleLinkedList<T>::insertAt(T data, int pos)
   if (pos == 0)
   {
     this->insert(data); // Insert Node Next to Head
+    return;
+  }
+
+  if (pos == -1)
+  {
+    this->pushBack(data); // Insert Node Next to Tail
     return;
   }
 
@@ -345,10 +353,10 @@ T SingleLinkedList<T>::removeAt(int pos)
   if (pos > this->length)
     return this->error; // Node not Found
 
-  if (pos == this->length)
+  if (pos == -1 || pos == this->length)
     return this->pop(); // Remove Tail
 
-  SingleNodePtr<T> m, p, q;
+  SingleNodePtr<T> p, m, n;
 
   this->decreaseLength();
 

@@ -64,13 +64,13 @@ void NumberLinkedList<T>::print()
 template <class T>
 void NumberLinkedList<T>::printReverse(DoublyNodePtr<T> p)
 {
-  int n = 0;
+  int n = this->length - 1;
 
   // Prints from Tail to Head
   cout << setw(6) << left << setfill(' ') << "Index" << setw(10) << "Node" << '\n';
   while (p != NULL)
   {
-    cout << setw(6) << n++ << p->data << '\n';
+    cout << setw(6) << n-- << p->data << '\n';
     p = p->prev;
   }
 }
