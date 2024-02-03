@@ -87,7 +87,8 @@ DoublyNode<T>::DoublyNode(T data, DoublyNode<T> *prev)
   this->data = data;
   this->next = prev;
 
-  prev->next = this;
+  if (prev != NULL)
+    prev->next = this;
 }
 
 template <class T>
@@ -97,7 +98,10 @@ DoublyNode<T>::DoublyNode(T data, DoublyNode<T> *prev, DoublyNode<T> *next)
   this->prev = prev;
   this->next = next;
 
-  next->prev = prev->next = this;
+  if (prev != NULL)
+    prev->next = this;
+  if (next != NULL)
+    next->prev = this;
 }
 
 // LINKED LIST CLASS
@@ -126,14 +130,11 @@ DoublyLinkedList<T>::DoublyLinkedList(T data, T error)
   // Default Error Value
   this->error = error;
 
-  // Add Head
-  this->head = p = new DoublyNode<T>();
+  // Create New Node
+  p = new DoublyNode<T>(data);
 
-  // Add Next Node, with Head Node as Previous One
-  p = new DoublyNode<T>(data, this->head);
-
-  // Add Node as Head Next Node and as Tail
-  this->tail = this->head->next = p;
+  // Set Node as Head and as Tail
+  this->tail = this->head = p;
 
   // Increase Length
   this->increaseLength();
@@ -148,11 +149,14 @@ DoublyLinkedList<T>::DoublyLinkedList(T data[], int length, T error)
   // Default Error Value
   this->error = error;
 
-  // Add Head
-  this->head = p = new DoublyNode<T>();
+  // Create First Node
+  p = new DoublyNode<T>(data[0]);
+
+  // Set p Node as Head
+  this->head = p;
 
   // Add Next Nodes
-  for (int i = 0; i < length; i++)
+  for (int i = 1; i < length; i++)
   {
     // Add Node
     p->next = new DoublyNode<T>(data[i], p);
@@ -188,7 +192,7 @@ template <class T>
 DoublyNodePtr<T> DoublyLinkedList<T>::move(int n)
 {
   DoublyNodePtr<T> p;
-  int mov = n + 1;
+  int mov = n > 0 ? n : n + 1;
   bool backwards = n < 0;
 
   // Works only for Negative n Values
@@ -237,11 +241,11 @@ DoublyNodePtr<T> DoublyLinkedList<T>::move(int n)
 template <class T>
 void DoublyLinkedList<T>::insert(T data)
 {
-  DoublyNodePtr<T> n, p;
+  // Insert Node Before Head
+  DoublyNodePtr<T> h = new DoublyNode<T>(data, NULL, this->head);
 
-  // Insert Node Next to Head
-  p = this->head;
-  n = new DoublyNode<T>(data, p);
+  // Set h Node as Head
+  this->head = h;
 
   this->increaseLength();
 }
@@ -306,16 +310,16 @@ T DoublyLinkedList<T>::remove(bool destructor)
   if (this->isEmpty())
     return this->error;
 
-  // Get Node Next to Head
-  DoublyNodePtr<T> m = this->head->next;
+  // Get Head Node
+  DoublyNodePtr<T> m = this->head;
   T data = m->data;
 
   // Get Next Node to the One that will be Removed
   n = m->next;
 
-  // Remove n Node from Linked List
-  head->next = n;
-  n->prev = head;
+  // Remove m Node from Linked List
+  this->head = n;
+  n->prev = NULL;
 
   // Deallocate Memory
   if (destructor)
@@ -440,7 +444,7 @@ T DoublyLinkedList<T>::get(int pos)
     return this->error;
 
   if (pos == 0)
-    return this->head->next->data; // Get Node Next to Head
+    return this->head->data; // Get Node Next to Head
 
   if (pos == this->length)
     return this->tail->data; // Get Tail
@@ -498,8 +502,8 @@ template <class T>
 void DoublyLinkedList<T>::concat(DoublyLinkedList<T> l)
 {
   // Assign l First Node Next to this Linked List Tail
-  this->tail->next = l->head->next;
-  l->head->next->prev = this->tail;
+  this->tail->next = l->head;
+  l->head->prev = this->tail;
 
   // Save New Tail Node
   this->tail = l->tail;
