@@ -2,6 +2,7 @@
 #include <iostream>
 
 #include "../../../doubly-linked-lists/number.h"
+#include "../../../single-linked-lists/number.h"
 
 using namespace std;
 
@@ -19,12 +20,25 @@ string isNull(DoublyNodePtr<T> p)
   return p ? "Node is NULL" : "Node is not NULL";
 }
 
+// Function to Check compare Return Value
+string checkCompare(int r)
+{
+  if (r == 0)
+    return "Equal";
+  else if (r == 1)
+    return "First Node is Greater than Second Node";
+  else if (r == 2)
+    return "Second Node is Greater than First Node";
+
+  return "There's Some Node that's Null";
+}
+
 int main()
 {
   // Memory Allocation
   double numbers[11] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 25};
 
-  NumberLinkedList<double> list(numbers, 11, -1);
+  NumberDoublyLinkedList<double> list(numbers, 11, -1);
 
   // Check if it's Empty
   string isEmpty = list.isEmpty() ? "True" : "False";
@@ -106,4 +120,17 @@ int main()
 
   cout << "\nNodes after Change:\n";
   list.print();
+
+  // Compare Nodes
+  int pos1 = 5, pos2 = 9;
+
+  cout << "\nCompare Node at Index \'" << pos1
+       << "\' with Node at Index \'" << pos2 << "\': "
+       << checkCompare(list.compare(pos1, pos2)) << '\n';
+
+  // Create Copy Single Linked List
+  NumberSingleLinkedList<double> listCopy = list.SingleLinkedList();
+
+  cout << "\nSingle List:\n";
+  listCopy.print();
 }

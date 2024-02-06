@@ -211,6 +211,10 @@ void SingleLinkedList<T>::insert(T data)
   n = this->head->next;
   p = new SingleNode<T>(data, n);
 
+  // Set Node as Tail
+  if (this->getLength() == 0)
+    this->tail = p;
+
   // Set Node Next to Head
   this->head->next = p;
 

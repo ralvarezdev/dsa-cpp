@@ -26,7 +26,7 @@ int main()
 
   // NumberLinkedList list = NumberLinkedList();
   // NumberLinkedList list = NumberLinkedList(1);
-  NumberLinkedList<double> list(numbers, 11, -1);
+  NumberSingleLinkedList<double> list(numbers, 11, -1);
 
   // Check if it's Empty
   string isEmpty = list.isEmpty() ? "True" : "False";

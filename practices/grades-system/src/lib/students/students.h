@@ -59,6 +59,7 @@ public:
   int getGrade(int);
   float getProm();
   void setGenderAbb();
+  void generateFile();
 };
 
 // STUDENT LINKED LIST CLASS
@@ -174,7 +175,31 @@ void Student::setGenderAbb()
     this->genderAbb = students::genders::nonBinary;
 };
 
-// STUDENT LINKED LIST CLASS
+// Method to Generate Student File
+void Student::generateFile()
+{
+  ostringstream content, filename;
+
+  // Get Filename
+  filename << this->getId() << '-' << this->getFirstName() << '-' << this->getLastName() << ".txt";
+  ofstream studentFile(filename.str());
+
+  // Add Student Data
+  content << "ID: " << this->getId() << '\n'
+          << "First Name: " << this->getFirstName() << '\n'
+          << "Last Name: " << this->getLastName() << '\n'
+          << "Email: " << this->getEmail() << '\n'
+          << "Gender: " << this->getGender() << '\n'
+          << "Prom: " << this->getProm() << '\n'
+          << "OOP: " << this->getGrade(0) << '\n'
+          << "DSA: " << this->getGrade(1) << '\n'
+          << "Databases: " << this->getGrade(2) << '\n'
+          << "Math: " << this->getGrade(3) << '\n'
+          << "Statistics: " << this->getGrade(4);
+
+  studentFile << content.str(); // Write Content to Student File
+  studentFile.close();          // STUDENT LINKED LIST CLASS
+}
 
 // Method to Insert in a Sorted Student Linked List
 void StudentLinkedList::insertionSort(Student student)
@@ -394,34 +419,12 @@ int StudentLinkedList::linearSearch(int id)
 void StudentLinkedList::generateStudentFile(int pos)
 {
   SingleNodePtr<Student> p;
-  Student student;
-
-  ostringstream content, filename;
 
   // Move pos Nodes
   p = this->move(this->head->next, pos);
-  // Get Student
-  student = p->data;
 
-  // Get Filename
-  filename << student.getId() << '-' << student.getFirstName() << '-' << student.getLastName() << ".txt";
-  ofstream studentFile(filename.str());
-
-  // Add Student Data
-  content << "ID: " << student.getId() << '\n'
-          << "First Name: " << student.getFirstName() << '\n'
-          << "Last Name: " << student.getLastName() << '\n'
-          << "Email: " << student.getEmail() << '\n'
-          << "Gender: " << student.getGender() << '\n'
-          << "Prom: " << student.getProm() << '\n'
-          << "OOP: " << student.getGrade(0) << '\n'
-          << "DSA: " << student.getGrade(1) << '\n'
-          << "Databases: " << student.getGrade(2) << '\n'
-          << "Math: " << student.getGrade(3) << '\n'
-          << "Statistics: " << student.getGrade(4);
-
-  studentFile << content.str(); // Write Content to Student File
-  studentFile.close();
+  // Generate Student File
+  p->data.generateFile();
 }
 
 // Method to Overwite students.csv

@@ -48,7 +48,6 @@ protected:
 
 public:
   // Constructors
-  DoublyLinkedList(T);
   DoublyLinkedList(T, T);
   DoublyLinkedList(T[], int, T);
   ~DoublyLinkedList();
@@ -107,19 +106,6 @@ DoublyNode<T>::DoublyNode(T data, DoublyNode<T> *prev, DoublyNode<T> *next)
 // LINKED LIST CLASS
 
 // Linked List Constructors
-
-// Add Head with Next Node as NULL
-template <class T>
-DoublyLinkedList<T>::DoublyLinkedList(T error)
-{
-  DoublyNodePtr<T> p;
-
-  // Default Error Value
-  this->error = error;
-
-  // Add Node as Head and Tail
-  this->head = this->tail = p = new DoublyNode<T>();
-}
 
 // Add Head with Only One Next Node
 template <class T>
@@ -256,13 +242,7 @@ void DoublyLinkedList<T>::insertAt(T data, int pos)
     return;
   }
 
-  if (pos == -1)
-  {
-    this->pushBack(data); // Insert Node at Tail
-    return;
-  }
-
-  if (pos >= this->length)
+  if (pos==-1||pos >= this->length)
   {
     this->pushBack(data); // Insert Node at Tail
     return;
