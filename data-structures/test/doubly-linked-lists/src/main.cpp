@@ -36,9 +36,9 @@ string checkCompare(int r)
 int main()
 {
   // Memory Allocation
-  double numbers[11] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 25};
+  double numbers[14] = {10, 1, 2, 3, 9, 4, 5, 4, 6, 7, 8, 9, 10, 25};
 
-  NumberDoublyLinkedList<double> list(numbers, 11, -1);
+  NumberDoublyLinkedList<double> list(numbers, 14, -1);
 
   // Check if it's Empty
   string isEmpty = list.isEmpty() ? "True" : "False";
@@ -82,14 +82,14 @@ int main()
   cout << "Search for Key '" << key << "': " << isKey<double>(nodeFound) << '\n';
 
   // Insert Node
-  list.insert(55);        // Next to Head
+  list.push(55);          // Next to Head
   list.insertAt(100, 6);  // At Index 6
   list.pushBack(33);      // At Tail
   list.insertAt(77, -1);  // At Tail
   list.insertAt(400, -2); // Before Tail
   list.insertAt(898, 20); // At Tail
   list.insertAt(999, -1); // At Tail
-  list.insert(13);        // Next to Head
+  list.push(13);          // Next to Head
 
   cout << "\nNodes after Insertion:\n";
   list.print();

@@ -48,7 +48,7 @@ void NumberSingleLinkedList<T>::insertionSort(T data)
   // Insert Node Next to Head
   if (this->getLength() == 0)
   {
-    this->insert(data);
+    this->push(data);
     return;
   }
 

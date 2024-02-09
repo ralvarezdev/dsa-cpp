@@ -51,7 +51,7 @@ public:
 
   // Public Methods
   bool isEmpty();
-  void insert(T);
+  void push(T);
   void pushBack(T);
   void insertAt(T, int);
   T remove(bool);
@@ -203,7 +203,7 @@ SingleNodePtr<T> SingleLinkedList<T>::move(SingleNodePtr<T> p, int n)
 
 // Method to Insert Node Next to Head
 template <class T>
-void SingleLinkedList<T>::insert(T data)
+void SingleLinkedList<T>::push(T data)
 {
   SingleNodePtr<T> n, p;
 
@@ -228,7 +228,7 @@ void SingleLinkedList<T>::insertAt(T data, int pos)
   // Check pos
   if (pos == 0)
   {
-    this->insert(data); // Insert Node Next to Head
+    this->push(data); // Insert Node Next to Head
     return;
   }
 

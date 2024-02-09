@@ -75,14 +75,14 @@ int main()
   list.print();
 
   // Insert Node
-  list.insert(55);        // Next to Head
+  list.push(55);          // Next to Head
   list.insertAt(100, 6);  // At Index 6
   list.pushBack(33);      // At Tail
   list.insertAt(77, -1);  // At Tail
   list.insertAt(400, -2); // Before Tail
   list.insertAt(898, 20); // At Tail
   list.insertAt(999, -1); // At Tail
-  list.insert(13);        // Next to Head
+  list.push(13);          // Next to Head
 
   cout << "\nNodes after Insertion:\n";
   list.print();

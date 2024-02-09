@@ -54,7 +54,7 @@ public:
 
   // Public Methods
   bool isEmpty();
-  void insert(T);
+  void push(T);
   void pushBack(T);
   void insertAt(T, int);
   T remove(bool);
@@ -218,9 +218,9 @@ DoublyNodePtr<T> DoublyLinkedList<T>::move(int n)
   return p;
 }
 
-// Method to Insert Node Next to Head
+// Method to Insert Node Before Head
 template <class T>
-void DoublyLinkedList<T>::insert(T data)
+void DoublyLinkedList<T>::push(T data)
 {
   // Insert Node Before Head
   DoublyNodePtr<T> h = new DoublyNode<T>(data, NULL, this->head);
@@ -238,11 +238,11 @@ void DoublyLinkedList<T>::insertAt(T data, int pos)
   // Check pos
   if (pos == 0)
   {
-    this->insert(data); // Insert Node Next to Head
+    this->push(data); // Insert Node Next to Head
     return;
   }
 
-  if (pos==-1||pos >= this->length)
+  if (pos == -1 || pos >= this->length)
   {
     this->pushBack(data); // Insert Node at Tail
     return;
