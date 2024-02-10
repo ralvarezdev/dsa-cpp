@@ -23,7 +23,9 @@ public:
 template <class T>
 using SingleNodePtr = SingleNode<T> *;
 
-// LINKED LIST CLASS
+// STACK LINKED LIST CLASS
+// LIFO
+// Last-in, First-out
 
 template <class T>
 class StackLinkedList
@@ -124,7 +126,7 @@ StackLinkedList<T>::~StackLinkedList()
 {
   // Remove Node Next to Head if It isn't Empty
   while (!isEmpty())
-    this->remove(true);
+    this->pop(true);
 
   // Remove Head Node
   SingleNodePtr<T> temp = this->head;
@@ -146,7 +148,7 @@ void StackLinkedList<T>::push(T data)
   this->increaseLength();
 }
 
-// Method to Remove Node Next to Head
+// Method to Remove Head Node
 template <class T>
 T StackLinkedList<T>::pop(bool destructor)
 {

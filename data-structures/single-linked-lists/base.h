@@ -232,13 +232,7 @@ void SingleLinkedList<T>::insertAt(T data, int pos)
     return;
   }
 
-  if (pos == -1)
-  {
-    this->pushBack(data); // Insert Node Next to Tail
-    return;
-  }
-
-  if (pos >= this->length)
+  if (pos == -1 || >= this->length)
   {
     this->pushBack(data); // Insert Node at Tail
     return;

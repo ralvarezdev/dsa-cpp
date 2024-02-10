@@ -282,7 +282,7 @@ void DoublyLinkedList<T>::pushBack(T data)
   this->increaseLength();
 }
 
-// Method to Remove Node Next to Head
+// Method to Remove Head Node
 template <class T>
 T DoublyLinkedList<T>::remove(bool destructor)
 {

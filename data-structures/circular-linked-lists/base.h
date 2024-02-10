@@ -217,7 +217,7 @@ void CircularLinkedList<T>::pushBack(T data)
   this->increaseLength();
 }
 
-// Method to Remove Node Next to Head
+// Method to Remove Head Node
 template <class T>
 T CircularLinkedList<T>::remove(bool destructor)
 {
