@@ -99,8 +99,11 @@ int main()
   // Get Node
   int pos;
 
-  pos = 13;
+  pos = 7;
   cout << "\nGet Node at Index \'" << pos << "\': " << list.get(pos) << '\n';
+
+  pos = 12;
+  cout << "Get Node at Index \'" << pos << "\': " << list.get(pos) << '\n';
 
   pos = 20;
   cout << "Get Node at Index \'" << pos << "\': " << list.get(pos) << '\n';

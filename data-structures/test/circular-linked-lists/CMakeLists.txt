@@ -12,6 +12,7 @@ add_library(circular-linked-lists SHARED
   ${CMAKE_CURRENT_SOURCE_DIR}/../../circular-linked-lists/base.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/../../circular-linked-lists/number.h
   ${CMAKE_CURRENT_SOURCE_DIR}/../../circular-linked-lists/number.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/../../nodes/doublyNode.h
 )
 
 # Link Libraries

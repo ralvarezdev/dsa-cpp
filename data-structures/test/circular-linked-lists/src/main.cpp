@@ -83,21 +83,22 @@ int main()
   // Insert Node
   list.push(55);          // Next to Head
   list.insertAt(100, 6);  // At Index 6
-  list.pushBack(33);      // At Tail
-  list.insertAt(77, -1);  // At Tail
-  list.insertAt(400, -2); // Before Tail
-  list.insertAt(898, 20); // At Tail
-  list.insertAt(999, -1); // At Tail
+  list.insertAt(200, 11); // At Index 11
+  list.pushBack(33);      // At Head Previous Node
+  list.insertAt(77, -1);  // At Head Previous Node
+  list.insertAt(400, -2); // Before Head Previous Node
+  list.insertAt(898, 20); // At Head Previous Node
+  list.insertAt(999, -1); // At Head Previous Node
   list.push(13);          // Next to Head
 
   cout << "\nNodes after Insertion:\n";
   list.print();
 
   // Remove Node
-  list.remove();     // Remove Node Next to Head
-  list.removeAt(8);  // At Index 6
+  list.remove();     // Remove Head
+  list.removeAt(8);  // At Index 8
   list.removeAt(-4); // At Index -4
-  list.pop();        // Remove Tail
+  list.pop();        // Remove Head Previous Node
 
   cout << "\nNodes after Deletion:\n";
   list.print();
@@ -105,8 +106,11 @@ int main()
   // Get Node
   int pos;
 
-  pos = 13;
+  pos = 5;
   cout << "\nGet Node at Index \'" << pos << "\': " << list.get(pos) << '\n';
+
+  pos = 12;
+  cout << "Get Node at Index \'" << pos << "\': " << list.get(pos) << '\n';
 
   pos = 20;
   cout << "Get Node at Index \'" << pos << "\': " << list.get(pos) << '\n';

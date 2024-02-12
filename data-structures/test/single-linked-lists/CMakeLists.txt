@@ -12,6 +12,7 @@ add_library(single-linked-lists SHARED
   ${CMAKE_CURRENT_SOURCE_DIR}/../../single-linked-lists/base.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/../../single-linked-lists/number.h
   ${CMAKE_CURRENT_SOURCE_DIR}/../../single-linked-lists/number.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/../../nodes/singleNode.h
 )
 
 # Link Libraries

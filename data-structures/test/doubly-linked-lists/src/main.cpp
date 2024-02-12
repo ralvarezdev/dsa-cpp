@@ -82,21 +82,22 @@ int main()
   cout << "Search for Key '" << key << "': " << isKey<double>(nodeFound) << '\n';
 
   // Insert Node
-  list.push(55);          // Next to Head
+  list.push(55);          // At Head
   list.insertAt(100, 6);  // At Index 6
+  list.insertAt(200, 11); // At Index 11
   list.pushBack(33);      // At Tail
   list.insertAt(77, -1);  // At Tail
   list.insertAt(400, -2); // Before Tail
   list.insertAt(898, 20); // At Tail
   list.insertAt(999, -1); // At Tail
-  list.push(13);          // Next to Head
+  list.push(13);          // At Head
 
   cout << "\nNodes after Insertion:\n";
   list.print();
 
   // Remove Node
-  list.remove();     // Remove Node Next to Head
-  list.removeAt(8);  // At Index 6
+  list.remove();     // Remove Head
+  list.removeAt(8);  // At Index 8
   list.removeAt(-4); // At Index -4
   list.pop();        // Remove Tail
 
@@ -106,8 +107,11 @@ int main()
   // Get Node
   int pos;
 
-  pos = 13;
+  pos = 7;
   cout << "\nGet Node at Index \'" << pos << "\': " << list.get(pos) << '\n';
+
+  pos = 13;
+  cout << "Get Node at Index \'" << pos << "\': " << list.get(pos) << '\n';
 
   pos = 20;
   cout << "Get Node at Index \'" << pos << "\': " << list.get(pos) << '\n';

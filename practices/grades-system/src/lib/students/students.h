@@ -164,12 +164,12 @@ float Student::getProm()
 // Method to Set Gender Abbreviation
 void Student::setGenderAbb()
 {
-  string genderLower = this->gender;
+  string genderLower = getLower(this->gender);
 
   // Check Gender
   if (genderLower == "female")
     this->genderAbb = students::genders::female;
-  if (genderLower == "male")
+  else if (genderLower == "male")
     this->genderAbb = students::genders::male;
   else
     this->genderAbb = students::genders::nonBinary;

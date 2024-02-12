@@ -72,14 +72,14 @@ void NumberCircularLinkedList<T>::printReverse(DoublyNodePtr<T> p)
   {
     cout << setw(6) << n-- << p->data << '\n';
     p = p->prev;
-  } while (p != this->tail);
+  } while (p != this->head->prev);
 }
 
 // Method Overload
 template <class T>
 void NumberCircularLinkedList<T>::printReverse()
 {
-  this->printReverse(this->tail); // Set Head Node as p Node
+  this->printReverse(this->head->prev); // Set Head Node as p Node
 }
 
 // Method that Returns the Sum of All Node's Data Field

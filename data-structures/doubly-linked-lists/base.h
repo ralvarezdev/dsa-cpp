@@ -1,34 +1,18 @@
 #include <cstdlib>
 #include <math.h>
 
+#include "../nodes/doublyNode.h"
+
 using std::abs;
 
 #ifndef DOUBLY_LINKED_LISTS
 #define DOUBLY_LINKED_LISTS
 
-// NODE CLASS
-// Self-Referential Structure
-
-template <class T>
-class DoublyNode
-{
-public:
-  T data;
-  DoublyNode *prev = NULL;
-  DoublyNode *next = NULL;
-
-  // Constructors
-  DoublyNode();
-  DoublyNode(T);
-  DoublyNode(T, DoublyNode *);
-  DoublyNode(T, DoublyNode *, DoublyNode *);
-};
-
 // DoublyNodePtr Definition
 template <class T>
 using DoublyNodePtr = DoublyNode<T> *;
 
-// LINKED LIST CLASS
+// DOUBLY LINKED LIST CLASS
 
 template <class T>
 class DoublyLinkedList
@@ -45,9 +29,13 @@ protected:
   void increaseLength(int);
   void decreaseLength();
   DoublyNodePtr<T> move(int);
+  T remove(bool);
+  T pop(bool);
+  T setNULL(bool);
 
 public:
   // Constructors
+  DoublyLinkedList(T);
   DoublyLinkedList(T, T);
   DoublyLinkedList(T[], int, T);
   ~DoublyLinkedList();
@@ -57,7 +45,6 @@ public:
   void push(T);
   void pushBack(T);
   void insertAt(T, int);
-  T remove(bool);
   T remove();
   T pop();
   T removeAt(int);
@@ -67,45 +54,15 @@ public:
   void concat(DoublyLinkedList);
 };
 
-// Node Class Constructors
+// Doubly Linked List Constructors
+
+// Create Doubly Linked List and Set Error Value
 template <class T>
-DoublyNode<T>::DoublyNode()
+DoublyLinkedList<T>::DoublyLinkedList(T error)
 {
-  return;
+  // Default Error Value
+  this->error = error;
 }
-
-template <class T>
-DoublyNode<T>::DoublyNode(T data)
-{
-  this->data = data;
-}
-
-template <class T>
-DoublyNode<T>::DoublyNode(T data, DoublyNode<T> *prev)
-{
-  this->data = data;
-  this->prev = prev;
-
-  if (prev != NULL)
-    prev->next = this;
-}
-
-template <class T>
-DoublyNode<T>::DoublyNode(T data, DoublyNode<T> *prev, DoublyNode<T> *next)
-{
-  this->data = data;
-  this->prev = prev;
-  this->next = next;
-
-  if (prev != NULL)
-    prev->next = this;
-  if (next != NULL)
-    next->prev = this;
-}
-
-// LINKED LIST CLASS
-
-// Linked List Constructors
 
 // Add Head with Only One Next Node
 template <class T>
@@ -157,15 +114,9 @@ DoublyLinkedList<T>::DoublyLinkedList(T data[], int length, T error)
 template <class T>
 DoublyLinkedList<T>::~DoublyLinkedList()
 {
-  // Remove Node Next to Head if It isn't Empty
+  // Remove Tail Node if Linked List isn't Empty
   while (!isEmpty())
-    this->remove(true);
-
-  // Remove Head Node
-  DoublyNodePtr<T> temp = this->head;
-  this->head = NULL;
-
-  delete[] temp;
+    this->pop(true);
 }
 
 // Method to Move to Next Node N Times
@@ -177,7 +128,7 @@ DoublyNodePtr<T> DoublyLinkedList<T>::move(int n)
   bool backwards = n < 0;
 
   // Works only for Negative n Values
-  if (n < 0)
+  if (backwards)
     if (abs(mov) < this->length / 2)
       mov = abs(mov); // Get Absolute Value of mov
     else
@@ -189,7 +140,7 @@ DoublyNodePtr<T> DoublyLinkedList<T>::move(int n)
   else if (mov > this->length / 2)
   {
     backwards = true;
-    mov = this->length - mov;
+    mov = this->length - mov - 1;
   }
 
   // Move from Tail to Head, or from Head to Tail
@@ -282,14 +233,42 @@ void DoublyLinkedList<T>::pushBack(T data)
   this->increaseLength();
 }
 
+// Method to Safely Remove Node that is Both Head and Tail
+template <class T>
+T DoublyLinkedList<T>::setNULL(bool destructor)
+{
+  DoublyNodePtr<T> t;
+
+  // Get Tail
+  t = this->tail;
+
+  // Get Tail Data
+  T data = t->data;
+
+  // Set Head and Tail Node as NULL
+  this->head = this->tail = NULL;
+
+  // Deallocate Memory
+  if (destructor)
+    delete[] t;
+  else
+    delete t;
+
+  return data;
+}
+
 // Method to Remove Head Node
 template <class T>
 T DoublyLinkedList<T>::remove(bool destructor)
 {
-  DoublyNodePtr<T> m, n;
-
   if (this->isEmpty())
     return this->error;
+
+  // Head and Tail Node are the Same
+  if (this->getLength() == 1)
+    return this->setNULL(destructor);
+
+  DoublyNodePtr<T> m, n;
 
   // Get Head Node
   m = this->head;
@@ -322,30 +301,48 @@ T DoublyLinkedList<T>::remove()
 
 // Method to Remove Node at Tail
 template <class T>
-T DoublyLinkedList<T>::pop()
+T DoublyLinkedList<T>::pop(bool destructor)
 {
   if (this->isEmpty())
     return this->error;
+
+  // Head and Tail Node are the Same
+  if (this->getLength() == 1)
+    return this->setNULL(destructor);
 
   DoublyNodePtr<T> t, p;
 
   this->decreaseLength();
 
+  // Get Tail
+  t = this->tail;
+
+  // Get Tail Data
+  T data = t->data;
+
   // Get Tail Previous Node
   p = this->tail->prev;
 
-  // Get Tail
-  t = this->tail;
-  T data = t->data;
+  // Remove Tail Node
   p->next = NULL;
 
   // Set Previous Node as Tail
   this->tail = p;
 
   // Deallocate Memory
-  delete t;
+  if (destructor)
+    delete[] t;
+  else
+    delete t;
 
   return data;
+}
+
+// Method Overloads
+template <class T>
+T DoublyLinkedList<T>::pop()
+{
+  return this->pop(false);
 }
 
 // Method to Remove Node at Given Index
@@ -353,14 +350,14 @@ template <class T>
 T DoublyLinkedList<T>::removeAt(int pos)
 {
   // Check pos
+  if (pos == -1 || pos >= this->length)
+    return this->error; // Node not Found
+
   if (pos == 0)
     return this->remove(); // Remove Node at Head
 
-  if (pos == this->length)
+  if (pos == this->length - 1)
     return this->pop(); // Remove Tail
-
-  if (pos == -1 || pos > this->length)
-    return this->error; // Node not Found
 
   pos -= 1;
 
@@ -394,10 +391,7 @@ T DoublyLinkedList<T>::removeAt(int pos)
 template <class T>
 T DoublyLinkedList<T>::change(T data, int pos)
 {
-  if (this->isEmpty())
-    return this->error;
-
-  if (pos > this->length)
+  if (this->isEmpty() || pos >= this->length)
     return this->error; // Node not Found
 
   // Move to Node
@@ -421,17 +415,14 @@ template <class T>
 T DoublyLinkedList<T>::get(int pos)
 {
   // Check pos
-  if (this->isEmpty())
-    return this->error;
+  if (this->isEmpty() || pos >= this->length)
+    return this->error; // Node not Found
 
   if (pos == 0)
     return this->head->data; // Get Node Next to Head
 
-  if (pos == this->length)
+  if (pos == this->length - 1)
     return this->tail->data; // Get Tail
-
-  if (pos > this->length)
-    return this->error; // Node not Found
 
   // Move to Node
   DoublyNodePtr<T> m = this->move(pos);
@@ -448,7 +439,7 @@ T DoublyLinkedList<T>::get(int pos)
 template <class T>
 bool DoublyLinkedList<T>::isEmpty()
 {
-  return this->head->next == NULL;
+  return this->head == NULL;
 }
 
 // Method to Increase Linked List Length

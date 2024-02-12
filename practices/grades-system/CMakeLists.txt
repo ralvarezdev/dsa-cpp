@@ -10,6 +10,7 @@ add_executable(${PROJECT_NAME} ./src/main.cpp)
 add_library(single-linked-lists SHARED
   ${CMAKE_CURRENT_SOURCE_DIR}/../../data-structures/single-linked-lists/base.h
   ${CMAKE_CURRENT_SOURCE_DIR}/../../data-structures/single-linked-lists/base.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/../../data-structures/nodes/singleNode.h
 )
 
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src/lib/students)

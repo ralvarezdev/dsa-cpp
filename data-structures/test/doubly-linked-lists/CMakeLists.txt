@@ -12,6 +12,7 @@ add_library(doubly-linked-lists SHARED
   ${CMAKE_CURRENT_SOURCE_DIR}/../../doubly-linked-lists/base.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/../../doubly-linked-lists/number.h
   ${CMAKE_CURRENT_SOURCE_DIR}/../../doubly-linked-lists/number.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/../../nodes/doublyNode.h
 )
 
 # Link Libraries

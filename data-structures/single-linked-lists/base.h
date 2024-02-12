@@ -1,29 +1,15 @@
 #include <cstdlib>
 
+#include "../nodes/singleNode.h"
+
 #ifndef SINGLE_LINKED_LISTS
 #define SINGLE_LINKED_LISTS
-
-// NODE CLASS
-// Self-Referential Structure
-
-template <class T>
-class SingleNode
-{
-public:
-  T data;
-  SingleNode *next = NULL;
-
-  // Constructors
-  SingleNode();
-  SingleNode(T);
-  SingleNode(T, SingleNode *);
-};
 
 // SingleNodePtr Definition
 template <class T>
 using SingleNodePtr = SingleNode<T> *;
 
-// LINKED LIST CLASS
+// SINGLE LINKED LIST CLASS
 
 template <class T>
 class SingleLinkedList
@@ -41,6 +27,7 @@ protected:
   void increaseLength(int);
   void decreaseLength();
   SingleNodePtr<T> move(SingleNodePtr<T>, int);
+  T remove(bool);
 
 public:
   // Constructors
@@ -54,7 +41,6 @@ public:
   void push(T);
   void pushBack(T);
   void insertAt(T, int);
-  T remove(bool);
   T remove();
   T pop();
   T removeAt(int);
@@ -67,29 +53,7 @@ public:
   void concat(SingleLinkedList);
 };
 
-// Node Class Constructors
-template <class T>
-SingleNode<T>::SingleNode()
-{
-  return;
-}
-
-template <class T>
-SingleNode<T>::SingleNode(T data)
-{
-  this->data = data;
-}
-
-template <class T>
-SingleNode<T>::SingleNode(T data, SingleNode<T> *next)
-{
-  this->data = data;
-  this->next = next;
-}
-
-// LINKED LIST CLASS
-
-// Linked List Constructors
+// Single Linked List Constructors
 
 // Add Head with Next Node as NULL
 template <class T>

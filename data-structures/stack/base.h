@@ -1,27 +1,13 @@
 #include <cstdlib>
 
+#include "../nodes/singleNode.h"
+
 #ifndef STACK_LINKED_LISTS
 #define STACK_LINKED_LISTS
 
-// NODE CLASS
-// Self-Referential Structure
-
+// SingleNodePtr Definition
 template <class T>
-class StackNode
-{
-public:
-  T data;
-  StackNode *next = NULL;
-
-  // Constructors
-  StackNode();
-  StackNode(T);
-  StackNode(T, StackNode *);
-};
-
-// StackNodePtr Definition
-template <class T>
-using StackNodePtr = StackNode<T> *;
+using SingleNodePtr = SingleNode<T> *;
 
 // STACK LINKED LIST CLASS
 // LIFO
@@ -31,7 +17,7 @@ template <class T>
 class StackLinkedList
 {
 protected:
-  StackNodePtr<T> head;
+  SingleNodePtr<T> head;
 
   int length = 0;
   T error;
@@ -56,41 +42,19 @@ public:
   int getLength();
 };
 
-// Node Class Constructors
-template <class T>
-StackNode<T>::StackNode()
-{
-  return;
-}
-
-template <class T>
-StackNode<T>::StackNode(T data)
-{
-  this->data = data;
-}
-
-template <class T>
-StackNode<T>::StackNode(T data, StackNode<T> *next)
-{
-  this->data = data;
-  this->next = next;
-}
-
-// STACK LINKED LIST CLASS
-
 // Stack Constructors
 
 // Add Head with Only One Next Node
 template <class T>
 StackLinkedList<T>::StackLinkedList(T data, T error)
 {
-  StackNodePtr<T> p;
+  SingleNodePtr<T> p;
 
   // Default Error Value
   this->error = error;
 
   // Create New Node
-  p = new StackNode<T>(data);
+  p = new SingleNode<T>(data);
 
   // Set Node as Head
   this->head = p;
@@ -107,12 +71,12 @@ StackLinkedList<T>::StackLinkedList(T data[], int length, T error)
   this->error = error;
 
   // Create First Node
-  this->head = new StackNode<T>(data[0]);
+  this->head = new SingleNode<T>(data[0]);
 
   // Add Next Nodes
   for (int i = 1; i < length; i++)
     // Add Node
-    this->head = new StackNode<T>(data[i], this->head);
+    this->head = new SingleNode<T>(data[i], this->head);
 
   // Increase Length
   this->increaseLength(length);
@@ -127,7 +91,7 @@ StackLinkedList<T>::~StackLinkedList()
     this->pop(true);
 
   // Remove Head Node
-  StackNodePtr<T> temp = this->head;
+  SingleNodePtr<T> temp = this->head;
   this->head = NULL;
 
   delete[] temp;
@@ -138,7 +102,7 @@ template <class T>
 void StackLinkedList<T>::push(T data)
 {
   // Insert Node Before Head
-  StackNodePtr<T> h = new StackNode<T>(data, this->head);
+  SingleNodePtr<T> h = new SingleNode<T>(data, this->head);
 
   // Set h Node as Head
   this->head = h;
@@ -150,7 +114,7 @@ void StackLinkedList<T>::push(T data)
 template <class T>
 T StackLinkedList<T>::pop(bool destructor)
 {
-  StackNodePtr<T> m, n;
+  SingleNodePtr<T> m, n;
 
   if (this->isEmpty())
     return this->error;
