@@ -7,22 +7,22 @@
 // Self-Referential Structure
 
 template <class T>
-class SingleNode
+class QueueNode
 {
 public:
   T data;
-  SingleNode *next = NULL;
+  QueueNode *next = NULL;
 
   // Constructors
-  SingleNode();
-  SingleNode(T);
-  SingleNode(T, SingleNode *);
-  SingleNode(T, SingleNode *, SingleNode *);
+  QueueNode();
+  QueueNode(T);
+  QueueNode(T, QueueNode *);
+  QueueNode(T, QueueNode *, QueueNode *);
 };
 
-// SingleNodePtr Definition
+// QueueNodePtr Definition
 template <class T>
-using SingleNodePtr = SingleNode<T> *;
+using QueueNodePtr = QueueNode<T> *;
 
 // QUEUE LINKED LIST CLASS
 // FIFO
@@ -32,8 +32,8 @@ template <class T>
 class QueueLinkedList
 {
 protected:
-  SingleNodePtr<T> head;
-  SingleNodePtr<T> tail;
+  QueueNodePtr<T> head;
+  QueueNodePtr<T> tail;
 
   int length = 0;
   T error;
@@ -61,19 +61,19 @@ public:
 
 // Node Class Constructors
 template <class T>
-SingleNode<T>::SingleNode()
+QueueNode<T>::QueueNode()
 {
   return;
 }
 
 template <class T>
-SingleNode<T>::SingleNode(T data)
+QueueNode<T>::QueueNode(T data)
 {
   this->data = data;
 }
 
 template <class T>
-SingleNode<T>::SingleNode(T data, SingleNode<T> *prev)
+QueueNode<T>::QueueNode(T data, QueueNode<T> *prev)
 {
   this->data = data;
 
@@ -89,13 +89,13 @@ SingleNode<T>::SingleNode(T data, SingleNode<T> *prev)
 template <class T>
 QueueLinkedList<T>::QueueLinkedList(T data, T error)
 {
-  SingleNodePtr<T> p;
+  QueueNodePtr<T> p;
 
   // Default Error Value
   this->error = error;
 
   // Create New Node
-  p = new SingleNode<T>(data);
+  p = new QueueNode<T>(data);
 
   // Set Node as Head and as Tail
   this->tail = this->head = p;
@@ -108,13 +108,13 @@ QueueLinkedList<T>::QueueLinkedList(T data, T error)
 template <class T>
 QueueLinkedList<T>::QueueLinkedList(T data[], int length, T error)
 {
-  SingleNodePtr<T> p;
+  QueueNodePtr<T> p;
 
   // Default Error Value
   this->error = error;
 
   // Create First Node
-  p = new SingleNode<T>(data[0]);
+  p = new QueueNode<T>(data[0]);
 
   // Set p Node as Head
   this->head = p;
@@ -122,7 +122,7 @@ QueueLinkedList<T>::QueueLinkedList(T data[], int length, T error)
   // Add Next Nodes
   for (int i = 1; i < length; i++)
     // Add Node
-    p = new SingleNode<T>(data[i], p);
+    p = new QueueNode<T>(data[i], p);
 
   // Set p Node as Tail
   this->tail = p;
@@ -140,7 +140,7 @@ QueueLinkedList<T>::~QueueLinkedList()
     this->pop(true);
 
   // Remove Head Node
-  SingleNodePtr<T> temp = this->head;
+  QueueNodePtr<T> temp = this->head;
   this->head = NULL;
 
   delete[] temp;
@@ -150,7 +150,7 @@ QueueLinkedList<T>::~QueueLinkedList()
 template <class T>
 void QueueLinkedList<T>::push(T data)
 {
-  SingleNodePtr<T> n = new SingleNode<T>(data);
+  QueueNodePtr<T> n = new QueueNode<T>(data);
 
   // Set Node at Tail
   this->tail->next = n;
@@ -165,7 +165,7 @@ void QueueLinkedList<T>::push(T data)
 template <class T>
 T QueueLinkedList<T>::pop(bool destructor)
 {
-  SingleNodePtr<T> m, n;
+  QueueNodePtr<T> m, n;
 
   if (this->isEmpty())
     return this->error;
