@@ -29,6 +29,7 @@ protected:
 
 public:
   // Constructors
+  StackLinkedList(T);
   StackLinkedList(T, T);
   StackLinkedList(T[], int, T);
   ~StackLinkedList();
@@ -43,6 +44,14 @@ public:
 };
 
 // Stack Constructors
+
+// Create Stack Linked List and Set Error Value
+template <class T>
+StackLinkedList<T>::StackLinkedList(T error)
+{
+  // Default Error Value
+  this->error = error;
+}
 
 // Add Head with Only One Next Node
 template <class T>

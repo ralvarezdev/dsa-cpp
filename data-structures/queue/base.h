@@ -30,6 +30,7 @@ protected:
 
 public:
   // Constructors
+  QueueLinkedList(T);
   QueueLinkedList(T, T);
   QueueLinkedList(T[], int, T);
   ~QueueLinkedList();
@@ -45,6 +46,14 @@ public:
 };
 
 // Queue Constructors
+
+// Create Queue Linked List and Set Error Value
+template <class T>
+QueueLinkedList<T>::QueueLinkedList(T error)
+{
+  // Default Error Value
+  this->error = error;
+}
 
 // Add Head with Only One Next Node
 template <class T>
@@ -119,6 +128,10 @@ void QueueLinkedList<T>::push(T data)
   // Set Tail
   this->tail = n;
 
+  // Set Head
+  if (this->isEmpty())
+    this->head = n;
+
   this->increaseLength();
 }
 
@@ -126,10 +139,10 @@ void QueueLinkedList<T>::push(T data)
 template <class T>
 T QueueLinkedList<T>::pop(bool destructor)
 {
-  SingleNodePtr<T> m, n;
-
   if (this->isEmpty())
     return this->error;
+
+  SingleNodePtr<T> m, n;
 
   // Get Head Node
   m = this->head;
