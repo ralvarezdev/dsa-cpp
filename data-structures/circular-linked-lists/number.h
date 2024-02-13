@@ -24,6 +24,9 @@ public:
   // Inherit Constructors
   using CircularLinkedList<NodeType>::CircularLinkedList;
 
+  // Constructors
+  NumberCircularLinkedList() : CircularLinkedList<NodeType>(-1){};
+
   // Public Methods
   void print();
   void print(DoublyNodePtr<NodeType>);

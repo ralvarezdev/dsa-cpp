@@ -25,6 +25,9 @@ public:
   // Inherit Constructors
   using DoublyLinkedList<NodeType>::DoublyLinkedList;
 
+  // Constructors
+  NumberDoublyLinkedList() : DoublyLinkedList<NodeType>(-1){};
+
   // Public Methods
   void print();
   void print(DoublyNodePtr<NodeType>);

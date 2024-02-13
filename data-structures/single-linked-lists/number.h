@@ -24,6 +24,9 @@ public:
   // Inherit Constructors
   using SingleLinkedList<NodeType>::SingleLinkedList;
 
+  // Constructors
+  NumberSingleLinkedList() : SingleLinkedList<NodeType>(-1){};
+
   // Public Methods
   void insertionSort(NodeType);
   void print();

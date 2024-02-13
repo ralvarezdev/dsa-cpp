@@ -37,6 +37,7 @@ public:
   ~SingleLinkedList();
 
   // Public Methods
+  NodeType getError();
   bool isEmpty();
   void push(NodeType);
   void pushBack(NodeType);
@@ -147,6 +148,13 @@ SingleLinkedList<NodeType>::~SingleLinkedList()
   this->head = NULL;
 
   delete[] temp;
+}
+
+// Method to Get Error Value
+template <class NodeType>
+NodeType SingleLinkedList<NodeType>::getError()
+{
+  return this->error;
 }
 
 // Method to Move to Next Node N Times

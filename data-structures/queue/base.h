@@ -36,6 +36,7 @@ public:
   ~QueueLinkedList();
 
   // Public Methods
+  NodeType getError();
   bool isEmpty();
   void push(NodeType);
   NodeType pop(bool);
@@ -114,6 +115,13 @@ QueueLinkedList<NodeType>::~QueueLinkedList()
   this->head = NULL;
 
   delete[] temp;
+}
+
+// Method to Get Error Value
+template <class NodeType>
+NodeType QueueLinkedList<NodeType>::getError()
+{
+  return this->error;
 }
 
 // Method to Insert Node at Tail
