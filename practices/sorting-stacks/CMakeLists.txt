@@ -10,11 +10,16 @@ add_executable(${PROJECT_NAME} ./src/main.cpp)
 add_library(doubly-linked-lists SHARED
   ${CMAKE_CURRENT_SOURCE_DIR}/../../data-structures/doubly-linked-lists/base.h
   ${CMAKE_CURRENT_SOURCE_DIR}/../../data-structures/doubly-linked-lists/base.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/../../data-structures/doubly-linked-lists/number.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../../data-structures/doubly-linked-lists/number.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/../../data-structures/nodes/doublyNode.h
 )
 
 add_library(stack SHARED
   ${CMAKE_CURRENT_SOURCE_DIR}/../../data-structures/stack/base.h
   ${CMAKE_CURRENT_SOURCE_DIR}/../../data-structures/stack/base.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/../../data-structures/stack/number.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../../data-structures/stack/number.cpp
 )
 
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src/lib/terminal)

@@ -14,7 +14,7 @@ template <class NodeType>
 class CircularLinkedList
 {
 protected:
-  DoublyNodePtr<NodeType> head;
+  DoublyNodePtr<NodeType> head = NULL;
 
   int length = 0;
   NodeType error;

@@ -5,6 +5,11 @@ using std::string;
 #ifndef NAMESPACES_H
 #define NAMESPACES_H
 
+namespace ascii
+{
+  const int intDiff = 48; // ASCII Code Difference between Chars and Integers
+}
+
 namespace terminal
 {
   // - ANSI Escape Code
@@ -26,6 +31,21 @@ namespace terminal
   // - Warning (On Error)
   const string sgrBgError = "\x1b[48;2;255;153;153m";
   const string sgrFgError = "\x1b[38;2;32;32;32m";
+
+  // - Number of Characters
+  const int nChar = 100; // Max Number of Characters being Printed on Each Line
+}
+
+namespace stacks
+{
+  // Number of Stacks to Sort
+  const int nStacks = 3;
+
+  // Minimum and Maximum Limits
+  const int minNodes = 3;
+  const int maxNodes = 10;
+  const int minNodeValue = 0;
+  const int maxNodeValue = 999;
 }
 
 #endif

@@ -1,9 +1,11 @@
 #include <string>
+#include <random>
 #include <iostream>
 
+#include "lib/namespaces.h"
 #include "lib/terminal/ansiEsc.h"
 #include "lib/terminal/input.h"
-#include "../../../data-structures/stack/base.h"
+#include "../../../data-structures/stack/number.h"
 #include "../../../data-structures/doubly-linked-lists/number.h"
 
 /*
@@ -25,7 +27,12 @@ Stack Representation
 | 66  |
 */
 
-using namespace std;
+using std::cin;
+using std::cout;
+using std::random_device;
+using std::uniform_int_distribution;
+
+using namespace stacks;
 
 // --- Function Prototypes
 void helpMessage();
@@ -36,12 +43,71 @@ int main(int argc, char **argv)
   std::ios::sync_with_stdio(false);
 
   // Print Title
-  printTitle("SORTING STACKS PROBLEM", false);
+  printTitle("SORTING STACKS PROBLEM");
   cout << '\n';
 
-  // Ask for Number of Stacks to Create
-  const int numberStacks = getInteger("Enter the Number of Stacks", 3, 6);
-
   // Ask for Number of Nodes for each Stack
-  const int stackLength = getInteger("Enter the Number of Nodes for each Stack", 3, 10);
+  const int stackLen = getInteger("Enter the Number of Nodes for each Stack", stacks::minNodes, stacks::maxNodes);
+
+  // Check nStacks
+  if (stacks::nStacks < 3)
+  {
+    printTitle("ERROR: This Algorithm Requires at Least 3 Stacks to Sort them", true);
+    return -1;
+  }
+
+  // Create Stacks Linked List
+  NumberStackLinkedList<int> **stacksArray = new NumberStackLinkedList<int> *[stacks::nStacks];
+  NumberDoublyLinkedList<int> **listsArray = new NumberDoublyLinkedList<int> *[stacks::nStacks];
+
+  // Random Number Generator
+  random_device rd;
+
+  // Random Integer Distribution
+  uniform_int_distribution<int> dist(stacks::minNodeValue, stacks::maxNodeValue);
+
+  int random;
+
+  for (int n = 0; n < stacks::nStacks; n++)
+  {
+    // Create Stack and Doubly Linked List
+    NumberStackLinkedList<int> *stack = new NumberStackLinkedList<int>();
+    NumberDoublyLinkedList<int> *list = new NumberDoublyLinkedList<int>();
+
+    // Create Random Nodes Values for Each
+    for (int i = 0; i < stackLen; i++)
+    {
+      // Generate Random Node Values
+      random = dist(rd);
+
+      /*
+      // Testing Data Structures
+      cout << random << ' ' << (*stack).getLength() << ' ' << (*list).getLength() << '\n';
+      */
+
+      // Push Random Node Value to Stack and Doubly Linked List
+      (*stack).push(random);
+      (*list).push(random);
+    }
+
+    // Testing Data Structures
+    cout << "\nStack " << n + 1 << " Top: " << (*stack).top();
+    /*
+     */
+
+    // Added Stack and Doubly Linked List to their Corresponding Array
+    stacksArray[n] = stack;
+    listsArray[n] = list;
+  }
+
+  // Check Random Numbers
+  for (int n = 0; n < stacks::nStacks; n++)
+  {
+    cout << "\n\nStack " << n + 1 << '\n';
+    (*listsArray[n]).print();
+  }
+
+  // Deallocate Memory
+  delete[] stacksArray;
+  delete[] listsArray;
 }

@@ -17,7 +17,7 @@ template <class NodeType>
 class StackLinkedList
 {
 protected:
-  SingleNodePtr<NodeType> head;
+  SingleNodePtr<NodeType> head = NULL;
 
   int length = 0;
   NodeType error;

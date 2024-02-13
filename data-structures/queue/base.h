@@ -17,8 +17,8 @@ template <class NodeType>
 class QueueLinkedList
 {
 protected:
-  SingleNodePtr<NodeType> head;
-  SingleNodePtr<NodeType> tail;
+  SingleNodePtr<NodeType> head = NULL;
+  SingleNodePtr<NodeType> tail = NULL;
 
   int length = 0;
   NodeType error;

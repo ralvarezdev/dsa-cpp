@@ -17,7 +17,7 @@ class SingleLinkedList
 protected:
   SingleNodePtr<NodeType> head;
   SingleNodePtr<NodeType> tail;
-  // SingleNodePtr<NodeType> curr;
+  // SingleNodePtr<NodeType> curr = NULL;
 
   int length = 0;
   NodeType error;

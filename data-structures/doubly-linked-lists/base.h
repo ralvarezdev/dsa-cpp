@@ -18,8 +18,8 @@ template <class NodeType>
 class DoublyLinkedList
 {
 protected:
-  DoublyNodePtr<NodeType> head;
-  DoublyNodePtr<NodeType> tail;
+  DoublyNodePtr<NodeType> head = NULL;
+  DoublyNodePtr<NodeType> tail = NULL;
 
   int length = 0;
   NodeType error;
