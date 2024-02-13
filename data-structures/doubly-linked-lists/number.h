@@ -18,31 +18,31 @@ using std::string;
 
 // NUMBER LINKED LIST CLASS
 
-template <class T>
-class NumberDoublyLinkedList : public DoublyLinkedList<T>
+template <class NodeType>
+class NumberDoublyLinkedList : public DoublyLinkedList<NodeType>
 {
 public:
   // Inherit Constructors
-  using DoublyLinkedList<T>::DoublyLinkedList;
+  using DoublyLinkedList<NodeType>::DoublyLinkedList;
 
   // Public Methods
   void print();
-  void print(DoublyNodePtr<T>);
+  void print(DoublyNodePtr<NodeType>);
   void printReverse();
-  void printReverse(DoublyNodePtr<T>);
-  T total();
-  T total(DoublyNodePtr<T>);
-  T max();
-  T max(DoublyNodePtr<T>);
-  DoublyNodePtr<T> linearSearch(T);
-  DoublyNodePtr<T> linearSearch(DoublyNodePtr<T>, T);
+  void printReverse(DoublyNodePtr<NodeType>);
+  NodeType total();
+  NodeType total(DoublyNodePtr<NodeType>);
+  NodeType max();
+  NodeType max(DoublyNodePtr<NodeType>);
+  DoublyNodePtr<NodeType> linearSearch(NodeType);
+  DoublyNodePtr<NodeType> linearSearch(DoublyNodePtr<NodeType>, NodeType);
   int compare(int, int);
-  NumberSingleLinkedList<T> SingleLinkedList();
+  NumberSingleLinkedList<NodeType> SingleLinkedList();
 };
 
 // Method to Print Nodes from Tail to Head
-template <class T>
-void NumberDoublyLinkedList<T>::print(DoublyNodePtr<T> p)
+template <class NodeType>
+void NumberDoublyLinkedList<NodeType>::print(DoublyNodePtr<NodeType> p)
 {
   int n = 0;
 
@@ -56,15 +56,15 @@ void NumberDoublyLinkedList<T>::print(DoublyNodePtr<T> p)
 }
 
 // Method Overload
-template <class T>
-void NumberDoublyLinkedList<T>::print()
+template <class NodeType>
+void NumberDoublyLinkedList<NodeType>::print()
 {
   this->print(this->head); // Set Head Node as p Node
 }
 
 // Method to Print Nodes from Tail to Head
-template <class T>
-void NumberDoublyLinkedList<T>::printReverse(DoublyNodePtr<T> p)
+template <class NodeType>
+void NumberDoublyLinkedList<NodeType>::printReverse(DoublyNodePtr<NodeType> p)
 {
   int n = this->length - 1;
 
@@ -78,17 +78,17 @@ void NumberDoublyLinkedList<T>::printReverse(DoublyNodePtr<T> p)
 }
 
 // Method Overload
-template <class T>
-void NumberDoublyLinkedList<T>::printReverse()
+template <class NodeType>
+void NumberDoublyLinkedList<NodeType>::printReverse()
 {
   this->printReverse(this->tail); // Set Head Node as p Node
 }
 
 // Method that Returns the Sum of All Node's Data Field
-template <class T>
-T NumberDoublyLinkedList<T>::total(DoublyNodePtr<T> p)
+template <class NodeType>
+NodeType NumberDoublyLinkedList<NodeType>::total(DoublyNodePtr<NodeType> p)
 {
-  T sum = 0;
+  NodeType sum = 0;
 
   while (p != NULL)
   {
@@ -100,17 +100,17 @@ T NumberDoublyLinkedList<T>::total(DoublyNodePtr<T> p)
 }
 
 // Method Overload
-template <class T>
-T NumberDoublyLinkedList<T>::total()
+template <class NodeType>
+NodeType NumberDoublyLinkedList<NodeType>::total()
 {
   return this->total(this->head); // Set Head Node as p Node
 }
 
 // Method that Returns the Highest Number in Linked List
-template <class T>
-T NumberDoublyLinkedList<T>::max(DoublyNodePtr<T> p)
+template <class NodeType>
+NodeType NumberDoublyLinkedList<NodeType>::max(DoublyNodePtr<NodeType> p)
 {
-  static T m = -1;
+  static NodeType m = -1;
 
   while (p != NULL)
   {
@@ -125,15 +125,15 @@ T NumberDoublyLinkedList<T>::max(DoublyNodePtr<T> p)
 }
 
 // Method Overload
-template <class T>
-T NumberDoublyLinkedList<T>::max()
+template <class NodeType>
+NodeType NumberDoublyLinkedList<NodeType>::max()
 {
   return this->max(this->head); // Set Head Node as p Node
 }
 
 // Method that Checks if the Given Number is Inside Linked List
-template <class T>
-DoublyNodePtr<T> NumberDoublyLinkedList<T>::linearSearch(DoublyNodePtr<T> p, T key)
+template <class NodeType>
+DoublyNodePtr<NodeType> NumberDoublyLinkedList<NodeType>::linearSearch(DoublyNodePtr<NodeType> p, NodeType key)
 {
   while (p != NULL)
   {
@@ -147,15 +147,15 @@ DoublyNodePtr<T> NumberDoublyLinkedList<T>::linearSearch(DoublyNodePtr<T> p, T k
 }
 
 // Method Overload
-template <class T>
-DoublyNodePtr<T> NumberDoublyLinkedList<T>::linearSearch(T key)
+template <class NodeType>
+DoublyNodePtr<NodeType> NumberDoublyLinkedList<NodeType>::linearSearch(NodeType key)
 {
   return this->linearSearch(this->head, key); // Set Head Node as p Node
 }
 
 // Method to Compare Two Nodes Values
-template <class T>
-int NumberDoublyLinkedList<T>::compare(int index1, int index2)
+template <class NodeType>
+int NumberDoublyLinkedList<NodeType>::compare(int index1, int index2)
 {
   /*
   Possible Results:
@@ -167,7 +167,7 @@ int NumberDoublyLinkedList<T>::compare(int index1, int index2)
 
   */
 
-  T value1, value2;
+  NodeType value1, value2;
 
   value1 = this->get(index1);
   value2 = this->get(index2);
@@ -182,12 +182,12 @@ int NumberDoublyLinkedList<T>::compare(int index1, int index2)
 }
 
 // Method to Create Single Linked List
-template <class T>
-NumberSingleLinkedList<T> NumberDoublyLinkedList<T>::SingleLinkedList()
+template <class NodeType>
+NumberSingleLinkedList<NodeType> NumberDoublyLinkedList<NodeType>::SingleLinkedList()
 {
-  NumberSingleLinkedList<T> copy(this->error);
+  NumberSingleLinkedList<NodeType> copy(this->error);
 
-  DoublyNodePtr<T> p = this->head;
+  DoublyNodePtr<NodeType> p = this->head;
 
   while (p != NULL)
   {

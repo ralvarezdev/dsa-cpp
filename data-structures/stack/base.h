@@ -6,21 +6,21 @@
 #define STACK_LINKED_LISTS
 
 // SingleNodePtr Definition
-template <class T>
-using SingleNodePtr = SingleNode<T> *;
+template <class NodeType>
+using SingleNodePtr = SingleNode<NodeType> *;
 
 // STACK LINKED LIST CLASS
 // LIFO
 // Last-in, First-out
 
-template <class T>
+template <class NodeType>
 class StackLinkedList
 {
 protected:
-  SingleNodePtr<T> head;
+  SingleNodePtr<NodeType> head;
 
   int length = 0;
-  T error;
+  NodeType error;
 
   // Private Methods
   void increaseLength();
@@ -29,41 +29,41 @@ protected:
 
 public:
   // Constructors
-  StackLinkedList(T);
-  StackLinkedList(T, T);
-  StackLinkedList(T[], int, T);
+  StackLinkedList(NodeType);
+  StackLinkedList(NodeType, NodeType);
+  StackLinkedList(NodeType[], int, NodeType);
   ~StackLinkedList();
 
   // Public Methods
   bool isEmpty();
-  void push(T);
-  T pop(bool);
-  T pop();
-  T top();
+  void push(NodeType);
+  NodeType pop(bool);
+  NodeType pop();
+  NodeType top();
   int getLength();
 };
 
 // Stack Constructors
 
 // Create Stack Linked List and Set Error Value
-template <class T>
-StackLinkedList<T>::StackLinkedList(T error)
+template <class NodeType>
+StackLinkedList<NodeType>::StackLinkedList(NodeType error)
 {
   // Default Error Value
   this->error = error;
 }
 
 // Add Head with Only One Next Node
-template <class T>
-StackLinkedList<T>::StackLinkedList(T data, T error)
+template <class NodeType>
+StackLinkedList<NodeType>::StackLinkedList(NodeType data, NodeType error)
 {
-  SingleNodePtr<T> p;
+  SingleNodePtr<NodeType> p;
 
   // Default Error Value
   this->error = error;
 
   // Create New Node
-  p = new SingleNode<T>(data);
+  p = new SingleNode<NodeType>(data);
 
   // Set Node as Head
   this->head = p;
@@ -73,45 +73,45 @@ StackLinkedList<T>::StackLinkedList(T data, T error)
 }
 
 // Add Head and Multiple Next Nodes
-template <class T>
-StackLinkedList<T>::StackLinkedList(T data[], int length, T error)
+template <class NodeType>
+StackLinkedList<NodeType>::StackLinkedList(NodeType data[], int length, NodeType error)
 {
   // Default Error Value
   this->error = error;
 
   // Create First Node
-  this->head = new SingleNode<T>(data[0]);
+  this->head = new SingleNode<NodeType>(data[0]);
 
   // Add Next Nodes
   for (int i = 1; i < length; i++)
     // Add Node
-    this->head = new SingleNode<T>(data[i], this->head);
+    this->head = new SingleNode<NodeType>(data[i], this->head);
 
   // Increase Length
   this->increaseLength(length);
 }
 
 // Destructor
-template <class T>
-StackLinkedList<T>::~StackLinkedList()
+template <class NodeType>
+StackLinkedList<NodeType>::~StackLinkedList()
 {
   // Remove Node Next to Head if It isn't Empty
   while (!isEmpty())
     this->pop(true);
 
   // Remove Head Node
-  SingleNodePtr<T> temp = this->head;
+  SingleNodePtr<NodeType> temp = this->head;
   this->head = NULL;
 
   delete[] temp;
 }
 
 // Method to Insert Node Before Head
-template <class T>
-void StackLinkedList<T>::push(T data)
+template <class NodeType>
+void StackLinkedList<NodeType>::push(NodeType data)
 {
   // Insert Node Before Head
-  SingleNodePtr<T> h = new SingleNode<T>(data, this->head);
+  SingleNodePtr<NodeType> h = new SingleNode<NodeType>(data, this->head);
 
   // Set h Node as Head
   this->head = h;
@@ -120,17 +120,17 @@ void StackLinkedList<T>::push(T data)
 }
 
 // Method to Remove Head Node
-template <class T>
-T StackLinkedList<T>::pop(bool destructor)
+template <class NodeType>
+NodeType StackLinkedList<NodeType>::pop(bool destructor)
 {
-  SingleNodePtr<T> m, n;
+  SingleNodePtr<NodeType> m, n;
 
   if (this->isEmpty())
     return this->error;
 
   // Get Head Node
   m = this->head;
-  T data = m->data;
+  NodeType data = m->data;
 
   // Get Next Node to the One that will be Removed
   n = m->next;
@@ -150,15 +150,15 @@ T StackLinkedList<T>::pop(bool destructor)
 }
 
 // Method Overloads
-template <class T>
-T StackLinkedList<T>::pop()
+template <class NodeType>
+NodeType StackLinkedList<NodeType>::pop()
 {
   return this->pop(false);
 }
 
 // Method to Get Node Data at Top Position
-template <class T>
-T StackLinkedList<T>::top()
+template <class NodeType>
+NodeType StackLinkedList<NodeType>::top()
 {
   // Check pos
   if (this->isEmpty())
@@ -168,35 +168,35 @@ T StackLinkedList<T>::top()
 }
 
 // Method to Check if Stack is Empty
-template <class T>
-bool StackLinkedList<T>::isEmpty()
+template <class NodeType>
+bool StackLinkedList<NodeType>::isEmpty()
 {
   return this->head == NULL;
 }
 
 // Method to Increase Stack Length
-template <class T>
-void StackLinkedList<T>::increaseLength()
+template <class NodeType>
+void StackLinkedList<NodeType>::increaseLength()
 {
   this->length += 1;
 }
 
-template <class T>
-void StackLinkedList<T>::increaseLength(int length)
+template <class NodeType>
+void StackLinkedList<NodeType>::increaseLength(int length)
 {
   this->length += length;
 }
 
 // Method to Decrease Stack Length
-template <class T>
-void StackLinkedList<T>::decreaseLength()
+template <class NodeType>
+void StackLinkedList<NodeType>::decreaseLength()
 {
   this->length -= 1;
 }
 
 // Method to Get Stack Length
-template <class T>
-int StackLinkedList<T>::getLength()
+template <class NodeType>
+int StackLinkedList<NodeType>::getLength()
 {
   return this->length;
 }

@@ -4,36 +4,36 @@
 // DOUBLY NODE CLASS
 // Self-Referential Structure
 
-template <class T>
+template <class NodeType>
 class DoublyNode
 {
 public:
-  T data;
+  NodeType data;
   DoublyNode *prev = NULL;
   DoublyNode *next = NULL;
 
   // Constructors
   DoublyNode();
-  DoublyNode(T);
-  DoublyNode(T, DoublyNode *);
-  DoublyNode(T, DoublyNode *, DoublyNode *);
+  DoublyNode(NodeType);
+  DoublyNode(NodeType, DoublyNode *);
+  DoublyNode(NodeType, DoublyNode *, DoublyNode *);
 };
 
 // Doubly Node Class Constructors
-template <class T>
-DoublyNode<T>::DoublyNode()
+template <class NodeType>
+DoublyNode<NodeType>::DoublyNode()
 {
   return;
 }
 
-template <class T>
-DoublyNode<T>::DoublyNode(T data)
+template <class NodeType>
+DoublyNode<NodeType>::DoublyNode(NodeType data)
 {
   this->data = data;
 }
 
-template <class T>
-DoublyNode<T>::DoublyNode(T data, DoublyNode<T> *prev)
+template <class NodeType>
+DoublyNode<NodeType>::DoublyNode(NodeType data, DoublyNode<NodeType> *prev)
 {
   this->data = data;
   this->prev = prev;
@@ -42,8 +42,8 @@ DoublyNode<T>::DoublyNode(T data, DoublyNode<T> *prev)
     prev->next = this;
 }
 
-template <class T>
-DoublyNode<T>::DoublyNode(T data, DoublyNode<T> *prev, DoublyNode<T> *next)
+template <class NodeType>
+DoublyNode<NodeType>::DoublyNode(NodeType data, DoublyNode<NodeType> *prev, DoublyNode<NodeType> *next)
 {
   this->data = data;
   this->prev = prev;

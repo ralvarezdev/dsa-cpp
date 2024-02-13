@@ -6,22 +6,22 @@
 #define QUEUE_LINKED_LISTS
 
 // SingleNodePtr Definition
-template <class T>
-using SingleNodePtr = SingleNode<T> *;
+template <class NodeType>
+using SingleNodePtr = SingleNode<NodeType> *;
 
 // QUEUE LINKED LIST CLASS
 // FIFO
 // First-in, First-out
 
-template <class T>
+template <class NodeType>
 class QueueLinkedList
 {
 protected:
-  SingleNodePtr<T> head;
-  SingleNodePtr<T> tail;
+  SingleNodePtr<NodeType> head;
+  SingleNodePtr<NodeType> tail;
 
   int length = 0;
-  T error;
+  NodeType error;
 
   // Private Methods
   void increaseLength();
@@ -30,42 +30,42 @@ protected:
 
 public:
   // Constructors
-  QueueLinkedList(T);
-  QueueLinkedList(T, T);
-  QueueLinkedList(T[], int, T);
+  QueueLinkedList(NodeType);
+  QueueLinkedList(NodeType, NodeType);
+  QueueLinkedList(NodeType[], int, NodeType);
   ~QueueLinkedList();
 
   // Public Methods
   bool isEmpty();
-  void push(T);
-  T pop(bool);
-  T pop();
-  T first();
-  T last();
+  void push(NodeType);
+  NodeType pop(bool);
+  NodeType pop();
+  NodeType first();
+  NodeType last();
   int getLength();
 };
 
 // Queue Constructors
 
 // Create Queue Linked List and Set Error Value
-template <class T>
-QueueLinkedList<T>::QueueLinkedList(T error)
+template <class NodeType>
+QueueLinkedList<NodeType>::QueueLinkedList(NodeType error)
 {
   // Default Error Value
   this->error = error;
 }
 
 // Add Head with Only One Next Node
-template <class T>
-QueueLinkedList<T>::QueueLinkedList(T data, T error)
+template <class NodeType>
+QueueLinkedList<NodeType>::QueueLinkedList(NodeType data, NodeType error)
 {
-  SingleNodePtr<T> p;
+  SingleNodePtr<NodeType> p;
 
   // Default Error Value
   this->error = error;
 
   // Create New Node
-  p = new SingleNode<T>(data);
+  p = new SingleNode<NodeType>(data);
 
   // Set Node as Head and as Tail
   this->tail = this->head = p;
@@ -75,16 +75,16 @@ QueueLinkedList<T>::QueueLinkedList(T data, T error)
 }
 
 // Add Head and Multiple Next Nodes
-template <class T>
-QueueLinkedList<T>::QueueLinkedList(T data[], int length, T error)
+template <class NodeType>
+QueueLinkedList<NodeType>::QueueLinkedList(NodeType data[], int length, NodeType error)
 {
-  SingleNodePtr<T> p;
+  SingleNodePtr<NodeType> p;
 
   // Default Error Value
   this->error = error;
 
   // Create First Node
-  p = new SingleNode<T>(data[0]);
+  p = new SingleNode<NodeType>(data[0]);
 
   // Set p Node as Head
   this->head = p;
@@ -92,7 +92,7 @@ QueueLinkedList<T>::QueueLinkedList(T data[], int length, T error)
   // Add Next Nodes
   for (int i = 1; i < length; i++)
     // Add Node
-    p = new SingleNode<T>(data[i], p);
+    p = new SingleNode<NodeType>(data[i], p);
 
   // Set p Node as Tail
   this->tail = p;
@@ -102,25 +102,25 @@ QueueLinkedList<T>::QueueLinkedList(T data[], int length, T error)
 }
 
 // Destructor
-template <class T>
-QueueLinkedList<T>::~QueueLinkedList()
+template <class NodeType>
+QueueLinkedList<NodeType>::~QueueLinkedList()
 {
   // Remove Node Next to Head if It isn't Empty
   while (!isEmpty())
     this->pop(true);
 
   // Remove Head Node
-  SingleNodePtr<T> temp = this->head;
+  SingleNodePtr<NodeType> temp = this->head;
   this->head = NULL;
 
   delete[] temp;
 }
 
 // Method to Insert Node at Tail
-template <class T>
-void QueueLinkedList<T>::push(T data)
+template <class NodeType>
+void QueueLinkedList<NodeType>::push(NodeType data)
 {
-  SingleNodePtr<T> n = new SingleNode<T>(data);
+  SingleNodePtr<NodeType> n = new SingleNode<NodeType>(data);
 
   // Set Node at Tail
   this->tail->next = n;
@@ -136,17 +136,17 @@ void QueueLinkedList<T>::push(T data)
 }
 
 // Method to Remove Head Node
-template <class T>
-T QueueLinkedList<T>::pop(bool destructor)
+template <class NodeType>
+NodeType QueueLinkedList<NodeType>::pop(bool destructor)
 {
   if (this->isEmpty())
     return this->error;
 
-  SingleNodePtr<T> m, n;
+  SingleNodePtr<NodeType> m, n;
 
   // Get Head Node
   m = this->head;
-  T data = m->data;
+  NodeType data = m->data;
 
   // Get Next Node to the One that will be Removed
   n = m->next;
@@ -166,15 +166,15 @@ T QueueLinkedList<T>::pop(bool destructor)
 }
 
 // Method Overloads
-template <class T>
-T QueueLinkedList<T>::pop()
+template <class NodeType>
+NodeType QueueLinkedList<NodeType>::pop()
 {
   return this->pop(false);
 }
 
 // Method to Get First Node Data
-template <class T>
-T QueueLinkedList<T>::first()
+template <class NodeType>
+NodeType QueueLinkedList<NodeType>::first()
 {
   // Check pos
   if (this->isEmpty())
@@ -184,8 +184,8 @@ T QueueLinkedList<T>::first()
 }
 
 // Method to Get Last Node Data
-template <class T>
-T QueueLinkedList<T>::last()
+template <class NodeType>
+NodeType QueueLinkedList<NodeType>::last()
 {
   // Check pos
   if (this->isEmpty())
@@ -195,35 +195,35 @@ T QueueLinkedList<T>::last()
 }
 
 // Method to Check if Linked List is Empty
-template <class T>
-bool QueueLinkedList<T>::isEmpty()
+template <class NodeType>
+bool QueueLinkedList<NodeType>::isEmpty()
 {
   return this->head == NULL;
 }
 
 // Method to Increase Linked List Length
-template <class T>
-void QueueLinkedList<T>::increaseLength()
+template <class NodeType>
+void QueueLinkedList<NodeType>::increaseLength()
 {
   this->length += 1;
 }
 
-template <class T>
-void QueueLinkedList<T>::increaseLength(int length)
+template <class NodeType>
+void QueueLinkedList<NodeType>::increaseLength(int length)
 {
   this->length += length;
 }
 
 // Method to Decrease Linked List Length
-template <class T>
-void QueueLinkedList<T>::decreaseLength()
+template <class NodeType>
+void QueueLinkedList<NodeType>::decreaseLength()
 {
   this->length -= 1;
 }
 
 // Method to Get Linked List Length
-template <class T>
-int QueueLinkedList<T>::getLength()
+template <class NodeType>
+int QueueLinkedList<NodeType>::getLength()
 {
   return this->length;
 }

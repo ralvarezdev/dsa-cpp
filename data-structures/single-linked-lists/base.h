@@ -6,49 +6,49 @@
 #define SINGLE_LINKED_LISTS
 
 // SingleNodePtr Definition
-template <class T>
-using SingleNodePtr = SingleNode<T> *;
+template <class NodeType>
+using SingleNodePtr = SingleNode<NodeType> *;
 
 // SINGLE LINKED LIST CLASS
 
-template <class T>
+template <class NodeType>
 class SingleLinkedList
 {
 protected:
-  SingleNodePtr<T> head;
-  SingleNodePtr<T> tail;
-  // SingleNodePtr<T> curr;
+  SingleNodePtr<NodeType> head;
+  SingleNodePtr<NodeType> tail;
+  // SingleNodePtr<NodeType> curr;
 
   int length = 0;
-  T error;
+  NodeType error;
 
   // Private Methods
   void increaseLength();
   void increaseLength(int);
   void decreaseLength();
-  SingleNodePtr<T> move(SingleNodePtr<T>, int);
-  T remove(bool);
+  SingleNodePtr<NodeType> move(SingleNodePtr<NodeType>, int);
+  NodeType remove(bool);
 
 public:
   // Constructors
-  SingleLinkedList(T);
-  SingleLinkedList(T, T);
-  SingleLinkedList(T[], int, T);
+  SingleLinkedList(NodeType);
+  SingleLinkedList(NodeType, NodeType);
+  SingleLinkedList(NodeType[], int, NodeType);
   ~SingleLinkedList();
 
   // Public Methods
   bool isEmpty();
-  void push(T);
-  void pushBack(T);
-  void insertAt(T, int);
-  T remove();
-  T pop();
-  T removeAt(int);
-  T change(T, int);
-  T get(int);
-  // void setCurrent(SingleNodePtr<T>);
+  void push(NodeType);
+  void pushBack(NodeType);
+  void insertAt(NodeType, int);
+  NodeType remove();
+  NodeType pop();
+  NodeType removeAt(int);
+  NodeType change(NodeType, int);
+  NodeType get(int);
+  // void setCurrent(SingleNodePtr<NodeType>);
   // void setCurrent();
-  //  int count(SingleNodePtr<T>);
+  //  int count(SingleNodePtr<NodeType>);
   int getLength();
   void concat(SingleLinkedList);
 };
@@ -56,16 +56,16 @@ public:
 // Single Linked List Constructors
 
 // Add Head with Next Node as NULL
-template <class T>
-SingleLinkedList<T>::SingleLinkedList(T error)
+template <class NodeType>
+SingleLinkedList<NodeType>::SingleLinkedList(NodeType error)
 {
-  SingleNodePtr<T> p;
+  SingleNodePtr<NodeType> p;
 
   // Default Error Value
   this->error = error;
 
   // Add Node as Head and Tail
-  this->head = this->tail = p = new SingleNode<T>();
+  this->head = this->tail = p = new SingleNode<NodeType>();
 
   /*
     // Set Head as Current Node
@@ -74,19 +74,19 @@ SingleLinkedList<T>::SingleLinkedList(T error)
 }
 
 // Add Head with Only One Next Node
-template <class T>
-SingleLinkedList<T>::SingleLinkedList(T data, T error)
+template <class NodeType>
+SingleLinkedList<NodeType>::SingleLinkedList(NodeType data, NodeType error)
 {
-  SingleNodePtr<T> p;
+  SingleNodePtr<NodeType> p;
 
   // Default Error Value
   this->error = error;
 
   // Add Head
-  this->head = p = new SingleNode<T>();
+  this->head = p = new SingleNode<NodeType>();
 
   // Add Next Node
-  p = new SingleNode<T>(data);
+  p = new SingleNode<NodeType>(data);
 
   // Add Node as Head Next Node and as Tail
   this->tail = this->head->next = p;
@@ -101,22 +101,22 @@ SingleLinkedList<T>::SingleLinkedList(T data, T error)
 }
 
 // Add Head and Multiple Next Nodes
-template <class T>
-SingleLinkedList<T>::SingleLinkedList(T data[], int length, T error)
+template <class NodeType>
+SingleLinkedList<NodeType>::SingleLinkedList(NodeType data[], int length, NodeType error)
 {
-  SingleNodePtr<T> p;
+  SingleNodePtr<NodeType> p;
 
   // Default Error Value
   this->error = error;
 
   // Add Head
-  this->head = p = new SingleNode<T>();
+  this->head = p = new SingleNode<NodeType>();
 
   // Add Next Nodes
   for (int i = 0; i < length; i++)
   {
     // Add Node
-    p->next = new SingleNode<T>(data[i]);
+    p->next = new SingleNode<NodeType>(data[i]);
 
     // Move to Next Node
     p = p->next;
@@ -135,23 +135,23 @@ SingleLinkedList<T>::SingleLinkedList(T data[], int length, T error)
 }
 
 // Destructor
-template <class T>
-SingleLinkedList<T>::~SingleLinkedList()
+template <class NodeType>
+SingleLinkedList<NodeType>::~SingleLinkedList()
 {
   // Remove Node Next to Head if It isn't Empty
   while (!isEmpty())
     this->remove(true);
 
   // Remove Head Node
-  SingleNodePtr<T> temp = this->head;
+  SingleNodePtr<NodeType> temp = this->head;
   this->head = NULL;
 
   delete[] temp;
 }
 
 // Method to Move to Next Node N Times
-template <class T>
-SingleNodePtr<T> SingleLinkedList<T>::move(SingleNodePtr<T> p, int n)
+template <class NodeType>
+SingleNodePtr<NodeType> SingleLinkedList<NodeType>::move(SingleNodePtr<NodeType> p, int n)
 {
   // Move to Next N Nodes
   for (int i = 0; i < n; i++)
@@ -166,14 +166,14 @@ SingleNodePtr<T> SingleLinkedList<T>::move(SingleNodePtr<T> p, int n)
 }
 
 // Method to Insert Node Next to Head
-template <class T>
-void SingleLinkedList<T>::push(T data)
+template <class NodeType>
+void SingleLinkedList<NodeType>::push(NodeType data)
 {
-  SingleNodePtr<T> n, p;
+  SingleNodePtr<NodeType> n, p;
 
   // Insert Node Next to Head
   n = this->head->next;
-  p = new SingleNode<T>(data, n);
+  p = new SingleNode<NodeType>(data, n);
 
   // Set Node as Tail
   if (this->getLength() == 0)
@@ -186,8 +186,8 @@ void SingleLinkedList<T>::push(T data)
 }
 
 // Method to Insert Node at Given Position
-template <class T>
-void SingleLinkedList<T>::insertAt(T data, int pos)
+template <class NodeType>
+void SingleLinkedList<NodeType>::insertAt(NodeType data, int pos)
 {
   // Check pos
   if (pos == 0)
@@ -205,7 +205,7 @@ void SingleLinkedList<T>::insertAt(T data, int pos)
   if (pos < 0)
     pos = this->length + pos + 1; // Get Position
 
-  SingleNodePtr<T> p, m, n;
+  SingleNodePtr<NodeType> p, m, n;
 
   // Move to Next Node pos Times
   p = this->move(this->head, pos);
@@ -218,7 +218,7 @@ void SingleLinkedList<T>::insertAt(T data, int pos)
   n = p->next;
 
   // Create New Node and Set m as Next Node
-  m = new SingleNode<T>(data, n);
+  m = new SingleNode<NodeType>(data, n);
 
   // Set Node at Given Position
   p->next = m;
@@ -227,10 +227,10 @@ void SingleLinkedList<T>::insertAt(T data, int pos)
 }
 
 // Method to Insert Node at Tail
-template <class T>
-void SingleLinkedList<T>::pushBack(T data)
+template <class NodeType>
+void SingleLinkedList<NodeType>::pushBack(NodeType data)
 {
-  SingleNodePtr<T> n = new SingleNode<T>(data);
+  SingleNodePtr<NodeType> n = new SingleNode<NodeType>(data);
 
   // Set Node at Tail
   this->tail->next = n;
@@ -242,15 +242,15 @@ void SingleLinkedList<T>::pushBack(T data)
 }
 
 // Method to Remove Node Next to Head
-template <class T>
-T SingleLinkedList<T>::remove(bool destructor)
+template <class NodeType>
+NodeType SingleLinkedList<NodeType>::remove(bool destructor)
 {
   if (this->isEmpty())
     return this->error;
 
   // Get Node Next to Head
-  SingleNodePtr<T> n = this->head->next;
-  T data = n->data;
+  SingleNodePtr<NodeType> n = this->head->next;
+  NodeType data = n->data;
 
   // Remove n Node from Linked List
   head->next = n->next;
@@ -267,20 +267,20 @@ T SingleLinkedList<T>::remove(bool destructor)
 }
 
 // Method Overloads
-template <class T>
-T SingleLinkedList<T>::remove()
+template <class NodeType>
+NodeType SingleLinkedList<NodeType>::remove()
 {
   return this->remove(false);
 }
 
 // Method to Remove Node at Tail
-template <class T>
-T SingleLinkedList<T>::pop()
+template <class NodeType>
+NodeType SingleLinkedList<NodeType>::pop()
 {
   if (this->isEmpty())
     return this->error;
 
-  SingleNodePtr<T> t, p;
+  SingleNodePtr<NodeType> t, p;
 
   this->decreaseLength();
 
@@ -289,7 +289,7 @@ T SingleLinkedList<T>::pop()
 
   // Get Tail
   t = this->tail;
-  T data = t->data;
+  NodeType data = t->data;
   p->next = NULL;
 
   // Set Previous Node as Tail
@@ -302,8 +302,8 @@ T SingleLinkedList<T>::pop()
 }
 
 // Method to Remove Node at Given Index
-template <class T>
-T SingleLinkedList<T>::removeAt(int pos)
+template <class NodeType>
+NodeType SingleLinkedList<NodeType>::removeAt(int pos)
 {
   // Check pos
   if (pos == 0)
@@ -318,7 +318,7 @@ T SingleLinkedList<T>::removeAt(int pos)
   if (pos == -1 || pos == this->length)
     return this->pop(); // Remove Tail
 
-  SingleNodePtr<T> p, m, n;
+  SingleNodePtr<NodeType> p, m, n;
 
   this->decreaseLength();
 
@@ -334,7 +334,7 @@ T SingleLinkedList<T>::removeAt(int pos)
 
   // Remove Node
   n = m->next;
-  T data = m->data;
+  NodeType data = m->data;
   p->next = n;
 
   // Deallocate Memory
@@ -344,11 +344,11 @@ T SingleLinkedList<T>::removeAt(int pos)
 }
 
 // Method to Modify Node Value at Given Position
-template <class T>
-T SingleLinkedList<T>::change(T data, int pos)
+template <class NodeType>
+NodeType SingleLinkedList<NodeType>::change(NodeType data, int pos)
 {
-  SingleNodePtr<T> n;
-  T old;
+  SingleNodePtr<NodeType> n;
+  NodeType old;
 
   if (pos == 0)
   {
@@ -392,8 +392,8 @@ T SingleLinkedList<T>::change(T data, int pos)
 }
 
 // Method to Get Node at Given Position
-template <class T>
-T SingleLinkedList<T>::get(int pos)
+template <class NodeType>
+NodeType SingleLinkedList<NodeType>::get(int pos)
 {
   // Check pos
   if (this->isEmpty())
@@ -412,7 +412,7 @@ T SingleLinkedList<T>::get(int pos)
     pos = this->length + pos; // Get Position
   pos += 1;
 
-  SingleNodePtr<T> n;
+  SingleNodePtr<NodeType> n;
 
   n = this->head;
 
@@ -428,43 +428,43 @@ T SingleLinkedList<T>::get(int pos)
 }
 
 // Method to Check if Linked List is Empty
-template <class T>
-bool SingleLinkedList<T>::isEmpty()
+template <class NodeType>
+bool SingleLinkedList<NodeType>::isEmpty()
 {
   return this->head->next == NULL;
 }
 
 // Method to Increase Linked List Length
-template <class T>
-void SingleLinkedList<T>::increaseLength()
+template <class NodeType>
+void SingleLinkedList<NodeType>::increaseLength()
 {
   this->length += 1;
 }
 
-template <class T>
-void SingleLinkedList<T>::increaseLength(int length)
+template <class NodeType>
+void SingleLinkedList<NodeType>::increaseLength(int length)
 {
   this->length += length;
 }
 
 // Method to Decrease Linked List Length
-template <class T>
-void SingleLinkedList<T>::decreaseLength()
+template <class NodeType>
+void SingleLinkedList<NodeType>::decreaseLength()
 {
   this->length -= 1;
 }
 
 /*
 // Method to Set Current Node
-template <class T>
-void SingleLinkedList<T>::setCurrent(SingleNodePtr<T> p)
+template <class NodeType>
+void SingleLinkedList<NodeType>::setCurrent(SingleNodePtr<NodeType> p)
 {
   this->curr = p;
 }
 
 // Method Overload to Set Head Node as Current Node
-template <class T>
-void SingleLinkedList<T>::setCurrent()
+template <class NodeType>
+void SingleLinkedList<NodeType>::setCurrent()
 {
   this->curr = this->head;
 }
@@ -472,8 +472,8 @@ void SingleLinkedList<T>::setCurrent()
 
 /*
 // Count Nodes with a Recursive Method
-template <class T>
-int SingleLinkedList<T>::count(SingleNodePtr<T> p)
+template <class NodeType>
+int SingleLinkedList<NodeType>::count(SingleNodePtr<NodeType> p)
 {
   if (p != NULL)
     return count(p->next) + 1;
@@ -486,15 +486,15 @@ int SingleLinkedList<T>::count(SingleNodePtr<T> p)
 */
 
 // Method to Get Linked List Length
-template <class T>
-int SingleLinkedList<T>::getLength()
+template <class NodeType>
+int SingleLinkedList<NodeType>::getLength()
 {
   return this->length;
 }
 
 // Method to Concat Two Linked Lists
-template <class T>
-void SingleLinkedList<T>::concat(SingleLinkedList<T> l)
+template <class NodeType>
+void SingleLinkedList<NodeType>::concat(SingleLinkedList<NodeType> l)
 {
   // Assign l First Node Next to this Linked List Tail
   this->tail->next = l->head->next;

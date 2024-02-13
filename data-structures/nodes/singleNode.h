@@ -4,34 +4,34 @@
 // SINGLE NODE CLASS
 // Self-Referential Structure
 
-template <class T>
+template <class NodeType>
 class SingleNode
 {
 public:
-  T data;
+  NodeType data;
   SingleNode *next = NULL;
 
   // Constructors
   SingleNode();
-  SingleNode(T);
-  SingleNode(T, SingleNode *);
+  SingleNode(NodeType);
+  SingleNode(NodeType, SingleNode *);
 };
 
 // Node Class Constructors
-template <class T>
-SingleNode<T>::SingleNode()
+template <class NodeType>
+SingleNode<NodeType>::SingleNode()
 {
   return;
 }
 
-template <class T>
-SingleNode<T>::SingleNode(T data)
+template <class NodeType>
+SingleNode<NodeType>::SingleNode(NodeType data)
 {
   this->data = data;
 }
 
-template <class T>
-SingleNode<T>::SingleNode(T data, SingleNode<T> *next)
+template <class NodeType>
+SingleNode<NodeType>::SingleNode(NodeType data, SingleNode<NodeType> *next)
 {
   this->data = data;
   this->next = next;

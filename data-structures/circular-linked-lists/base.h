@@ -10,41 +10,41 @@ using std::abs;
 
 // CIRCULAR LINKED LIST CLASS
 
-template <class T>
+template <class NodeType>
 class CircularLinkedList
 {
 protected:
-  DoublyNodePtr<T> head;
+  DoublyNodePtr<NodeType> head;
 
   int length = 0;
-  T error;
+  NodeType error;
 
   // Private Methods
   void increaseLength();
   void increaseLength(int);
   void decreaseLength();
-  DoublyNodePtr<T> move(int);
-  T remove(bool);
-  T pop(bool);
-  T setNULL(bool);
+  DoublyNodePtr<NodeType> move(int);
+  NodeType remove(bool);
+  NodeType pop(bool);
+  NodeType setNULL(bool);
 
 public:
   // Constructors
-  CircularLinkedList(T);
-  CircularLinkedList(T, T);
-  CircularLinkedList(T[], int, T);
+  CircularLinkedList(NodeType);
+  CircularLinkedList(NodeType, NodeType);
+  CircularLinkedList(NodeType[], int, NodeType);
   ~CircularLinkedList();
 
   // Public Methods
   bool isEmpty();
-  void push(T);
-  void pushBack(T);
-  void insertAt(T, int);
-  T remove();
-  T pop();
-  T removeAt(int);
-  T change(T, int);
-  T get(int);
+  void push(NodeType);
+  void pushBack(NodeType);
+  void insertAt(NodeType, int);
+  NodeType remove();
+  NodeType pop();
+  NodeType removeAt(int);
+  NodeType change(NodeType, int);
+  NodeType get(int);
   int getLength();
   void concat(CircularLinkedList);
 };
@@ -52,24 +52,24 @@ public:
 // Circular Linked List Constructors
 
 // Create Circular Linked List and Set Error Value
-template <class T>
-CircularLinkedList<T>::CircularLinkedList(T error)
+template <class NodeType>
+CircularLinkedList<NodeType>::CircularLinkedList(NodeType error)
 {
   // Default Error Value
   this->error = error;
 }
 
 // Add Head with Only One Next Node
-template <class T>
-CircularLinkedList<T>::CircularLinkedList(T data, T error)
+template <class NodeType>
+CircularLinkedList<NodeType>::CircularLinkedList(NodeType data, NodeType error)
 {
-  DoublyNodePtr<T> p;
+  DoublyNodePtr<NodeType> p;
 
   // Default Error Value
   this->error = error;
 
   // Create New Node
-  p = new DoublyNode<T>(data);
+  p = new DoublyNode<NodeType>(data);
 
   // Set Node as Head
   this->head = p;
@@ -82,16 +82,16 @@ CircularLinkedList<T>::CircularLinkedList(T data, T error)
 }
 
 // Add Head and Multiple Next Nodes
-template <class T>
-CircularLinkedList<T>::CircularLinkedList(T data[], int length, T error)
+template <class NodeType>
+CircularLinkedList<NodeType>::CircularLinkedList(NodeType data[], int length, NodeType error)
 {
-  DoublyNodePtr<T> p;
+  DoublyNodePtr<NodeType> p;
 
   // Default Error Value
   this->error = error;
 
   // Create First Node
-  p = new DoublyNode<T>(data[0]);
+  p = new DoublyNode<NodeType>(data[0]);
 
   // Set p Node as Head
   this->head = p;
@@ -99,7 +99,7 @@ CircularLinkedList<T>::CircularLinkedList(T data[], int length, T error)
   // Add Next Nodes
   for (int i = 1; i < length; i++)
     // Add Node
-    p = new DoublyNode<T>(data[i], p);
+    p = new DoublyNode<NodeType>(data[i], p);
 
   // Set p Next Node to Head, and Set Head Previous Node to p
   p->next = this->head;
@@ -110,8 +110,8 @@ CircularLinkedList<T>::CircularLinkedList(T data[], int length, T error)
 }
 
 // Destructor
-template <class T>
-CircularLinkedList<T>::~CircularLinkedList()
+template <class NodeType>
+CircularLinkedList<NodeType>::~CircularLinkedList()
 {
   // Remove Head Previous Node if It isn't Empty
   while (!isEmpty())
@@ -119,10 +119,10 @@ CircularLinkedList<T>::~CircularLinkedList()
 }
 
 // Method to Move to Next Node N Times
-template <class T>
-DoublyNodePtr<T> CircularLinkedList<T>::move(int n)
+template <class NodeType>
+DoublyNodePtr<NodeType> CircularLinkedList<NodeType>::move(int n)
 {
-  DoublyNodePtr<T> p;
+  DoublyNodePtr<NodeType> p;
   int mov = n > 0 ? n : n + 1;
   bool backwards = n < 0;
 
@@ -157,19 +157,19 @@ DoublyNodePtr<T> CircularLinkedList<T>::move(int n)
 }
 
 // Method to Insert Node Before Head
-template <class T>
-void CircularLinkedList<T>::push(T data)
+template <class NodeType>
+void CircularLinkedList<NodeType>::push(NodeType data)
 {
-  DoublyNodePtr<T> h;
+  DoublyNodePtr<NodeType> h;
 
   // Insert Node Before Head
   if (this->isEmpty())
   {
-    h = new DoublyNode<T>(data, NULL, NULL);
+    h = new DoublyNode<NodeType>(data, NULL, NULL);
     h->prev = h->next = h;
   }
   else
-    h = new DoublyNode<T>(data, this->head->prev, this->head);
+    h = new DoublyNode<NodeType>(data, this->head->prev, this->head);
 
   // Set h Node as Head
   this->head = h;
@@ -178,8 +178,8 @@ void CircularLinkedList<T>::push(T data)
 }
 
 // Method to Insert Node at Given Position
-template <class T>
-void CircularLinkedList<T>::insertAt(T data, int pos)
+template <class NodeType>
+void CircularLinkedList<NodeType>::insertAt(NodeType data, int pos)
 {
   // Check pos
   if (pos == 0)
@@ -197,7 +197,7 @@ void CircularLinkedList<T>::insertAt(T data, int pos)
   if (pos > 0)
     pos -= 1;
 
-  DoublyNodePtr<T> p, n;
+  DoublyNodePtr<NodeType> p, n;
 
   // Move to Next or Prev Node pos Times
   p = this->move(pos);
@@ -206,32 +206,32 @@ void CircularLinkedList<T>::insertAt(T data, int pos)
   n = p->next;
 
   // Create New Node
-  new DoublyNode<T>(data, p, n);
+  new DoublyNode<NodeType>(data, p, n);
 
   this->increaseLength();
 }
 
 // Method to Insert Node at Head Previous Node
-template <class T>
-void CircularLinkedList<T>::pushBack(T data)
+template <class NodeType>
+void CircularLinkedList<NodeType>::pushBack(NodeType data)
 {
   // Create New Node and Assign Old Head Previous Node as Previous Node
-  DoublyNodePtr<T> n = new DoublyNode<T>(data, this->head->prev, this->head);
+  DoublyNodePtr<NodeType> n = new DoublyNode<NodeType>(data, this->head->prev, this->head);
 
   this->increaseLength();
 }
 
 // Method to Safely Remove Head Node when it's the Only Node in Linked List
-template <class T>
-T CircularLinkedList<T>::setNULL(bool destructor)
+template <class NodeType>
+NodeType CircularLinkedList<NodeType>::setNULL(bool destructor)
 {
-  DoublyNodePtr<T> h;
+  DoublyNodePtr<NodeType> h;
 
   // Get Head Node
   h = this->head;
 
   // Get Head Data
-  T data = h->data;
+  NodeType data = h->data;
 
   // Set Head as NULL
   this->head = NULL;
@@ -246,10 +246,10 @@ T CircularLinkedList<T>::setNULL(bool destructor)
 }
 
 // Method to Remove Head Node
-template <class T>
-T CircularLinkedList<T>::remove(bool destructor)
+template <class NodeType>
+NodeType CircularLinkedList<NodeType>::remove(bool destructor)
 {
-  DoublyNodePtr<T> m, n;
+  DoublyNodePtr<NodeType> m, n;
 
   if (this->isEmpty())
     return this->error;
@@ -260,7 +260,7 @@ T CircularLinkedList<T>::remove(bool destructor)
 
   // Get Head Node
   m = this->head;
-  T data = m->data;
+  NodeType data = m->data;
 
   // Get Next Node to the One that will be Removed
   n = m->next;
@@ -282,15 +282,15 @@ T CircularLinkedList<T>::remove(bool destructor)
 }
 
 // Method Overloads
-template <class T>
-T CircularLinkedList<T>::remove()
+template <class NodeType>
+NodeType CircularLinkedList<NodeType>::remove()
 {
   return this->remove(false);
 }
 
 // Method to Remove Node at Head Previous Node
-template <class T>
-T CircularLinkedList<T>::pop(bool destructor)
+template <class NodeType>
+NodeType CircularLinkedList<NodeType>::pop(bool destructor)
 {
   if (this->isEmpty())
     return this->error;
@@ -299,7 +299,7 @@ T CircularLinkedList<T>::pop(bool destructor)
   if (this->getLength() == 1)
     return this->setNULL(destructor);
 
-  DoublyNodePtr<T> t, p;
+  DoublyNodePtr<NodeType> t, p;
 
   this->decreaseLength();
 
@@ -310,7 +310,7 @@ T CircularLinkedList<T>::pop(bool destructor)
   p = t->prev;
 
   // Get Tail Data
-  T data = t->data;
+  NodeType data = t->data;
 
   // Set Tail Next Node to Head
   p->next = this->head;
@@ -328,15 +328,15 @@ T CircularLinkedList<T>::pop(bool destructor)
 }
 
 // Method Overloads
-template <class T>
-T CircularLinkedList<T>::pop()
+template <class NodeType>
+NodeType CircularLinkedList<NodeType>::pop()
 {
   return this->pop(false);
 }
 
 // Method to Remove Node at Given Index
-template <class T>
-T CircularLinkedList<T>::removeAt(int pos)
+template <class NodeType>
+NodeType CircularLinkedList<NodeType>::removeAt(int pos)
 {
   // Check pos
   if (pos == -1 || pos >= this->length)
@@ -350,7 +350,7 @@ T CircularLinkedList<T>::removeAt(int pos)
 
   pos -= 1;
 
-  DoublyNodePtr<T> p, m, n;
+  DoublyNodePtr<NodeType> p, m, n;
 
   this->decreaseLength();
 
@@ -362,7 +362,7 @@ T CircularLinkedList<T>::removeAt(int pos)
 
   // Remove Node
   n = m->next;
-  T data = m->data;
+  NodeType data = m->data;
   p->next = n;
   n->prev = p;
 
@@ -373,17 +373,17 @@ T CircularLinkedList<T>::removeAt(int pos)
 }
 
 // Method to Modify Node Value at Given Position
-template <class T>
-T CircularLinkedList<T>::change(T data, int pos)
+template <class NodeType>
+NodeType CircularLinkedList<NodeType>::change(NodeType data, int pos)
 {
   if (this->isEmpty() || pos >= this->length)
     return this->error; // Node not Found
 
   // Move to Node
-  DoublyNodePtr<T> m = this->move(pos);
+  DoublyNodePtr<NodeType> m = this->move(pos);
 
   // Get Old Value
-  T old = m->data;
+  NodeType old = m->data;
 
   // Assign New Value
   m->data = data;
@@ -392,8 +392,8 @@ T CircularLinkedList<T>::change(T data, int pos)
 }
 
 // Method to Get Node at Given Position
-template <class T>
-T CircularLinkedList<T>::get(int pos)
+template <class NodeType>
+NodeType CircularLinkedList<NodeType>::get(int pos)
 {
   // Check pos
   if (this->isEmpty() || pos >= this->length)
@@ -406,7 +406,7 @@ T CircularLinkedList<T>::get(int pos)
     return this->head->prev->data; // Get Head Previous Node Data
 
   // Move to Node
-  DoublyNodePtr<T> m = this->move(pos);
+  DoublyNodePtr<NodeType> m = this->move(pos);
 
   // pos is Out of Range
   if (m == NULL)
@@ -417,42 +417,42 @@ T CircularLinkedList<T>::get(int pos)
 }
 
 // Method to Check if Linked List is Empty
-template <class T>
-bool CircularLinkedList<T>::isEmpty()
+template <class NodeType>
+bool CircularLinkedList<NodeType>::isEmpty()
 {
   return this->head == NULL;
 }
 
 // Method to Increase Linked List Length
-template <class T>
-void CircularLinkedList<T>::increaseLength()
+template <class NodeType>
+void CircularLinkedList<NodeType>::increaseLength()
 {
   this->length += 1;
 }
 
-template <class T>
-void CircularLinkedList<T>::increaseLength(int length)
+template <class NodeType>
+void CircularLinkedList<NodeType>::increaseLength(int length)
 {
   this->length += length;
 }
 
 // Method to Decrease Linked List Length
-template <class T>
-void CircularLinkedList<T>::decreaseLength()
+template <class NodeType>
+void CircularLinkedList<NodeType>::decreaseLength()
 {
   this->length -= 1;
 }
 
 // Method to Get Linked List Length
-template <class T>
-int CircularLinkedList<T>::getLength()
+template <class NodeType>
+int CircularLinkedList<NodeType>::getLength()
 {
   return this->length;
 }
 
 // Method to Concat Two Linked Lists
-template <class T>
-void CircularLinkedList<T>::concat(CircularLinkedList<T> l)
+template <class NodeType>
+void CircularLinkedList<NodeType>::concat(CircularLinkedList<NodeType> l)
 {
   // Assign l First Node Next to this Linked List Head Previous Node
   this->head->prev->next = l->head;

@@ -17,33 +17,33 @@ using std::string;
 
 // NUMBER LINKED LIST CLASS
 
-template <class T>
-class NumberSingleLinkedList : public SingleLinkedList<T>
+template <class NodeType>
+class NumberSingleLinkedList : public SingleLinkedList<NodeType>
 {
 public:
   // Inherit Constructors
-  using SingleLinkedList<T>::SingleLinkedList;
+  using SingleLinkedList<NodeType>::SingleLinkedList;
 
   // Public Methods
-  void insertionSort(T);
+  void insertionSort(NodeType);
   void print();
-  void print(SingleNodePtr<T>);
+  void print(SingleNodePtr<NodeType>);
   void printReverse();
-  void printReverse(SingleNodePtr<T>);
-  T total();
-  T total(SingleNodePtr<T>);
-  T max();
-  T max(SingleNodePtr<T>);
-  SingleNodePtr<T> linearSearch(T);
-  SingleNodePtr<T> linearSearch(SingleNodePtr<T>, T);
+  void printReverse(SingleNodePtr<NodeType>);
+  NodeType total();
+  NodeType total(SingleNodePtr<NodeType>);
+  NodeType max();
+  NodeType max(SingleNodePtr<NodeType>);
+  SingleNodePtr<NodeType> linearSearch(NodeType);
+  SingleNodePtr<NodeType> linearSearch(SingleNodePtr<NodeType>, NodeType);
   int compare(int, int);
 };
 
 // Method to Insert Node by Insertion Sort
-template <class T>
-void NumberSingleLinkedList<T>::insertionSort(T data)
+template <class NodeType>
+void NumberSingleLinkedList<NodeType>::insertionSort(NodeType data)
 {
-  SingleNodePtr<T> p, m, n;
+  SingleNodePtr<NodeType> p, m, n;
 
   // Insert Node Next to Head
   if (this->getLength() == 0)
@@ -75,8 +75,8 @@ void NumberSingleLinkedList<T>::insertionSort(T data)
 }
 
 // Method Print Nodes from Head to Tail
-template <class T>
-void NumberSingleLinkedList<T>::print(SingleNodePtr<T> p)
+template <class NodeType>
+void NumberSingleLinkedList<NodeType>::print(SingleNodePtr<NodeType> p)
 {
   int n = 0;
 
@@ -90,15 +90,15 @@ void NumberSingleLinkedList<T>::print(SingleNodePtr<T> p)
 }
 
 // Method Overload
-template <class T>
-void NumberSingleLinkedList<T>::print()
+template <class NodeType>
+void NumberSingleLinkedList<NodeType>::print()
 {
   this->print(this->head->next); // Set Head Node as p Node
 }
 
 // Print Nodes with a Recursive Method from Tail to Head
-template <class T>
-void NumberSingleLinkedList<T>::printReverse(SingleNodePtr<T> p)
+template <class NodeType>
+void NumberSingleLinkedList<NodeType>::printReverse(SingleNodePtr<NodeType> p)
 {
   static int n = this->length - 1;
 
@@ -116,17 +116,17 @@ void NumberSingleLinkedList<T>::printReverse(SingleNodePtr<T> p)
 }
 
 // Method Overload
-template <class T>
-void NumberSingleLinkedList<T>::printReverse()
+template <class NodeType>
+void NumberSingleLinkedList<NodeType>::printReverse()
 {
   this->printReverse(this->head->next); // Set Head Node as p Node
 }
 
 // Method that Returns the Sum of All Node's Data Field
-template <class T>
-T NumberSingleLinkedList<T>::total(SingleNodePtr<T> p)
+template <class NodeType>
+NodeType NumberSingleLinkedList<NodeType>::total(SingleNodePtr<NodeType> p)
 {
-  T sum = 0;
+  NodeType sum = 0;
 
   while (p != NULL)
   {
@@ -138,17 +138,17 @@ T NumberSingleLinkedList<T>::total(SingleNodePtr<T> p)
 }
 
 // Method Overload
-template <class T>
-T NumberSingleLinkedList<T>::total()
+template <class NodeType>
+NodeType NumberSingleLinkedList<NodeType>::total()
 {
   return this->total(this->head->next); // Set Head Node as p Node
 }
 
 // Method that Returns the Highest Number in Linked List
-template <class T>
-T NumberSingleLinkedList<T>::max(SingleNodePtr<T> p)
+template <class NodeType>
+NodeType NumberSingleLinkedList<NodeType>::max(SingleNodePtr<NodeType> p)
 {
-  static T m = -1;
+  static NodeType m = -1;
 
   while (p != NULL)
   {
@@ -163,24 +163,24 @@ T NumberSingleLinkedList<T>::max(SingleNodePtr<T> p)
 }
 
 // Method Overload
-template <class T>
-T NumberSingleLinkedList<T>::max()
+template <class NodeType>
+NodeType NumberSingleLinkedList<NodeType>::max()
 {
   return this->max(this->head->next); // Set Head Node as p Node
 }
 
 /*
 // Recursive Method that Returns the Highest Number in Linked List
-template <class T>
-T NumberSingleLinkedList<T>::max()
+template <class NodeType>
+NodeType NumberSingleLinkedList<NodeType>::max()
 {
-  static T m = -1;
+  static NodeType m = -1;
   SingleNodePtr p = this->curr;
 
   if (p == NULL)
   {
     // Set Head Node as Current Node
-    SingleLinkedList<T>::setCurrent();
+    SingleLinkedList<NodeType>::setCurrent();
 
     return -1;
   }
@@ -193,10 +193,10 @@ T NumberSingleLinkedList<T>::max()
 */
 
 // Method that Checks if the Given Number is Inside Linked List
-template <class T>
-SingleNodePtr<T> NumberSingleLinkedList<T>::linearSearch(SingleNodePtr<T> p, T key)
+template <class NodeType>
+SingleNodePtr<NodeType> NumberSingleLinkedList<NodeType>::linearSearch(SingleNodePtr<NodeType> p, NodeType key)
 {
-  SingleNodePtr<T> q;
+  SingleNodePtr<NodeType> q;
 
   while (p != NULL)
   {
@@ -213,7 +213,7 @@ SingleNodePtr<T> NumberSingleLinkedList<T>::linearSearch(SingleNodePtr<T> p, T k
 
       /*
         // Set Head Node as Current Node
-        SingleLinkedList<T>::setCurrent();
+        SingleLinkedList<NodeType>::setCurrent();
       */
 
       return p;
@@ -224,31 +224,31 @@ SingleNodePtr<T> NumberSingleLinkedList<T>::linearSearch(SingleNodePtr<T> p, T k
 
   /*
     // Set Head Node as Current Node
-    SingleLinkedList<T>::setCurrent();
+    SingleLinkedList<NodeType>::setCurrent();
   */
 
   return NULL;
 }
 
 // Method Overload
-template <class T>
-SingleNodePtr<T> NumberSingleLinkedList<T>::linearSearch(T key)
+template <class NodeType>
+SingleNodePtr<NodeType> NumberSingleLinkedList<NodeType>::linearSearch(NodeType key)
 {
   return this->linearSearch(this->head->next, key); // Set Head Node as p Node
 }
 
 /*
 // Recursive Method that Checks if the Given Number is Inside Linked List
-template <class T>
-SingleNodePtr<T> NumberSingleLinkedList<T>::linearSearch(T key)
+template <class NodeType>
+SingleNodePtr<NodeType> NumberSingleLinkedList<NodeType>::linearSearch(NodeType key)
 {
   // Get Current Node
-  SingleNodePtr<T> p = this->curr;
+  SingleNodePtr<NodeType> p = this->curr;
 
   if (p == NULL)
   {
     // Set Head Node as Current Node
-    SingleLinkedList<T>::setCurrent();
+    SingleLinkedList<NodeType>::setCurrent();
     return NULL;
   }
 
@@ -261,8 +261,8 @@ SingleNodePtr<T> NumberSingleLinkedList<T>::linearSearch(T key)
 */
 
 // Method to Compare Two Nodes Values
-template <class T>
-int NumberSingleLinkedList<T>::compare(int index1, int index2)
+template <class NodeType>
+int NumberSingleLinkedList<NodeType>::compare(int index1, int index2)
 {
   /*
   Possible Results:
@@ -274,7 +274,7 @@ int NumberSingleLinkedList<T>::compare(int index1, int index2)
 
   */
 
-  T value1, value2;
+  NodeType value1, value2;
 
   value1 = this->get(index1);
   value2 = this->get(index2);
