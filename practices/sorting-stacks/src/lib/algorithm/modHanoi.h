@@ -12,5 +12,6 @@ using NumberStackPtr = NumberStackLinkedList<int> *;
 
 // --- Function Prototypes
 void modHanoi(int nDisks, int mainIndex, int auxIndex, int mainAuxIndex, NumberStackPtr *stacks, NumberDoublyPtr *lists);
+void moveAtoB(int fromIndex, int toIndex, NumberStackPtr *stacks, NumberDoublyPtr *lists);
 
 #endif

@@ -2,6 +2,7 @@
 
 // --- Functions Prototypes
 void modHanoi(int nDisks, int mainIndex, int auxIndex, int mainAuxIndex, NumberStackPtr *stacks, NumberDoublyPtr *lists);
+void moveAtoB(int fromIndex, int toIndex, NumberStackPtr *stacks, NumberDoublyPtr *lists);
 
 // --- Functions
 
@@ -14,15 +15,20 @@ void modHanoi(int nDisks, int mainIndex, int auxIndex, int mainAuxIndex, NumberS
     modHanoi(nDisks - 1, mainIndex, mainAuxIndex, auxIndex, stacks, lists);
 
     // Move Last Node from A to C
-
-    // Pop Last Node from Stack and Doubly Linked List at mainIndex
-    int number = stacks[mainIndex]->pop();
-    lists[mainIndex]->pop();
-
-    // Push Node to Stack and Doubly Linked List at mainAuxIndex
-    stacks[mainAuxIndex]->push(number);
-    lists[mainAuxIndex]->push(number);
+    moveAtoB(mainAuxIndex, mainAuxIndex, stacks, lists);
 
     modHanoi(nDisks - 1, auxIndex, mainIndex, mainAuxIndex, stacks, lists);
   }
+}
+
+// Function to Move Top Node from A Stack to B Stack
+void moveAtoB(int fromIndex, int toIndex, NumberStackPtr *stacks, NumberDoublyPtr *lists)
+{
+  // Remove Top Node from Current Stack
+  int number = stacks[fromIndex]->pop();
+  lists[fromIndex]->pop();
+
+  // Push Top Node from Current Stack to Stack at mainAuxIndex
+  stacks[toIndex]->push(number);
+  lists[toIndex]->push(number);
 }

@@ -23,6 +23,7 @@ add_library(stack SHARED
 )
 
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src/lib/terminal)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src/lib/algorithm)
 
 target_include_directories(${PROJECT_NAME}
   PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/lib/terminal
@@ -31,8 +32,8 @@ target_include_directories(${PROJECT_NAME}
 
 # Link Libraries
 target_link_libraries(${PROJECT_NAME}
-  PRIVATE terminal
-  PRIVATE algorithm
   PRIVATE doubly-linked-lists
   PRIVATE stack
+  PRIVATE terminal
+  PRIVATE algorithm
 )

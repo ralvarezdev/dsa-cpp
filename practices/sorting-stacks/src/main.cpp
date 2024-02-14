@@ -132,6 +132,9 @@ int main(int argc, char **argv)
   }
    */
 
+  // Initial State
+  printStacks(listsArray, maxLength);
+
   for (int currStack = 0; currStack < stacks::nStacks; currStack++)
   {
     // Sort Last Stack
@@ -158,7 +161,67 @@ int main(int argc, char **argv)
       auxIndex = currStack + 1;
     }
 
+    // First Iteration
+    moveAtoB(currStack, mainAuxIndex, stacksArray, listsArray);
+
+    // Increase Length
+    maxLength++;
+
+    // Print Update
     printStacks(listsArray, maxLength);
+
+    int currStackTop;
+
+    // Sort Stack Until All Nodes are Pushed to Current Stack Again
+    while (stacksArray[currStack]->getLength() != stackLen)
+    {
+      // All Nodes have been Popped from Current Stack. Perform Last Iteration
+      if (stacksArray[currStack]->getLength() == 0)
+      {
+        // Move Nodes from Stack at mainAuxIndex, through Stack at auxIndex, to Current Stack
+        modHanoi(stackLen, mainAuxIndex, auxIndex, currStack, stacksArray, listsArray);
+
+        // Update maxLength. MUST BE EQUAL TO maxLength
+        maxLength = stacksArray[mainAuxIndex]->getLength();
+
+        // Print Stacks
+        printStacks(listsArray, maxLength);
+
+        break;
+      }
+
+      // Get Current Stack Top Node's Value
+      currStackTop = stacksArray[currStack]->top();
+
+      // Current Stack Top Node's Value is Less than mainAux Stack Top Node's Value
+      if ((currStackTop <= stacksArray[mainAuxIndex]->top()))
+        // Move from Current Stack to Stack at mainAuxIndex
+        moveAtoB(currStack, mainAuxIndex, stacksArray, listsArray);
+      else
+      {
+        // Counter to Check at which Level Should be Placed the Disk
+        int nDisks;
+
+        // Only Compare Nodes that were Popped from Current Stack
+        for (nDisks = 1; nDisks <= maxLength - stackLen; nDisks++)
+          if (listsArray[mainAuxIndex]->get(-1 * nDisks) >= currStackTop)
+            break;
+
+        // Move nDisks from Stack at mainAuxIndex to Stack at auxIndex
+        modHanoi(nDisks, mainAuxIndex, currStack, auxIndex, stacksArray, listsArray);
+
+        // Move Current Stack Top Node to Stack at mainAuxIndex
+        moveAtoB(currStack, mainAuxIndex, stacksArray, listsArray);
+
+        // Move nDisks from Stack at auxIndex to Stack at mainAuxIndex
+        modHanoi(nDisks, auxIndex, currStack, mainAuxIndex, stacksArray, listsArray);
+      }
+
+      // Update maxLength
+      maxLength++;
+
+      printStacks(listsArray, maxLength);
+    };
   }
 
   // Deallocate Memory
