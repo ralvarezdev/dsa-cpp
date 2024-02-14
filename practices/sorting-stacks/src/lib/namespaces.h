@@ -1,7 +1,6 @@
 #include <string>
 #include <math.h>
 
-using std::pow;
 using std::string;
 
 #ifndef NAMESPACES_H

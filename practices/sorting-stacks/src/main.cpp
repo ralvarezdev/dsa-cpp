@@ -5,6 +5,7 @@
 #include <iostream>
 
 #include "lib/namespaces.h"
+#include "lib/algorithm/modHanoi.h"
 #include "lib/terminal/ansiEsc.h"
 #include "lib/terminal/input.h"
 #include "../../../data-structures/stack/number.h"
@@ -40,12 +41,18 @@ using std::uniform_int_distribution;
 using namespace stacks;
 
 // --- Function Prototypes
-void printStacks(NumberDoublyLinkedList<int> **, int);
+void printStacks(NumberDoublyPtr *, int);
 
 int main(int argc, char **argv)
 {
   // Length of Biggest Stack
   int maxLength;
+
+  // Auxiliary Stacks Used to Sort Current Stack
+  int auxIndex, mainAuxIndex;
+
+  // Random Number Generator
+  random_device rd;
 
   // Desynchronize C++ Streams from C I/O Operations to Increase Performance
   std::ios::sync_with_stdio(false);
@@ -73,19 +80,16 @@ int main(int argc, char **argv)
     return -1;
   }
 
-  // Create Stacks Linked List
-  NumberStackLinkedList<int> **stacksArray = new NumberStackLinkedList<int> *[stacks::nStacks];
-  NumberDoublyLinkedList<int> **listsArray = new NumberDoublyLinkedList<int> *[stacks::nStacks];
-
-  // Random Number Generator
-  random_device rd;
+  // Create Stacks and Doubly Linked List
+  NumberStackPtr *stacksArray = new NumberStackPtr[stacks::nStacks];
+  NumberDoublyPtr *listsArray = new NumberDoublyPtr[stacks::nStacks];
 
   // Random Integer Distribution
   uniform_int_distribution<int> dist(stacks::minNodeValue, stacks::maxNodeValue);
 
   int random;
-  NumberStackLinkedList<int> *stack;
-  NumberDoublyLinkedList<int> *list;
+  NumberStackPtr stack;
+  NumberDoublyPtr list;
 
   for (int n = 0; n < stacks::nStacks; n++)
   {
@@ -128,7 +132,34 @@ int main(int argc, char **argv)
   }
    */
 
-  printStacks(listsArray, maxLength);
+  for (int currStack = 0; currStack < stacks::nStacks; currStack++)
+  {
+    // Sort Last Stack
+    if (currStack + 1 == stacks::nStacks)
+    {
+      // Third to Last Stack
+      mainAuxIndex = currStack - 2;
+      // Second to Last Stack
+      auxIndex = currStack - 1;
+    }
+    // Sort Second to Last Stack
+    else if (currStack + 2 == stacks::nStacks)
+    {
+      // Third to Last Stack
+      mainAuxIndex = currStack - 2;
+      // Last Stack
+      auxIndex = currStack + 1;
+    }
+    else
+    {
+      // Second Stack Next to the One to be Sorted
+      mainAuxIndex = currStack + 2;
+      // Stack Next to the One to be Sorted
+      auxIndex = currStack + 1;
+    }
+
+    printStacks(listsArray, maxLength);
+  }
 
   // Deallocate Memory
   delete[] stacksArray;
@@ -138,7 +169,7 @@ int main(int argc, char **argv)
 // --- Functions
 
 // Function to Print Stacks
-void printStacks(NumberDoublyLinkedList<int> **listsArray, int maxLength)
+void printStacks(NumberDoublyPtr *listsArray, int maxLength)
 {
   // Array Used to Check if the Given Stack has a Length Greater or Equal to Current Level
   bool greaterLength[stacks::nStacks];

@@ -26,11 +26,13 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src/lib/terminal)
 
 target_include_directories(${PROJECT_NAME}
   PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/lib/terminal
+  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/lib/algorithm
 )
 
 # Link Libraries
 target_link_libraries(${PROJECT_NAME}
   PRIVATE terminal
+  PRIVATE algorithm
   PRIVATE doubly-linked-lists
   PRIVATE stack
 )
