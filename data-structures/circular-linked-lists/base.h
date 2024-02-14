@@ -141,7 +141,7 @@ DoublyNodePtr<NodeType> CircularLinkedList<NodeType>::move(int n)
     else
     {
       backwards = false;
-      mov = this->length + mov;
+      mov = this->length + mov - 1;
     }
   // Works only for Positive n Values
   else if (mov > this->length / 2)
@@ -225,6 +225,13 @@ void CircularLinkedList<NodeType>::pushBack(NodeType data)
 {
   // Create New Node and Assign Old Head Previous Node as Previous Node
   DoublyNodePtr<NodeType> n = new DoublyNode<NodeType>(data, this->head->prev, this->head);
+
+  // Set Head if it's NULL
+  if (this->head == NULL)
+  {
+    h->prev = h->next = h;
+    this->head = h;
+  }
 
   this->increaseLength();
 }
@@ -384,7 +391,7 @@ NodeType CircularLinkedList<NodeType>::removeAt(int pos)
 template <class NodeType>
 NodeType CircularLinkedList<NodeType>::change(NodeType data, int pos)
 {
-  if (this->isEmpty() || pos >= this->length)
+  if (this->isEmpty() || pos >= this->length || abs(pos) >= this->length + 1)
     return this->error; // Node not Found
 
   // Move to Node
@@ -404,13 +411,13 @@ template <class NodeType>
 NodeType CircularLinkedList<NodeType>::get(int pos)
 {
   // Check pos
-  if (this->isEmpty() || pos >= this->length)
+  if (this->isEmpty() || pos >= this->length || abs(pos) >= this->length + 1)
     return this->error; // Node not Found
 
-  if (pos == 0)
+  if (pos == 0 || pos == -1 * length)
     return this->head->data; // Get Node Next to Head Data
 
-  if (pos == this->length - 1)
+  if (pos == this->length - 1 || pos == -1)
     return this->head->prev->data; // Get Head Previous Node Data
 
   // Move to Node

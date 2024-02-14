@@ -1,5 +1,7 @@
 #include <string>
+#include <math.h>
 
+using std::pow;
 using std::string;
 
 #ifndef NAMESPACES_H
@@ -44,8 +46,13 @@ namespace stacks
   // Minimum and Maximum Limits
   const int minNodes = 3;
   const int maxNodes = 10;
+  const int maxDigits = 3;
   const int minNodeValue = 0;
-  const int maxNodeValue = 999;
+  const int maxNodeValue = pow(10, maxDigits) - 1;
+
+  // WARNING: MANIPULATING THESE VALUES MAY LEAD TO UNDEFINED BEHAVIOURS
+  const int minStacks = 3;
+  const int maxStacks = 6;
 }
 
 #endif

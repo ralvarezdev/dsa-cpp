@@ -142,7 +142,7 @@ DoublyNodePtr<NodeType> DoublyLinkedList<NodeType>::move(int n)
     else
     {
       backwards = false;
-      mov = this->length + mov;
+      mov = this->length + mov - 1;
     }
   // Works only for Positive n Values
   else if (mov > this->length / 2)
@@ -186,6 +186,10 @@ void DoublyLinkedList<NodeType>::push(NodeType data)
 
   // Set h Node as Head
   this->head = h;
+
+  // Set Tail if it's NULL
+  if (this->tail == NULL)
+    this->tail = this->head;
 
   this->increaseLength();
 }
@@ -237,6 +241,10 @@ void DoublyLinkedList<NodeType>::pushBack(NodeType data)
 
   // Set Tail
   this->tail = n;
+
+  // Set Head if it's NULL
+  if (this->head == NULL)
+    this->head = this->tail;
 
   this->increaseLength();
 }
@@ -399,7 +407,7 @@ NodeType DoublyLinkedList<NodeType>::removeAt(int pos)
 template <class NodeType>
 NodeType DoublyLinkedList<NodeType>::change(NodeType data, int pos)
 {
-  if (this->isEmpty() || pos >= this->length)
+  if (this->isEmpty() || pos >= this->length || abs(pos) >= this->length + 1)
     return this->error; // Node not Found
 
   // Move to Node
@@ -423,13 +431,13 @@ template <class NodeType>
 NodeType DoublyLinkedList<NodeType>::get(int pos)
 {
   // Check pos
-  if (this->isEmpty() || pos >= this->length)
+  if (this->isEmpty() || pos >= this->length || abs(pos) >= length + 1)
     return this->error; // Node not Found
 
-  if (pos == 0)
+  if (pos == 0 || pos == -1 * length)
     return this->head->data; // Get Node Next to Head
 
-  if (pos == this->length - 1)
+  if (pos == this->length - 1 || pos == -1)
     return this->tail->data; // Get Tail
 
   // Move to Node
