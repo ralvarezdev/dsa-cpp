@@ -204,6 +204,8 @@ int main(int argc, char **argv)
 
       // Get Current Stack Top Node's Value
       currStackTop = stacksArray[currStack]->top();
+/*
+      cout << currStackTop << ' ' << listsArray[mainAuxIndex]->get(-1 * (stackLen - 1)) << '\n';
 
       // Current Stack Top Node is the Biggest One
       if (currStackLen == 1 && currStackTop >= listsArray[mainAuxIndex]->get(-1 * (stackLen - 1)))
@@ -211,10 +213,8 @@ int main(int argc, char **argv)
         // Move Nodes from Stack at mainAuxIndex, through Stack at auxIndex, to Current Stack
         modHanoi(stackLen - 1, mainAuxIndex, auxIndex, currStack, stacksArray, listsArray);
 
-        /*
         // Check Stack at mainAuxIndex Length
         cout << "Main Aux Stack Length: " << stacksArray[mainAuxIndex]->getLength();
-        */
 
         // Update maxLength. MUST BE EQUAL TO maxLength
         maxLength = stacksArray[mainAuxIndex]->getLength();
@@ -224,6 +224,7 @@ int main(int argc, char **argv)
 
         break;
       }
+*/
 
       // Current Stack Top Node's Value is Less than mainAux Stack Top Node's Value
       if ((currStackTop <= stacksArray[mainAuxIndex]->top()))

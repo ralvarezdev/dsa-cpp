@@ -27,12 +27,20 @@ void modHanoi(int nDisks, int mainIndex, int auxIndex, int mainAuxIndex, NumberS
 void moveAtoB(int fromIndex, int toIndex, NumberStackPtr *stacks, NumberDoublyPtr *lists)
 {
   // Remove Top Node from Current Stack
-  int number = stacks[fromIndex]->pop();
-  lists[fromIndex]->remove();
+  int numberStack = stacks[fromIndex]->pop();
+  int numberList = lists[fromIndex]->remove();
+
+  /*
+    // Testing Length and Node Removed
+    cout << "Stack and List " << fromIndex + 1 << " Length: "
+         << lists[fromIndex]->getLength() << ' ' << stacks[fromIndex]->getLength() << '\n'
+         << "Stack and List " << fromIndex + 1 << " Node: "
+         << numberStack << ' ' << numberList << '\n';
+  */
 
   // Push Top Node from Current Stack to Stack at mainAuxIndex
-  stacks[toIndex]->push(number);
-  lists[toIndex]->push(number);
+  stacks[toIndex]->push(numberStack);
+  lists[toIndex]->push(numberList);
 
   // Print Stack at toIndex Top Node
   // cout << "Top Node at Stack " << toIndex + 1 << ": " << number << '\n';
