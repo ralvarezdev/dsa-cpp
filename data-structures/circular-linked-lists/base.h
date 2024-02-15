@@ -257,6 +257,8 @@ NodeType CircularLinkedList<NodeType>::setNULL(bool destructor)
   else
     delete h;
 
+  decreaseLength();
+
   return data;
 }
 

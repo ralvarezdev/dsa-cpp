@@ -12,11 +12,13 @@ void modHanoi(int nDisks, int mainIndex, int auxIndex, int mainAuxIndex, NumberS
 {
   if (nDisks > 0)
   {
+    // Move Last Node from A to B
     modHanoi(nDisks - 1, mainIndex, mainAuxIndex, auxIndex, stacks, lists);
 
     // Move Last Node from A to C
-    moveAtoB(mainAuxIndex, mainAuxIndex, stacks, lists);
+    moveAtoB(mainIndex, mainAuxIndex, stacks, lists);
 
+    // Move Last Node from B to C
     modHanoi(nDisks - 1, auxIndex, mainIndex, mainAuxIndex, stacks, lists);
   }
 }
@@ -26,9 +28,12 @@ void moveAtoB(int fromIndex, int toIndex, NumberStackPtr *stacks, NumberDoublyPt
 {
   // Remove Top Node from Current Stack
   int number = stacks[fromIndex]->pop();
-  lists[fromIndex]->pop();
+  lists[fromIndex]->remove();
 
   // Push Top Node from Current Stack to Stack at mainAuxIndex
   stacks[toIndex]->push(number);
   lists[toIndex]->push(number);
+
+  // Print Stack at toIndex Top Node
+  // cout << "Top Node at Stack " << toIndex + 1 << ": " << number << '\n';
 }

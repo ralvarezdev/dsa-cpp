@@ -270,6 +270,8 @@ NodeType DoublyLinkedList<NodeType>::setNULL(bool destructor)
   else
     delete t;
 
+  decreaseLength();
+
   return data;
 }
 

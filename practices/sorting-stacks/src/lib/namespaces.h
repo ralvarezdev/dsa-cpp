@@ -18,10 +18,12 @@ namespace terminal
   const string clear = "\033c";   // Clear Terminal
 
   // - Format Constants
-  const string tab1 = string(3, ' '); // String with 3 whitespaces
-  const string tab2 = string(8, ' '); // String with 8 whitespaces
-  const bool applyBg = true;          // Add Customed Background Color
-  const bool applyFg = true;          // Add Customed Foreground Color
+  const int nTab1 = 3;
+  const string tab1 = string(nTab1, ' '); // String with 3 whitespaces
+  const int nTab2 = 8;
+  const string tab2 = string(nTab2, ' '); // String with 8 whitespaces
+  const bool applyBg = true;              // Add Customed Background Color
+  const bool applyFg = true;              // Add Customed Foreground Color
 
   // --- Color Command Created Using ralvarezdev's Minigrep. URL: https://github.com/ralvarezdev/minigrep
 
