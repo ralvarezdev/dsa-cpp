@@ -36,11 +36,22 @@ namespace terminal
   const string sgrFgError = "\x1b[38;2;32;32;32m";
 
   // - Number of Characters
-  const int nChar = 100; // Max Number of Characters being Printed on Each Line
+  const int nChar = 100;   // Max Number of Characters being Printed on Each Line
+  const int nNewLines = 3; // Number of New Lines to Print
+}
+
+namespace lists
+{
+  // Character Used to Visualize List Linear Search
+  const char linearHead = '<';
+  const char linearBody = '-';
 }
 
 namespace stacks
 {
+  // Milliseconds to Sleep after Printing Stack
+  const int sleep = 300;
+
   // Number of Stacks to Sort
   const int nStacks = 3;
 
@@ -50,6 +61,12 @@ namespace stacks
   const int maxDigits = 3;
   const int minNodeValue = 0;
   const int maxNodeValue = pow(10, maxDigits) - 1;
+
+  // Stack Separators
+  const int borderSep = 3; // Number of Whitespaces between Node Border and Node Value
+  const char nodeBorder = '|';
+  const char cornerSep = '+';
+  const char horSep = '-';
 
   // WARNING: MANIPULATING THESE VALUES MAY LEAD TO UNDEFINED BEHAVIOURS
   const int minStacks = 3;

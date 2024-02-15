@@ -1,7 +1,5 @@
 #include <string>
 #include <random>
-#include <algorithm>
-#include <sstream>
 #include <iostream>
 
 #include "lib/namespaces.h"
@@ -32,30 +30,21 @@ Stack Representation
 
 using std::cin;
 using std::cout;
-using std::fill;
-using std::left;
-using std::ostringstream;
 using std::random_device;
 using std::uniform_int_distribution;
 
 using namespace stacks;
 
-// --- Function Prototypes
-void printStacks(NumberDoublyPtr *, int, int);
-
 int main(int argc, char **argv)
 {
-  // Length of Biggest Stack
-  int maxLength;
+  // Desynchronize C++ Streams from C I/O Operations to Increase Performance
+  // std::ios::sync_with_stdio(false);
 
-  // Auxiliary Stacks Used to Sort Current Stack
-  int auxIndex, mainAuxIndex;
+  // Length of the Biggest Stack. Auxiliary Stacks Used to Sort Current Stack
+  int maxLen, auxIndex, mainAuxIndex;
 
   // Random Number Generator
   random_device rd;
-
-  // Desynchronize C++ Streams from C I/O Operations to Increase Performance
-  // std::ios::sync_with_stdio(false);
 
   // Print Title
   printTitle("SORTING STACKS PROBLEM");
@@ -65,7 +54,7 @@ int main(int argc, char **argv)
   const int stackLen = getInteger("Enter the Number of Nodes for each Stack", stacks::minNodes, stacks::maxNodes);
 
   // Variable that Stores the Length of the Biggest Stack
-  maxLength = stackLen;
+  maxLen = stackLen;
 
   // Check nStacks
   if (stacks::nStacks < stacks::minStacks)
@@ -125,9 +114,10 @@ int main(int argc, char **argv)
   */
 
   // Initial State
-  printStacks(listsArray, maxLength, stackLen);
+  printStacks(listsArray, maxLen, stackLen);
 
   // Asks to Continue
+  cout << string(terminal::nNewLines, '\n');
   pressEnterToCont("Press Enter to Continue");
 
   // Loop Over Stacks
@@ -163,183 +153,92 @@ int main(int argc, char **argv)
     */
 
     // First Iteration
-    moveAtoB(currStack, mainAuxIndex, stacksArray, listsArray);
-
-    // Increase Length
-    maxLength++;
-
-    // Print Update
-    printStacks(listsArray, maxLength, stackLen);
-
-    // Asks to Continue
-    pressEnterToCont("Press Enter to Continue");
+    moveAtoB(stackLen, &maxLen, currStack, mainAuxIndex, stacksArray, listsArray);
 
     int currStackTop, currStackLen = stackLen - 1;
 
     // Sort Stack Until All Nodes are Pushed to Current Stack Again
     while (currStackLen != stackLen)
     {
-      // Testing
-      cout << "Current Stack Length: " << stacksArray[currStack]->getLength() << '\n';
+      // Get Current Stack Top Node's Value
+      currStackTop = stacksArray[currStack]->top();
+
+      // Visualize Comparison
+      printStacks(listsArray, stackLen, maxLen, true, currStack, currStackLen - 1);
 
       // All Nodes have been Popped from Current Stack. Perform Last Iteration
       if (currStackLen == 0)
       {
         // Move Nodes from Stack at mainAuxIndex, through Stack at auxIndex, to Current Stack
-        modHanoi(stackLen, mainAuxIndex, auxIndex, currStack, stacksArray, listsArray);
-
-        /*
-        // Check Stack at mainAuxIndex Length
-        cout << "Main Aux Stack Length: " << stacksArray[mainAuxIndex]->getLength();
-        */
-
-        // Update maxLength. MUST BE EQUAL TO maxLength
-        maxLength = stacksArray[mainAuxIndex]->getLength();
-
-        // Print Stacks
-        printStacks(listsArray, maxLength, stackLen);
-
+        modHanoi(stackLen, stackLen, &maxLen, mainAuxIndex, auxIndex, currStack, stacksArray, listsArray);
         break;
       }
-
-      // Get Current Stack Top Node's Value
-      currStackTop = stacksArray[currStack]->top();
-/*
-      cout << currStackTop << ' ' << listsArray[mainAuxIndex]->get(-1 * (stackLen - 1)) << '\n';
 
       // Current Stack Top Node is the Biggest One
-      if (currStackLen == 1 && currStackTop >= listsArray[mainAuxIndex]->get(-1 * (stackLen - 1)))
+      if (currStackLen == 1 && currStackTop >= listsArray[mainAuxIndex]->get(maxLen - stackLen - 1))
       {
+        // Visualize Comparison
+        printStacks(listsArray, stackLen, maxLen, true, mainAuxIndex, stackLen);
+
         // Move Nodes from Stack at mainAuxIndex, through Stack at auxIndex, to Current Stack
-        modHanoi(stackLen - 1, mainAuxIndex, auxIndex, currStack, stacksArray, listsArray);
-
-        // Check Stack at mainAuxIndex Length
-        cout << "Main Aux Stack Length: " << stacksArray[mainAuxIndex]->getLength();
-
-        // Update maxLength. MUST BE EQUAL TO maxLength
-        maxLength = stacksArray[mainAuxIndex]->getLength();
-
-        // Print Stacks
-        printStacks(listsArray, maxLength, stackLen);
-
+        modHanoi(stackLen - 1, stackLen, &maxLen, mainAuxIndex, auxIndex, currStack, stacksArray, listsArray);
         break;
       }
-*/
 
-      // Current Stack Top Node's Value is Less than mainAux Stack Top Node's Value
-      if ((currStackTop <= stacksArray[mainAuxIndex]->top()))
+      // Current Stack Top Node's Value is Less than Stack at mainAuxIndex Top Node's Value
+      if (currStackTop <= stacksArray[mainAuxIndex]->top())
+      {
+        // Visualize Comparison
+        printStacks(listsArray, stackLen, maxLen, true, mainAuxIndex, maxLen - 1);
+
         // Move from Current Stack to Stack at mainAuxIndex
-        moveAtoB(currStack, mainAuxIndex, stacksArray, listsArray);
+        moveAtoB(stackLen, &maxLen, currStack, mainAuxIndex, stacksArray, listsArray);
+      }
+      // Current Stack Top Node's Value is Grater than Stack at mainAuxIndex Top Node's Value, but Just One Iteration has been Performed
+      else if (maxLen == stackLen + 1)
+      {
+        // Move from Stack at mainAuxIndex to Stack at auxIndex
+        moveAtoB(stackLen, &maxLen, mainAuxIndex, auxIndex, stacksArray, listsArray);
+        // Move from Current Stack to Stack at mainAuxIndex
+        moveAtoB(stackLen, &maxLen, currStack, mainAuxIndex, stacksArray, listsArray);
+        // Move from Stack at auxIndex to Stack at mainAuxIndex
+        moveAtoB(stackLen, &maxLen, auxIndex, mainAuxIndex, stacksArray, listsArray);
+      }
       else
       {
         // Counter to Check at which Level Should be Placed the Disk
         int nNodes;
 
-        /*
-                // Print Max Length
-                cout << "Max Length: " << maxLength << '\n';
-        */
-
         // Only Compare Nodes that were Popped from Current Stack
-        for (nNodes = 1; nNodes <= maxLength - stackLen - 1; nNodes++)
-          if (listsArray[mainAuxIndex]->get(-1 * nNodes) >= currStackTop)
-            break;
+        for (nNodes = 2; nNodes <= maxLen - stackLen; nNodes++)
+        {
+          // Visualize Linear Search
+          printStacks(listsArray, stackLen, maxLen, true, mainAuxIndex, maxLen - nNodes);
 
-        // Print Number of Nodes to Move
-        cout << "Number of Nodes to Move: " << nNodes << '\n';
+          if (listsArray[mainAuxIndex]->get(nNodes - 1) >= currStackTop)
+            break;
+        }
 
         // Move nNodes from Stack at mainAuxIndex to Stack at auxIndex
-        modHanoi(nNodes, mainAuxIndex, currStack, auxIndex, stacksArray, listsArray);
+        modHanoi(nNodes - 1, stackLen, &maxLen, mainAuxIndex, currStack, auxIndex, stacksArray, listsArray);
 
         // Move Current Stack Top Node to Stack at mainAuxIndex
-        moveAtoB(currStack, mainAuxIndex, stacksArray, listsArray);
+        moveAtoB(stackLen, &maxLen, currStack, mainAuxIndex, stacksArray, listsArray);
 
         // Move nNodes from Stack at auxIndex to Stack at mainAuxIndex
-        modHanoi(nNodes, auxIndex, currStack, mainAuxIndex, stacksArray, listsArray);
+        modHanoi(nNodes - 1, stackLen, &maxLen, auxIndex, currStack, mainAuxIndex, stacksArray, listsArray);
       }
-
-      // Update maxLength
-      maxLength++;
 
       // Update currStackLen
       currStackLen = stacksArray[currStack]->getLength();
-
-      /*
-      // Prints Lists and Stacks length
-      for (int n = 0; n < stacks::nStacks; n++)
-        cout << "List and Stack " << n + 1 << " Length: " << listsArray[n]->getLength() << ' ' << stacksArray[n]->getLength() << '\n';
-      */
-
-      // Print Update
-      printStacks(listsArray, maxLength, stackLen);
-
-      // Asks to Continue
-      pressEnterToCont("Press Enter to Continue");
     };
-
-    cout << '\n';
-    printTitle("ANOTHER STACK SORTED");
   }
 
   // End Message
-  cout << '\n';
-  printTitle("COMPLETED");
+  cout << string(terminal::nNewLines, '\n');
+  pressEnterToCont("COMPLETED");
 
   // Deallocate Memory
   delete[] stacksArray;
   delete[] listsArray;
-}
-
-// --- Functions
-
-// Function to Print Stacks
-void printStacks(NumberDoublyPtr *listsArray, int maxLength, int stackLen)
-{
-  static int nSeparator = (4 + stacks::maxDigits) * stacks::nStacks + terminal::nTab2 * (nStacks - 1);
-
-  // Array Used to Check if the Given Stack has a Length Greater or Equal to Current Level
-  bool greaterLength[stacks::nStacks];
-  fill(greaterLength, greaterLength + stacks::nStacks, false);
-
-  // Current Node Level that's being Printed from All Stacks that have that Length
-  int currLevel = maxLength;
-
-  cout << '\n';
-  printTitle("Stacks");
-
-  // Stacks Content
-  ostringstream content;
-
-  // Loop Over All Stack Levels
-  for (; currLevel > 0; currLevel--)
-  {
-    // Print Separator
-    if (currLevel == stackLen && maxLength > stackLen)
-      content << string(nSeparator, '-') << '\n';
-
-    // Print Stack Level which has a Length Equal or Greater than Current Level
-    for (int n = 0; n < stacks::nStacks; n++)
-    {
-      // Check if Current Stack has a Length Equal or Geater than Current Level
-      if (!greaterLength[n])
-        greaterLength[n] = listsArray[n]->getLength() >= currLevel;
-
-      if (n != 0)
-        content << terminal::tab2;
-
-      // Current Stack have less Nodes than Current Level
-      if (!greaterLength[n])
-      {
-        content << string(stacks::maxDigits + 4, ' ');
-        continue;
-      }
-
-      content << "| " << setw(stacks::maxDigits) << setfill(' ') << left << listsArray[n]->get(-1 * currLevel) << " |";
-    }
-
-    content << '\n';
-  }
-
-  // Print Content
-  cout << content.str();
 }
