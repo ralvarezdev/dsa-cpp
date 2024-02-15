@@ -36,6 +36,7 @@ public:
   ~QueueLinkedList();
 
   // Public Methods
+  NodeType setNULL(bool);
   NodeType getError();
   bool isEmpty();
   void push(NodeType);
@@ -117,6 +118,32 @@ QueueLinkedList<NodeType>::~QueueLinkedList()
   delete[] temp;
 }
 
+// Method to Safely Remove Node that is Both Head and Tail
+template <class NodeType>
+NodeType QueueLinkedList<NodeType>::setNULL(bool destructor)
+{
+  SingleNodePtr<NodeType> t;
+
+  // Get Tail
+  t = this->tail;
+
+  // Get Tail Data
+  NodeType data = t->data;
+
+  // Set Head and Tail Node as NULL
+  this->head = this->tail = NULL;
+
+  // Deallocate Memory
+  if (destructor)
+    delete[] t;
+  else
+    delete t;
+
+  decreaseLength();
+
+  return data;
+}
+
 // Method to Get Error Value
 template <class NodeType>
 NodeType QueueLinkedList<NodeType>::getError()
@@ -130,15 +157,17 @@ void QueueLinkedList<NodeType>::push(NodeType data)
 {
   SingleNodePtr<NodeType> n = new SingleNode<NodeType>(data);
 
-  // Set Node at Tail
-  this->tail->next = n;
-
-  // Set Tail
-  this->tail = n;
-
-  // Set Head
+  // Set Head and Tail
   if (this->isEmpty())
-    this->head = n;
+    this->head = this->tail = n;
+  else
+  {
+    // Set Next Node to Tail
+    this->tail->next = n;
+
+    // Set New Tail
+    this->tail = n;
+  }
 
   this->increaseLength();
 }
@@ -149,6 +178,10 @@ NodeType QueueLinkedList<NodeType>::pop(bool destructor)
 {
   if (this->isEmpty())
     return this->error;
+
+  // Head and Tail Node are the Same
+  if (this->getLength() == 1)
+    return this->setNULL(destructor);
 
   SingleNodePtr<NodeType> m, n;
 
