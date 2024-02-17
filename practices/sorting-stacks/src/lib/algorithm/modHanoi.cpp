@@ -26,8 +26,8 @@ string separator;
 
 // --- Functions Prototypes
 void modHanoi(int nNodes, int stackLen, int *maxLen, int mainIndex, int auxIndex, int mainAuxIndex, NumberStackPtr *stacks, NumberDoublyPtr *lists);
-void moveAtoB(int stackLen, int *maxLen, int fromIndex, int toIndex, NumberStackPtr *stacks, NumberDoublyPtr *lists);
-void printStacks(NumberDoublyPtr *stacks, int stackLen, int maxLen, bool sleep, int listIndexToCheck, int nodeIndexToCheck);
+void moveAtoB(int stackLen, int *maxLen, int sleepFor, int fromIndex, int toIndex, NumberStackPtr *stacks, NumberDoublyPtr *lists);
+void printStacks(NumberDoublyPtr *stacks, int stackLen, int maxLen, int sleepFor, int listIndexToCheck, int nodeIndexToCheck);
 
 // --- Functions
 
@@ -41,7 +41,7 @@ void modHanoi(int nNodes, int stackLen, int *maxLen, int mainIndex, int auxIndex
     modHanoi(nNodes - 1, stackLen, maxLen, mainIndex, mainAuxIndex, auxIndex, stacks, lists);
 
     // Move Last Node from A to C
-    moveAtoB(stackLen, maxLen, mainIndex, mainAuxIndex, stacks, lists);
+    moveAtoB(stackLen, maxLen, stacks::sleepHanoi, mainIndex, mainAuxIndex, stacks, lists);
 
     // Move Last Node from B to C
     modHanoi(nNodes - 1, stackLen, maxLen, auxIndex, mainIndex, mainAuxIndex, stacks, lists);
@@ -49,7 +49,7 @@ void modHanoi(int nNodes, int stackLen, int *maxLen, int mainIndex, int auxIndex
 }
 
 // Function to Move Top Node from A Stack to B Stack
-void moveAtoB(int stackLen, int *maxLen, int fromIndex, int toIndex, NumberStackPtr *stacks, NumberDoublyPtr *lists)
+void moveAtoB(int stackLen, int *maxLen, int sleepFor, int fromIndex, int toIndex, NumberStackPtr *stacks, NumberDoublyPtr *lists)
 {
   int numberStack, numberList;
 
@@ -84,11 +84,11 @@ void moveAtoB(int stackLen, int *maxLen, int fromIndex, int toIndex, NumberStack
     *maxLen = stackLen;
 
   // Print Stacks
-  printStacks(lists, stackLen, *maxLen, true);
+  printStacks(lists, stackLen, *maxLen, sleepFor);
 }
 
 // Function to Print Stacks
-void printStacks(NumberDoublyPtr *lists, int stackLen, int maxLen, bool sleep, int listIndexToCheck, int nodeIndexToCheck)
+void printStacks(NumberDoublyPtr *lists, int stackLen, int maxLen, int sleepFor, int listIndexToCheck, int nodeIndexToCheck)
 {
   // Array Used to Check if the Given Stack has a Length Greater or Equal to Current Level
   bool greaterLength[stacks::nStacks];
@@ -103,7 +103,30 @@ void printStacks(NumberDoublyPtr *lists, int stackLen, int maxLen, bool sleep, i
   int currLevel = stackLen * 2 + 1;
 
   // Stacks Content
-  ostringstream content;
+  ostringstream content, dataHeader;
+
+  // Stacks Data Title
+  dataHeader << left
+             << setw(terminal::nNumber) << setfill(' ') << "Stacks"
+             << setw(terminal::nLength) << setfill(' ') << "Length"
+             << setw(terminal::nTop) << setfill(' ') << "Top";
+
+  // Add Header
+  content << terminal::clear
+          << printTitle(dataHeader.str(), false, true)
+          << left;
+
+  for (int n = 0; n < stacks::nStacks; n++)
+  {
+    content << setw(terminal::nNumber) << setfill(' ') << n + 1
+            << setw(terminal::nLength) << setfill(' ') << lists[n]->getLength();
+
+    if (lists[n]->isEmpty())
+      content << "NULL\n";
+    else
+      content << setw(terminal::nTop) << setfill(' ') << lists[n]->get(0) << '\n';
+  }
+  content << "\nMax Length: " << maxLen << "\n\n";
 
   // Loop Over All Stack Levels
   for (; currLevel > 0; currLevel--)
@@ -119,7 +142,7 @@ void printStacks(NumberDoublyPtr *lists, int stackLen, int maxLen, bool sleep, i
         for (int n = 0; n < stacks::nStacks; n++)
         {
           if (n != 0)
-            tempSep << terminal::tab2;
+            tempSep << terminal::tab1;
 
           tempSep << stacks::cornerSep
                   << string(stacks::maxDigits + 2 * stacks::borderSep, horSep)
@@ -140,7 +163,7 @@ void printStacks(NumberDoublyPtr *lists, int stackLen, int maxLen, bool sleep, i
         greaterLength[n] = listsLength[n] >= currLevel;
 
       if (n != 0)
-        content << terminal::tab2;
+        content << terminal::tab1;
 
       // Current Stack have less Nodes than Current Level
       if (!greaterLength[n])
@@ -153,7 +176,7 @@ void printStacks(NumberDoublyPtr *lists, int stackLen, int maxLen, bool sleep, i
       // Add Node Value
       content << stacks::nodeBorder
               << string(stacks::borderSep, ' ')
-              << setw(stacks::maxDigits) << setfill(' ') << left
+              << setw(stacks::maxDigits) << setfill(' ')
               << lists[n]->get(listsLength[n] - currLevel);
 
       // Add Visual Guide to Visualize Linear Search
@@ -169,23 +192,9 @@ void printStacks(NumberDoublyPtr *lists, int stackLen, int maxLen, bool sleep, i
   }
 
   // Print Content
-  cout << terminal::clear;
-  printTitle("Stacks");
-  cout << "Max Length: " << maxLen << '\n';
-  for (int n = 0; n < stacks::nStacks; n++)
-  {
-    cout << "Stack " << n + 1 << " Top: ";
-
-    // Stack is Empty
-    if (lists[n]->isEmpty())
-      cout << "Empty\n";
-    else
-      cout << lists[n]->get(0) << '\n';
-  }
-
   cout << content.str();
 
   // Sleep for n Milliseconds
-  if (sleep)
-    std::this_thread::sleep_for(std::chrono::milliseconds(stacks::sleep));
+  if (sleepFor != 0)
+    std::this_thread::sleep_for(std::chrono::milliseconds(sleepFor));
 }

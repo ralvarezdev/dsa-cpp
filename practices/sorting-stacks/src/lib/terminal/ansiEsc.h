@@ -6,6 +6,6 @@ using std::string;
 #define ANSI_ESC_H
 
 // --- Functions
-void printTitle(string message, bool warning = false);
+string printTitle(string message, bool warning = false, bool returnStr = false);
 
 #endif

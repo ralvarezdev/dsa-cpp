@@ -38,7 +38,7 @@ using namespace stacks;
 int main(int argc, char **argv)
 {
   // Desynchronize C++ Streams from C I/O Operations to Increase Performance
-  // std::ios::sync_with_stdio(false);
+   std::ios::sync_with_stdio(false);
 
   // Length of the Biggest Stack. Auxiliary Stacks Used to Sort Current Stack
   int maxLen, auxIndex, mainAuxIndex;
@@ -59,13 +59,13 @@ int main(int argc, char **argv)
   // Check nStacks
   if (stacks::nStacks < stacks::minStacks)
   {
-    printTitle("ERROR: This Algorithm Requires at Least 3 Stacks to Sort them", true);
+    pressEnterToCont("ERROR: This Algorithm Requires at Least 3 Stacks to Sort them", true);
     return -1;
   }
   if (stacks::nStacks > stacks::maxStacks)
   {
-    printTitle("WARNING: nStacks is too Big. Stacks could Look Wrong because of Terminal Width", true);
-    printTitle("- If you're Sure about your Choice, Modify maxStacks in stacks Namespace, and Run this Program Again", true);
+    pressEnterToCont("WARNING: nStacks is too Big. Stacks could Look Wrong because of Terminal Width", true);
+    pressEnterToCont("- If you're Sure about your Choice, Modify maxStacks in stacks Namespace, and Run this Program Again", true);
     return -1;
   }
 
@@ -114,7 +114,7 @@ int main(int argc, char **argv)
   */
 
   // Initial State
-  printStacks(listsArray, maxLen, stackLen);
+  printStacks(listsArray, maxLen, stackLen, stacks::sleepNoMove);
 
   // Asks to Continue
   cout << string(terminal::nNewLines, '\n');
@@ -153,7 +153,7 @@ int main(int argc, char **argv)
     */
 
     // First Iteration
-    moveAtoB(stackLen, &maxLen, currStack, mainAuxIndex, stacksArray, listsArray);
+    moveAtoB(stackLen, &maxLen, stacks::sleepMove, currStack, mainAuxIndex, stacksArray, listsArray);
 
     int currStackTop, currStackLen = stackLen - 1;
 
@@ -164,7 +164,7 @@ int main(int argc, char **argv)
       currStackTop = stacksArray[currStack]->top();
 
       // Visualize Comparison
-      printStacks(listsArray, stackLen, maxLen, true, currStack, currStackLen - 1);
+      printStacks(listsArray, stackLen, maxLen, stacks::sleepRead, currStack, currStackLen - 1);
 
       // All Nodes have been Popped from Current Stack. Perform Last Iteration
       if (currStackLen == 0)
@@ -178,7 +178,7 @@ int main(int argc, char **argv)
       if (currStackLen == 1 && currStackTop >= listsArray[mainAuxIndex]->get(maxLen - stackLen - 1))
       {
         // Visualize Comparison
-        printStacks(listsArray, stackLen, maxLen, true, mainAuxIndex, stackLen);
+        printStacks(listsArray, stackLen, maxLen, stacks::sleepRead, mainAuxIndex, stackLen);
 
         // Move Nodes from Stack at mainAuxIndex, through Stack at auxIndex, to Current Stack
         modHanoi(stackLen - 1, stackLen, &maxLen, mainAuxIndex, auxIndex, currStack, stacksArray, listsArray);
@@ -189,20 +189,20 @@ int main(int argc, char **argv)
       if (currStackTop <= stacksArray[mainAuxIndex]->top())
       {
         // Visualize Comparison
-        printStacks(listsArray, stackLen, maxLen, true, mainAuxIndex, maxLen - 1);
+        printStacks(listsArray, stackLen, maxLen, stacks::sleepRead, mainAuxIndex, maxLen - 1);
 
         // Move from Current Stack to Stack at mainAuxIndex
-        moveAtoB(stackLen, &maxLen, currStack, mainAuxIndex, stacksArray, listsArray);
+        moveAtoB(stackLen, &maxLen, stacks::sleepMove, currStack, mainAuxIndex, stacksArray, listsArray);
       }
       // Current Stack Top Node's Value is Grater than Stack at mainAuxIndex Top Node's Value, but Just One Iteration has been Performed
       else if (maxLen == stackLen + 1)
       {
         // Move from Stack at mainAuxIndex to Stack at auxIndex
-        moveAtoB(stackLen, &maxLen, mainAuxIndex, auxIndex, stacksArray, listsArray);
+        moveAtoB(stackLen, &maxLen, stacks::sleepMove, mainAuxIndex, auxIndex, stacksArray, listsArray);
         // Move from Current Stack to Stack at mainAuxIndex
-        moveAtoB(stackLen, &maxLen, currStack, mainAuxIndex, stacksArray, listsArray);
+        moveAtoB(stackLen, &maxLen, stacks::sleepMove, currStack, mainAuxIndex, stacksArray, listsArray);
         // Move from Stack at auxIndex to Stack at mainAuxIndex
-        moveAtoB(stackLen, &maxLen, auxIndex, mainAuxIndex, stacksArray, listsArray);
+        moveAtoB(stackLen, &maxLen, stacks::sleepMove, auxIndex, mainAuxIndex, stacksArray, listsArray);
       }
       else
       {
@@ -213,7 +213,7 @@ int main(int argc, char **argv)
         for (nNodes = 2; nNodes <= maxLen - stackLen; nNodes++)
         {
           // Visualize Linear Search
-          printStacks(listsArray, stackLen, maxLen, true, mainAuxIndex, maxLen - nNodes);
+          printStacks(listsArray, stackLen, maxLen, stacks::sleepRead, mainAuxIndex, maxLen - nNodes);
 
           if (listsArray[mainAuxIndex]->get(nNodes - 1) >= currStackTop)
             break;
@@ -223,7 +223,7 @@ int main(int argc, char **argv)
         modHanoi(nNodes - 1, stackLen, &maxLen, mainAuxIndex, currStack, auxIndex, stacksArray, listsArray);
 
         // Move Current Stack Top Node to Stack at mainAuxIndex
-        moveAtoB(stackLen, &maxLen, currStack, mainAuxIndex, stacksArray, listsArray);
+        moveAtoB(stackLen, &maxLen, stacks::sleepMove, currStack, mainAuxIndex, stacksArray, listsArray);
 
         // Move nNodes from Stack at auxIndex to Stack at mainAuxIndex
         modHanoi(nNodes - 1, stackLen, &maxLen, auxIndex, currStack, mainAuxIndex, stacksArray, listsArray);
