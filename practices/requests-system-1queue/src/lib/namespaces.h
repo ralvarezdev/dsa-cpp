@@ -44,7 +44,7 @@ namespace terminal
   const int nLastName = 16;
   const int nTitle = 20;
   const int nDescription = 30;
-  const int nPriority = 10;
+  const int nPriority = 18;
 }
 
 namespace requests
@@ -53,13 +53,13 @@ namespace requests
   // - Priority
   enum priority
   {
-    directory,
-    subdirectory,
-    professor,
-    associateProfessor,
+    priorityNull,
+    alumni,
     administration,
-    students,
-    priorityNull
+    associateProfessor,
+    professor,
+    subdirectory,
+    directory
   };
 
   // - Commands

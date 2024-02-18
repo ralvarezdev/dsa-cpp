@@ -69,6 +69,9 @@ public:
   // Inherit Constructors
   using SingleLinkedList<Student>::SingleLinkedList;
 
+  // Constructors
+  StudentLinkedList() : SingleLinkedList<Student>(Student()){};
+
   // Public Methods
   void insertionSort(Student);
   void print(int);

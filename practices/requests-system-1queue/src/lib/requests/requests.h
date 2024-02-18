@@ -49,6 +49,7 @@ public:
   string getTitle();
   string getDescription();
   requests::priority getPriority();
+  string getPriorityStr();
 };
 
 // REQUEST QUEUE LINKED LIST CLASS
@@ -59,8 +60,11 @@ public:
   // Inherit Constructors
   using QueueLinkedList<Request>::QueueLinkedList;
 
+  // Constructors
+  RequestQueueLinkedList() : QueueLinkedList<Request>(Request()){};
+
   // Public Methods
-  requests::priority moveBack();
+  void moveBack();
   void insertByPriority(Request);
   void readFile();
   void print();
@@ -117,10 +121,40 @@ requests::priority Request::getPriority()
   return this->priority;
 }
 
+// Method to Get Priority as String
+string Request::getPriorityStr()
+{
+  requests::priority priority = this->getPriority();
+
+  switch (priority)
+  {
+  case requests::priority::directory:
+    return "Directory";
+
+  case requests::priority::subdirectory:
+    return "Subdirectory";
+
+  case requests::priority::professor:
+    return "Professor";
+
+  case requests::priority::associateProfessor:
+    return "Assoc. Professor";
+
+  case requests::priority::administration:
+    return "Administration";
+
+  case requests::priority::alumni:
+    return "Alumni";
+
+  default:
+    return "NULL";
+  }
+}
+
 // REQUEST QUEUE LINKED LIST CLASS
 
 // Method to Pop First Node and Push it Back
-requests::priority RequestQueueLinkedList::moveBack()
+void RequestQueueLinkedList::moveBack()
 {
   // Temp Request
   Request temp;
@@ -130,32 +164,94 @@ requests::priority RequestQueueLinkedList::moveBack()
 
   // Push First Request to the End
   this->push(temp);
-
-  return temp.getPriority();
 }
 
 // Method to Push Node by Priority
 void RequestQueueLinkedList::insertByPriority(Request request)
 {
+  // Request Priority
+  requests::priority priority = request.getPriority();
+
+  // Old Queue Length
+  int oldLen = this->getLength();
+
   // Insert at the End
-  if (requests::priority::students)
+  if (priority == requests::priority::alumni || oldLen == 0)
   {
     this->push(request);
     return;
   }
 
-  // Temp Priority
-  requests::priority tempPriority;
-  // Old Queue Length
-  int oldLen = this->getLength();
+  // Temp Requests
+  Request prevRequest, nextRequest;
+
+  // Temp Priorities
+  requests::priority prevPriority, nextPriority;
+
+  // First Iteration
+  prevPriority = requests::priority::priorityNull;
+  nextRequest = this->pop();
+  nextPriority = nextRequest.getPriority();
+  oldLen--;
+
+  // Just One Request was in Queue
+  if (oldLen == 0)
+  {
+    if (nextPriority >= priority)
+    {
+      this->push(nextRequest);
+      this->push(request);
+
+      /*´
+            cout << "Prev: " << prevPriority << '\n'
+                 << "Next: " << priority << '\n';
+            pressEnterToCont("Continue");
+      */
+
+      return;
+    }
+
+    this->push(request);
+    this->push(nextRequest);
+    /*
+      cout << "Prev: " << priority << '\n'
+           << "Next: " << nextPriority << '\n';
+      pressEnterToCont("Continue");
+    */
+    return;
+  }
 
   // Move Nodes to auxQueue, until New Request can be Pushed at the Right Order and Priority Position
-  for (; tempPriority != request.getPriority() + 1; oldLen--)
-    // Move Node to the End
-    tempPriority = this->moveBack();
+  for (; oldLen > 0 && nextPriority >= priority; oldLen--)
+  {
+    // Push Previous Request
+    if (prevPriority != requests::priority::priorityNull)
+      this->push(prevRequest);
+
+    // Save Next Request and Priority as the Previous One
+    prevRequest = nextRequest;
+    prevPriority = nextPriority;
+
+    // Get Top Request
+    nextRequest = this->pop();
+    nextPriority = nextRequest.getPriority();
+
+    // cout << "Prev: " << prevPriority << '\n';
+  }
+
+  // Push Previous Request
+  if (prevPriority != requests::priority::priorityNull)
+    this->push(prevRequest);
 
   // Push New Request
   this->push(request);
+  // cout << "Middle: " << priority << '\n';
+
+  // Push Next Request
+  this->push(nextRequest);
+  // cout << "Next: " << nextPriority << '\n';
+
+  // pressEnterToCont("Continue");
 
   // Push Nodes Left to the End
   for (; oldLen > 0; oldLen--)
@@ -195,28 +291,50 @@ void RequestQueueLinkedList::readFile()
       count = 0;
       while (getline(file, word, sep))
       {
-        if (word.length() != 0)
-          switch (count)
-          {
-          case 0:
-            firstName = word;
-            break;
-          case 1:
-            lastName = word;
-            break;
-          case 2:
-            title = word;
-            break;
-          case 3:
-            description = word;
-            break;
-          case 4:
-            priority = requests::priority(stoi(word));
-            break;
+        if (word.length() == 0)
+          continue;
 
-          default:
-            break;
+        switch (count)
+        {
+        case 0:
+          firstName = word;
+          break;
+
+        case 1:
+          lastName = word;
+          break;
+
+        case 2:
+          title = word;
+          break;
+
+        case 3:
+          if (word.at(0) == '"')
+          {
+            // Remove First Character
+            word = word.substr(1, word.length());
+
+            // Add Comma
+            word += ',';
+
+            // Get Missing Part from Description
+            string temp;
+            getline(file, temp, '"');
+
+            // Append it
+            word.append(temp);
           }
+
+          description = word;
+          break;
+
+        case 4:
+          priority = requests::priority(stoi(word));
+          break;
+
+        default:
+          break;
+        }
 
         count++;
       }
@@ -226,9 +344,6 @@ void RequestQueueLinkedList::readFile()
 
       // Insert Request
       this->insertByPriority(*newRequest);
-
-      // Increment Counter
-      this->increaseLength();
     }
     catch (...)
     {
@@ -285,6 +400,9 @@ void RequestQueueLinkedList::print()
 
   ostringstream content;
 
+  // Set Text Alignment to the Left
+  content << left;
+
   // Print All Nodes
   for (; oldLen > 0; oldLen--)
   {
@@ -302,12 +420,12 @@ void RequestQueueLinkedList::print()
       content << title.substr(0, terminal::nTitle - 4) << "... ";
 
     description = request.getDescription();
-    if (title.length() <= terminal::nTitle)
+    if (description.length() <= terminal::nDescription)
       content << setw(terminal::nDescription) << setfill(' ') << description;
     else
       content << description.substr(0, terminal::nDescription - 4) << "... ";
 
-    content << setw(terminal::nPriority) << setfill(' ') << request.getPriority()
+    content << setw(terminal::nPriority) << setfill(' ') << request.getPriorityStr()
             << '\n';
 
     // Push First Request to auxQueue

@@ -4,9 +4,14 @@
 
 #include "lib/terminal/cols.h"
 #include "lib/terminal/input.h"
-#include "lib/students/students.h"
+#include "lib/requests/requests.h"
 
 using namespace std;
+
+/*
+NOTE: In this Practice, we're Challenged to Create a Requests System that's Sorted by Priority and by Order of Arrival,
+with the Less Amount of Queues and Auxiliary Data Structures
+*/
 
 // --- Function Prototypes
 void helpMessage();
@@ -21,32 +26,27 @@ int main(int argc, char **argv)
   changeCwdToData();
 
   // Students Header
-  Col cols[11] = {
-      Col("Id", terminal::nId),
+  Col cols[5] = {
       Col("First Name", terminal::nFirstName),
       Col("Last Name", terminal::nLastName),
-      Col("Gender", terminal::nGender),
-      Col("Prom", terminal::nProm),
-      Col("OOP", terminal::nCourse),
-      Col("DSA", terminal::nCourse),
-      Col("DB", terminal::nCourse),
-      Col("Math", terminal::nCourse),
-      Col("Stats", terminal::nCourse)};
+      Col("Title", terminal::nTitle),
+      Col("Description", terminal::nDescription),
+      Col("Priority", terminal::nPriority)};
 
   // Create Title Linked List
-  ColLinkedList titleList(cols, 11, Col());
+  ColLinkedList titleList(cols, 5, Col());
 
-  // Create Student Linked List
-  StudentLinkedList studentList = StudentLinkedList(Student());
+  // Create Requests Queue Linked List
+  RequestQueueLinkedList requestsQueue = RequestQueueLinkedList();
 
-  // Read students.csv
-  studentList.readFile();
+  // Read requests.csv
+  requestsQueue.readFile();
 
   // - Program Status Variables
   bool exit, confirmation;
   string inputWord;
   int id, pos, intCmd, timesExec = 0;
-  students::cmds cmd;
+  requests::cmds cmd;
 
   while (!exit) // Main While Loop of the Program
   {
@@ -57,7 +57,7 @@ int main(int argc, char **argv)
       try
       {
         // Try to Get Command
-        cmd = students::cmds(stoi(inputWord));
+        cmd = requests::cmds(stoi(inputWord));
       }
       catch (...)
       {
@@ -84,7 +84,7 @@ int main(int argc, char **argv)
 
     switch (cmd)
     {
-    case students::printAll:
+    case requests::printAll:
       // Clear Terminal
       cout << clear;
 
@@ -92,7 +92,7 @@ int main(int argc, char **argv)
       titleList.print();
 
       // Print Students
-      studentList.print();
+      requestsQueue.print();
 
       // Print New Line
       cout << '\n';
@@ -100,67 +100,35 @@ int main(int argc, char **argv)
       pressEnterToCont("Press ENTER to Continue");
       break;
 
-    case students::printTop10:
-      // Clear Terminal
-      cout << clear;
+    case requests::addRequest:
+      /*
+            // Ask for Student ID
+            id = getInteger("Enter Student ID to Remove", 1, requestsQueue.getLength());
 
-      // Print Columns Header
-      titleList.print();
+            // Get Student Position in Linked List
+            pos = requestsQueue.linearSearch(id);
 
-      // Print Students
-      studentList.print(10);
+            // Student not Found
+            if (pos == -1)
+            {
+              pressEnterToCont("ERROR: Student not Found", true);
+              break;
+            }
 
-      // Print New Line
-      cout << '\n';
-
-      pressEnterToCont("Press ENTER to Continue");
+            // Confirmation Message
+            cout << "\n\n";
+            if (booleanQuestion("Is this the Student you want to Remove?"))
+            {
+              requestsQueue.removeAt(pos);
+              requestsQueue.overwriteCSV();
+            }
+      */
       break;
 
-    case students::generateStudentFile:
-      // Ask for Student ID
-      id = getInteger("Enter Student ID", 1, studentList.getLength());
-
-      // Get Student Position in Linked List
-      pos = studentList.linearSearch(id);
-
-      // Student not Found
-      if (pos == -1)
-      {
-        pressEnterToCont("ERROR: Student not Found", true);
-        break;
-      }
-
-      // Generate Student File
-      studentList.generateStudentFile(pos);
+    case requests::help:
       break;
 
-    case students::removeStudent:
-      // Ask for Student ID
-      id = getInteger("Enter Student ID to Remove", 1, studentList.getLength());
-
-      // Get Student Position in Linked List
-      pos = studentList.linearSearch(id);
-
-      // Student not Found
-      if (pos == -1)
-      {
-        pressEnterToCont("ERROR: Student not Found", true);
-        break;
-      }
-
-      // Confirmation Message
-      cout << "\n\n";
-      if (booleanQuestion("Is this the Student you want to Remove?"))
-      {
-        studentList.removeAt(pos);
-        studentList.overwriteCSV();
-      }
-      break;
-
-    case students::help:
-      break;
-
-    case students::exit:
+    case requests::exit:
       // Confirmation Message
       exit = booleanQuestion("Are you SURE to Exit");
       break;
@@ -179,15 +147,13 @@ int main(int argc, char **argv)
 void helpMessage()
 {
   cout << clear;
-  printTitle("WELCOME TO EDUCA V2.0");
+  printTitle("WELCOME TO FLASH ACADEMIC REQUESTS SYSTEM");
   cout << "Database Manipulation Commands\n"
-       << tab1 << addBrackets<int>(students::printAll) << " Print Students\n"
-       << tab1 << addBrackets<int>(students::printTop10) << " Print Top 10 Students\n"
-       << tab1 << addBrackets<int>(students::generateStudentFile) << " Generate Student File\n"
-       << tab1 << addBrackets<int>(students::removeStudent) << " Remove Student\n"
+       << tab1 << addBrackets<int>(requests::printAll) << " Print Requests\n"
+       << tab1 << addBrackets<int>(requests::addRequest) << " Add Request\n"
        << "Other Commands:\n"
-       << tab1 << addBrackets<int>(students::help) << " Help\n"
-       << tab1 << addBrackets<int>(students::exit) << " Exit\n";
+       << tab1 << addBrackets<int>(requests::help) << " Help\n"
+       << tab1 << addBrackets<int>(requests::exit) << " Exit\n";
 }
 
 // Function to Change Current Working Directory to 'src/data'

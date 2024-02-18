@@ -39,6 +39,9 @@ public:
   // Inherit Constructors
   using SingleLinkedList<Col>::SingleLinkedList;
 
+// Constructors
+  ColLinkedList() : SingleLinkedList<Col>(Col()){};
+
   // Public Methods
   void print();
 };

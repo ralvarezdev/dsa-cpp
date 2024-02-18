@@ -37,7 +37,7 @@ int main(int argc, char **argv)
   ColLinkedList titleList(cols, 11, Col());
 
   // Create Student Linked List
-  StudentLinkedList studentList = StudentLinkedList(Student());
+  StudentLinkedList studentList = StudentLinkedList();
 
   // Read students.csv
   studentList.readFile();
