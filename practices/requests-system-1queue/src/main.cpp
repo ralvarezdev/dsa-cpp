@@ -44,9 +44,21 @@ int main(int argc, char **argv)
 
   // - Program Status Variables
   bool exit, confirmation;
-  string inputWord;
-  int id, pos, intCmd, timesExec = 0;
+  string inputWord, firstName, lastName, title, description, errMessage1, errMessage2;
+  int intCmd, timesExec = 0, priorityNumber;
+  Request *newRequest;
   requests::cmds cmd;
+  requests::priority priority;
+
+  // - Characters Restricted
+  const int length1 = 1;
+  const int length2 = 1;
+  char restrictions1[length1] = {','};
+  char restrictions2[length2] = {'"'};
+
+  // Error Message
+  errMessage1 = "Cannot Contain Any Commas";
+  errMessage2 = "Cannot Contain Any Double Quotes";
 
   while (!exit) // Main While Loop of the Program
   {
@@ -101,28 +113,60 @@ int main(int argc, char **argv)
       break;
 
     case requests::addRequest:
-      /*
-            // Ask for Student ID
-            id = getInteger("Enter Student ID to Remove", 1, requestsQueue.getLength());
+      cout << terminal::clear;
+      printTitle("Insert New Request");
+      cout << '\n';
 
-            // Get Student Position in Linked List
-            pos = requestsQueue.linearSearch(id);
+      // Get First Name
+      firstName = getString("First Name", restrictions1, length1, errMessage1);
 
-            // Student not Found
-            if (pos == -1)
-            {
-              pressEnterToCont("ERROR: Student not Found", true);
-              break;
-            }
+      // Get Last Name
+      lastName = getString("Last Name", restrictions1, length1, errMessage1);
 
-            // Confirmation Message
-            cout << "\n\n";
-            if (booleanQuestion("Is this the Student you want to Remove?"))
-            {
-              requestsQueue.removeAt(pos);
-              requestsQueue.overwriteCSV();
-            }
-      */
+      // Get Title
+      title = getString("Title", restrictions1, length1, errMessage1);
+
+      // Get Description
+      description = getString("Description", restrictions2, length2, errMessage2);
+
+      // First Name Can't Contain Commas
+      if (description.find(',') != string::npos)
+      {
+        // Add Double Quote to the Beggining and End of this String
+        description.insert(0, "\"");
+        description += '"';
+      }
+
+      // Print Different Priorities
+      cout << '\n';
+      printTitle("Priority");
+      cout << '\n'
+           << setw(terminal::nPriority) << setfill(' ') << "Directory: "
+           << requests::priority::directory << '\n'
+           << setw(terminal::nPriority) << setfill(' ') << "Subdirectory: "
+           << requests::priority::subdirectory << '\n'
+           << setw(terminal::nPriority) << setfill(' ') << "Professor: "
+           << requests::priority::professor << '\n'
+           << setw(terminal::nPriority) << setfill(' ') << "Assoc. Professor: "
+           << requests::priority::associateProfessor << '\n'
+           << setw(terminal::nPriority) << setfill(' ') << "Administration: "
+           << requests::priority::administration << '\n'
+           << setw(terminal::nPriority) << setfill(' ') << "Alumni: "
+           << requests::priority::alumni << "\n\n";
+
+      // Get Request Priority
+      priorityNumber = getInteger("Priority", minPriority, maxPriority);
+      priority = requests::priority(priorityNumber);
+
+      // Call Request Constructor
+      newRequest = new Request(firstName, lastName, title, description, priority);
+
+      // Insert Request
+      requestsQueue.insertByPriority(*newRequest);
+
+      // Overwrite requests.csv
+      requestsQueue.overwriteCSV();
+
       break;
 
     case requests::help:

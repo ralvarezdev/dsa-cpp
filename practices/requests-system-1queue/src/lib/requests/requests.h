@@ -159,7 +159,7 @@ void RequestQueueLinkedList::moveBack()
   // Temp Request
   Request temp;
 
-  // Pop First Request =
+  // Pop First Request
   temp = this->pop();
 
   // Push First Request to the End
@@ -201,23 +201,11 @@ void RequestQueueLinkedList::insertByPriority(Request request)
     {
       this->push(nextRequest);
       this->push(request);
-
-      /*´
-            cout << "Prev: " << prevPriority << '\n'
-                 << "Next: " << priority << '\n';
-            pressEnterToCont("Continue");
-      */
-
       return;
     }
 
     this->push(request);
     this->push(nextRequest);
-    /*
-      cout << "Prev: " << priority << '\n'
-           << "Next: " << nextPriority << '\n';
-      pressEnterToCont("Continue");
-    */
     return;
   }
 
@@ -235,8 +223,6 @@ void RequestQueueLinkedList::insertByPriority(Request request)
     // Get Top Request
     nextRequest = this->pop();
     nextPriority = nextRequest.getPriority();
-
-    // cout << "Prev: " << prevPriority << '\n';
   }
 
   // Push Previous Request
@@ -245,13 +231,9 @@ void RequestQueueLinkedList::insertByPriority(Request request)
 
   // Push New Request
   this->push(request);
-  // cout << "Middle: " << priority << '\n';
 
   // Push Next Request
   this->push(nextRequest);
-  // cout << "Next: " << nextPriority << '\n';
-
-  // pressEnterToCont("Continue");
 
   // Push Nodes Left to the End
   for (; oldLen > 0; oldLen--)
@@ -311,15 +293,15 @@ void RequestQueueLinkedList::readFile()
         case 3:
           if (word.at(0) == '"')
           {
-            // Remove First Character
-            word = word.substr(1, word.length());
-
             // Add Comma
             word += ',';
 
             // Get Missing Part from Description
             string temp;
             getline(file, temp, '"');
+
+            // Add Double Quotes at the End
+            temp += '"';
 
             // Append it
             word.append(temp);
@@ -376,10 +358,9 @@ void RequestQueueLinkedList::overwriteCSV()
     // Add Request Data
     content << request.getFirstName() << sep
             << request.getLastName() << sep
-            << request.getTitle()
+            << request.getTitle() << sep
             << request.getDescription() << sep
-            << request.getPriority() << sep
-            << '\n';
+            << request.getPriority() << '\n';
 
     // Push First Request to the End
     this->push(request);
@@ -414,13 +395,18 @@ void RequestQueueLinkedList::print()
             << setw(terminal::nLastName) << setfill(' ') << request.getLastName();
 
     title = request.getTitle();
-    if (title.length() <= terminal::nTitle)
+    if (title.length() < terminal::nTitle)
       content << setw(terminal::nTitle) << setfill(' ') << title;
     else
       content << title.substr(0, terminal::nTitle - 4) << "... ";
 
     description = request.getDescription();
-    if (description.length() <= terminal::nDescription)
+    // Check if Description Contains Some Commas
+    if (description.find(',') != string::npos)
+      // Remove Double Quotes
+      description = description.substr(1, description.length() - 2);
+
+    if (description.length() < terminal::nDescription)
       content << setw(terminal::nDescription) << setfill(' ') << description;
     else
       content << description.substr(0, terminal::nDescription - 4) << "... ";

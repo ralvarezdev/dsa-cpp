@@ -72,6 +72,10 @@ namespace requests
     cmdNull
   };
 
+  // - Minimum and Maximum Priority
+  const int minPriority = priority::alumni;
+  const int maxPriority = priority::directory;
+
   // - Filename
   const string requestsFilename = "requests.csv";
 }

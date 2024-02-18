@@ -15,6 +15,7 @@ void pressEnterToCont(string message, bool warning);
 string getLower(string word);
 bool booleanQuestion(string message);
 int getInteger(string message, int low, int high);
+string getString(string askMessage, char restrictions[], int length, string errMessage);
 
 // --- Functions
 
@@ -75,6 +76,32 @@ int getInteger(string message, int low, int high)
              << " [" << low << '-' << high << "]";
 
       pressEnterToCont(stream.str(), true);
+    }
+}
+
+// Function to Ask for String with Some Restrictions
+string getString(string askMessage, char restrictions[], int length, string errMessage)
+{
+  string input;
+
+  // Ask for String Input
+  while (true)
+    try
+    {
+      cout << askMessage << ": ";
+      getline(cin, input);
+
+      // Input Can't Contain Any Restricted Character
+      for (int n = length; n > 0; n--)
+        if (input.find(restrictions[n - 1]) != string::npos)
+          throw(-1);
+
+      return input;
+    }
+    catch (...)
+    {
+      printTitle(errMessage, true); // Ignore String if it Contains Any Restricted Character
+      cout << '\n';
     }
 }
 
