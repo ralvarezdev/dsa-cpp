@@ -55,16 +55,12 @@ public:
 
 class RequestQueueLinkedList : public QueueLinkedList<Request>
 {
-private:
-  QueueLinkedList<Request> *auxQueue = new QueueLinkedList<Request>(Request());
-
 public:
   // Inherit Constructors
   using QueueLinkedList<Request>::QueueLinkedList;
 
   // Public Methods
-  requests::priority moveToAuxQueue();
-  void moveFromAuxQueue();
+  requests::priority moveBack();
   void insertByPriority(Request);
   void readFile();
   void print();
@@ -123,32 +119,19 @@ requests::priority Request::getPriority()
 
 // REQUEST QUEUE LINKED LIST CLASS
 
-// Method to Pop Node from RequestQueueLinkedList and Push it to auxQueue
-requests::priority RequestQueueLinkedList::moveToAuxQueue()
+// Method to Pop First Node and Push it Back
+requests::priority RequestQueueLinkedList::moveBack()
 {
   // Temp Request
   Request temp;
 
-  // Pop First Request from RequestQueueLinkedList
+  // Pop First Request =
   temp = this->pop();
 
-  // Push First Request to auxQueue
-  this->auxQueue->push(temp);
+  // Push First Request to the End
+  this->push(temp);
 
   return temp.getPriority();
-}
-
-// Method to Pop Node from auxQueue and Push it to RequestQueueLinkedList
-void RequestQueueLinkedList::moveFromAuxQueue()
-{
-  // Temp Request
-  Request temp;
-
-  // Pop First Request from auxQueue
-  temp = this->auxQueue->pop();
-
-  // Push First Request to RequestQueueLinkedList
-  this->push(temp);
 }
 
 // Method to Push Node by Priority
@@ -163,24 +146,21 @@ void RequestQueueLinkedList::insertByPriority(Request request)
 
   // Temp Priority
   requests::priority tempPriority;
+  // Old Queue Length
+  int oldLen = this->getLength();
 
   // Move Nodes to auxQueue, until New Request can be Pushed at the Right Order and Priority Position
-  while (tempPriority != request.getPriority() + 1)
-    // Move Node from RequestQueueLinkedList to auxQueue
-    tempPriority = this->moveToAuxQueue();
+  for (; tempPriority != request.getPriority() + 1; oldLen--)
+    // Move Node to the End
+    tempPriority = this->moveBack();
 
-  // Push New Request to auxQueue
-  this->auxQueue->push(request);
+  // Push New Request
+  this->push(request);
 
-  // Move Nodes Left from RequestQueueLinkedList to auxQueue
-  while (!this->isEmpty())
-    // Move Node from RequestQueueLinkedList to auxQueue
-    this->moveToAuxQueue();
-
-  // Move Nodes Back from auxQueue to RequestQueueLinkedList
-  while (!this->auxQueue->isEmpty())
-    // Move Node from auxQueue to RequestQueueLinkedList
-    this->moveFromAuxQueue();
+  // Push Nodes Left to the End
+  for (; oldLen > 0; oldLen--)
+    // Move Node to the End
+    this->moveBack();
 }
 
 // Method to Read requests.csv File
@@ -264,15 +244,18 @@ void RequestQueueLinkedList::overwriteCSV()
   SingleNodePtr<Request> p;
   Request request;
 
+  // Old Queue Length
+  int oldLen = this->getLength();
+
   ostringstream content;
   ofstream requestsCSV(requests::requestsFilename);
 
   content << "first_name,last_name,title,description,priority\n"; // Overwrite Header
 
-  // Move Nodes Left from RequestQueueLinkedList to auxQueue
-  while (!this->isEmpty())
+  // Get All Nodes Data
+  for (; oldLen > 0; oldLen--)
   {
-    // Pop First Request from RequestQueueLinkedList
+    // Pop First Request
     request = this->pop();
 
     // Add Request Data
@@ -283,14 +266,9 @@ void RequestQueueLinkedList::overwriteCSV()
             << request.getPriority() << sep
             << '\n';
 
-    // Push First Request to auxQueue
-    this->auxQueue->push(request);
+    // Push First Request to the End
+    this->push(request);
   }
-
-  // Move Nodes Back to RequestQueueLinkedList
-  while (!this->auxQueue->isEmpty())
-    // Move Node from RequestQueueLinkedList to auxQueue
-    moveFromAuxQueue();
 
   requestsCSV << content.str(); // Write Content to requests.csv
   requestsCSV.close();
@@ -302,10 +280,13 @@ void RequestQueueLinkedList::print()
   Request request;
   string title, description;
 
+  // Old Queue Length
+  int oldLen = this->getLength();
+
   ostringstream content;
 
-  // Move Nodes Left from RequestQueueLinkedList to auxQueue
-  while (!this->isEmpty())
+  // Print All Nodes
+  for (; oldLen > 0; oldLen--)
   {
     // Pop First Request from RequestQueueLinkedList
     request = this->pop();
@@ -330,13 +311,8 @@ void RequestQueueLinkedList::print()
             << '\n';
 
     // Push First Request to auxQueue
-    this->auxQueue->push(request);
+    this->push(request);
   }
-
-  // Move Nodes Back to RequestQueueLinkedList
-  while (!this->auxQueue->isEmpty())
-    // Move Node from RequestQueueLinkedList to auxQueue
-    moveFromAuxQueue();
 
   // Print Content
   cout << content.str();
