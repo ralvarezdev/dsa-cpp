@@ -45,6 +45,7 @@ namespace terminal
   const int nTitle = 20;
   const int nDescription = 30;
   const int nPriority = 18;
+  const int nColumn = 15;
 }
 
 namespace requests
@@ -66,7 +67,8 @@ namespace requests
   enum cmds
   {
     printAll = 1,
-    addRequest,
+    pushRequest,
+    popRequest,
     help,
     exit,
     cmdNull

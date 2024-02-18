@@ -45,8 +45,11 @@ int main(int argc, char **argv)
   // - Program Status Variables
   bool exit, confirmation;
   string inputWord, firstName, lastName, title, description, errMessage1, errMessage2;
-  int intCmd, timesExec = 0, priorityNumber;
-  Request *newRequest;
+  int intCmd, timesExec = 0, priorityNumber, columnDiff;
+
+  ostringstream content;
+
+  Request *newRequest, topRequest;
   requests::cmds cmd;
   requests::priority priority;
 
@@ -55,6 +58,9 @@ int main(int argc, char **argv)
   const int length2 = 1;
   char restrictions1[length1] = {','};
   char restrictions2[length2] = {'"'};
+
+  // Maximum Number of Characters per Line Minus Characters for Given Column
+  columnDiff = terminal::nChar - terminal::nColumn;
 
   // Error Message
   errMessage1 = "Cannot Contain Any Commas";
@@ -112,7 +118,7 @@ int main(int argc, char **argv)
       pressEnterToCont("Press ENTER to Continue");
       break;
 
-    case requests::addRequest:
+    case requests::pushRequest:
       cout << terminal::clear;
       printTitle("Insert New Request");
       cout << '\n';
@@ -169,6 +175,60 @@ int main(int argc, char **argv)
 
       break;
 
+    case requests::popRequest:
+      // Clear Stream
+      content.clear();
+
+      // Set Text Alignment to the Left
+      content << left;
+
+      cout << terminal::clear;
+      printTitle("Top Request");
+
+      // Pop First Request from requestsQueue
+      topRequest = requestsQueue.pop();
+
+      // Print Top Request Data
+      content << '\n'
+              << setw(terminal::nColumn) << setfill(' ') << "First Name"
+              << topRequest.getFirstName() << '\n'
+              << setw(terminal::nColumn) << setfill(' ') << "Last Name"
+              << topRequest.getLastName() << '\n';
+
+      // - Title
+      title = topRequest.getTitle();
+      content << setw(terminal::nColumn) << setfill(' ') << "Title";
+
+      if (title.length() < columnDiff)
+        content << title << '\n';
+      else
+        content << title.substr(0, columnDiff - 4) << "... \n";
+
+      // - Description
+      description = topRequest.getDescription();
+      content << setw(terminal::nColumn) << setfill(' ') << "Description";
+
+      // Check if Description Contains Some Commas
+      if (description.find(',') != string::npos)
+        // Remove Double Quotes
+        description = description.substr(1, description.length() - 2);
+
+      if (description.length() < columnDiff)
+        content << description << '\n';
+      else
+        content << description.substr(0, columnDiff - 4) << "... \n";
+
+      content << setw(terminal::nColumn) << setfill(' ') << "Priority"
+              << topRequest.getPriorityStr() << "\n\n";
+
+      // Print Data
+      cout << content.str();
+
+      // Ask to Overwrite CSV
+      if (booleanQuestion("Do you want to Save Changes to requests.csv File?"))
+        requestsQueue.overwriteCSV();
+      break;
+
     case requests::help:
       break;
 
@@ -194,7 +254,8 @@ void helpMessage()
   printTitle("WELCOME TO FLASH ACADEMIC REQUESTS SYSTEM");
   cout << "Database Manipulation Commands\n"
        << tab1 << addBrackets<int>(requests::printAll) << " Print Requests\n"
-       << tab1 << addBrackets<int>(requests::addRequest) << " Add Request\n"
+       << tab1 << addBrackets<int>(requests::pushRequest) << " Add Request at the End\n"
+       << tab1 << addBrackets<int>(requests::popRequest) << " Get First Request\n"
        << "Other Commands:\n"
        << tab1 << addBrackets<int>(requests::help) << " Help\n"
        << tab1 << addBrackets<int>(requests::exit) << " Exit\n";
