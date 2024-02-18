@@ -201,6 +201,8 @@ void Student::generateFile()
   studentFile.close();          // STUDENT LINKED LIST CLASS
 }
 
+// STUDENT LINKED LIST CLASS
+
 // Method to Insert in a Sorted Student Linked List
 void StudentLinkedList::insertionSort(Student student)
 {
@@ -369,7 +371,7 @@ void StudentLinkedList::readFile()
       this->insertionSort(*newStudent);
 
       // Increment Counter
-      this->length += 1;
+      this->increaseLength();
     }
     catch (...)
     {
