@@ -1,8 +1,6 @@
 #include <string>
 #include <sstream>
-#include <algorithm>
 #include <iostream>
-#include <limits.h>
 #include <iomanip>
 #include <fstream>
 
@@ -11,12 +9,11 @@
 #include "../terminal/ansiEsc.h"
 #include "../namespaces.h"
 
-using namespace std;
-
 using std::cout;
 using std::fill;
 using std::ifstream;
 using std::left;
+using std::ofstream;
 using std::ostringstream;
 using std::setfill;
 using std::setw;
@@ -70,6 +67,7 @@ public:
   void moveFromAuxQueue();
   void insertByPriority(Request);
   void readFile();
+  void print();
   void overwriteCSV();
 };
 
@@ -296,6 +294,52 @@ void RequestQueueLinkedList::overwriteCSV()
 
   requestsCSV << content.str(); // Write Content to requests.csv
   requestsCSV.close();
+}
+
+// Method to Print All Requests
+void RequestQueueLinkedList::print()
+{
+  Request request;
+  string title, description;
+
+  ostringstream content;
+
+  // Move Nodes Left from RequestQueueLinkedList to auxQueue
+  while (!this->isEmpty())
+  {
+    // Pop First Request from RequestQueueLinkedList
+    request = this->pop();
+
+    // Add Request Data
+    content << setw(terminal::nFirstName) << setfill(' ') << request.getFirstName()
+            << setw(terminal::nLastName) << setfill(' ') << request.getLastName();
+
+    title = request.getTitle();
+    if (title.length() <= terminal::nTitle)
+      content << setw(terminal::nTitle) << setfill(' ') << title;
+    else
+      content << title.substr(0, terminal::nTitle - 4) << "... ";
+
+    description = request.getDescription();
+    if (title.length() <= terminal::nTitle)
+      content << setw(terminal::nDescription) << setfill(' ') << description;
+    else
+      content << description.substr(0, terminal::nDescription - 4) << "... ";
+
+    content << setw(terminal::nPriority) << setfill(' ') << request.getPriority()
+            << '\n';
+
+    // Push First Request to auxQueue
+    this->auxQueue->push(request);
+  }
+
+  // Move Nodes Back to RequestQueueLinkedList
+  while (!this->auxQueue->isEmpty())
+    // Move Node from RequestQueueLinkedList to auxQueue
+    moveFromAuxQueue();
+
+  // Print Content
+  cout << content.str();
 }
 
 #endif

@@ -11,12 +11,11 @@
 #include "../terminal/ansiEsc.h"
 #include "../namespaces.h"
 
-using namespace std;
-
 using std::cout;
 using std::fill;
 using std::ifstream;
 using std::left;
+using std::ofstream;
 using std::ostringstream;
 using std::setfill;
 using std::setw;
