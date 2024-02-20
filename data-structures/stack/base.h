@@ -22,10 +22,11 @@ protected:
   int length = 0;
   NodeType error;
 
-  // Private Methods
+  // Protected Methods
   void increaseLength();
   void increaseLength(int);
   void decreaseLength();
+  NodeType pop(bool);
 
 public:
   // Constructors
@@ -38,7 +39,6 @@ public:
   NodeType getError();
   bool isEmpty();
   void push(NodeType);
-  NodeType pop(bool);
   NodeType pop();
   NodeType top();
   int getLength();

@@ -23,10 +23,11 @@ protected:
   int length = 0;
   NodeType error;
 
-  // Private Methods
+  // Protected Methods
   void increaseLength();
   void increaseLength(int);
   void decreaseLength();
+  NodeType pop(bool);
 
 public:
   // Constructors
@@ -40,8 +41,9 @@ public:
   NodeType getError();
   bool isEmpty();
   void push(NodeType);
-  NodeType pop(bool);
+  void enqueue(NodeType);
   NodeType pop();
+  NodeType dequeue();
   NodeType first();
   NodeType last();
   int getLength();
@@ -172,6 +174,13 @@ void QueueLinkedList<NodeType>::push(NodeType data)
   this->increaseLength();
 }
 
+// Calls Push Method
+template <class NodeType>
+void QueueLinkedList<NodeType>::enqueue(NodeType data)
+{
+  this->push(data);
+}
+
 // Method to Remove Head Node
 template <class NodeType>
 NodeType QueueLinkedList<NodeType>::pop(bool destructor)
@@ -211,6 +220,13 @@ template <class NodeType>
 NodeType QueueLinkedList<NodeType>::pop()
 {
   return this->pop(false);
+}
+
+// Calls Pop Method
+template <class NodeType>
+NodeType QueueLinkedList<NodeType>::dequeue()
+{
+  return this->pop(data);
 }
 
 // Method to Get First Node Data

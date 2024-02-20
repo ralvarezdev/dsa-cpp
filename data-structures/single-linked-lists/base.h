@@ -22,7 +22,7 @@ protected:
   int length = 0;
   NodeType error;
 
-  // Private Methods
+  // Protected Methods
   void increaseLength();
   void increaseLength(int);
   void decreaseLength();
