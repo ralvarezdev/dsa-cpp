@@ -177,6 +177,7 @@ int main(int argc, char **argv)
 
     case requests::popRequest:
       // Clear Stream
+      content.str("");
       content.clear();
 
       // Set Text Alignment to the Left
