@@ -36,10 +36,11 @@ public:
   ~StackLinkedList();
 
   // Public Methods
+  NodeType pop() { return pop(false); };
+
   NodeType getError();
   bool isEmpty();
   void push(NodeType);
-  NodeType pop();
   NodeType top();
   int getLength();
 };
@@ -155,13 +156,6 @@ NodeType StackLinkedList<NodeType>::pop(bool destructor)
   decreaseLength();
 
   return data;
-}
-
-// Method Overloads
-template <class NodeType>
-NodeType StackLinkedList<NodeType>::pop()
-{
-  return this->pop(false);
 }
 
 // Method to Get Node Data at Top Position

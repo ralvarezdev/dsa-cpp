@@ -37,12 +37,13 @@ public:
   ~QueueLinkedList();
 
   // Public Methods
+  NodeType pop() { return pop(false); };
+
   NodeType setNULL(bool);
   NodeType getError();
   bool isEmpty();
-  void push(NodeType);
   void enqueue(NodeType);
-  NodeType pop();
+  void push(NodeType);
   NodeType dequeue();
   NodeType first();
   NodeType last();
@@ -213,13 +214,6 @@ NodeType QueueLinkedList<NodeType>::pop(bool destructor)
   decreaseLength();
 
   return data;
-}
-
-// Method Overloads
-template <class NodeType>
-NodeType QueueLinkedList<NodeType>::pop()
-{
-  return this->pop(false);
 }
 
 // Calls Pop Method

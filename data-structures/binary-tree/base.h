@@ -29,9 +29,9 @@ protected:
 
 public:
   // Public Methods
-  void preorder();
-  void inorder();
-  void postorder();
+  void preorder() { preorder(root); };
+  void inorder() { inorder(root); };
+  void postorder() { postorder(root); };
 };
 
 // Method to Print Nodes through Preorder
@@ -53,13 +53,6 @@ void BinaryTree<NodeType>::preorder(BinNodePtr<NodeType> p)
   iter++;
 }
 
-// Method Overloads
-template <class NodeType>
-void BinaryTree<NodeType>::preorder()
-{
-  this->preorder(this->root);
-}
-
 // Method to Print Nodes through Inorder
 template <class NodeType>
 void BinaryTree<NodeType>::inorder(BinNodePtr<NodeType> p)
@@ -79,13 +72,6 @@ void BinaryTree<NodeType>::inorder(BinNodePtr<NodeType> p)
   iter++;
 }
 
-// Method Overloads
-template <class NodeType>
-void BinaryTree<NodeType>::inorder()
-{
-  this->inorder(this->root);
-}
-
 // Method to Print Nodes thorugh Postorder
 template <class NodeType>
 void BinaryTree<NodeType>::postorder(BinNodePtr<NodeType> p)
@@ -103,13 +89,6 @@ void BinaryTree<NodeType>::postorder(BinNodePtr<NodeType> p)
   cout << p->data << '\n';
 
   iter++;
-}
-
-// Method Overloads
-template <class NodeType>
-void BinaryTree<NodeType>::postorder()
-{
-  this->postorder(this->root);
 }
 
 #endif

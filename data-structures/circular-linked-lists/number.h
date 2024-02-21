@@ -28,14 +28,18 @@ public:
   NumberCircularLinkedList() : CircularLinkedList<NodeType>(-1){};
 
   // Public Methods
-  void print();
   void print(DoublyNodePtr<NodeType>);
-  void printReverse();
+  void print() { print(head); } // Set Head Node as p Node
+
   void printReverse(DoublyNodePtr<NodeType>);
-  NodeType total();
+  void printReverse() { printReverse(head->prev); }; // Set Head Node as p Node
+
   NodeType total(DoublyNodePtr<NodeType>);
-  NodeType max();
+  NodeType total() { return total(head); }; // Set Head Node as p Node
+
   NodeType max(DoublyNodePtr<NodeType>);
+  NodeType max() { return max(head); }; // Set Head Node as p Node
+
   DoublyNodePtr<NodeType> linearSearch(NodeType);
   DoublyNodePtr<NodeType> linearSearch(DoublyNodePtr<NodeType>, NodeType);
   int compare(int, int);
@@ -56,13 +60,6 @@ void NumberCircularLinkedList<NodeType>::print(DoublyNodePtr<NodeType> p)
   } while (p != this->head);
 }
 
-// Method Overload
-template <class NodeType>
-void NumberCircularLinkedList<NodeType>::print()
-{
-  this->print(this->head); // Set Head Node as p Node
-}
-
 // Method to Print Nodes from Tail to Head
 template <class NodeType>
 void NumberCircularLinkedList<NodeType>::printReverse(DoublyNodePtr<NodeType> p)
@@ -78,13 +75,6 @@ void NumberCircularLinkedList<NodeType>::printReverse(DoublyNodePtr<NodeType> p)
   } while (p != this->head->prev);
 }
 
-// Method Overload
-template <class NodeType>
-void NumberCircularLinkedList<NodeType>::printReverse()
-{
-  this->printReverse(this->head->prev); // Set Head Node as p Node
-}
-
 // Method that Returns the Sum of All Node's Data Field
 template <class NodeType>
 NodeType NumberCircularLinkedList<NodeType>::total(DoublyNodePtr<NodeType> p)
@@ -98,13 +88,6 @@ NodeType NumberCircularLinkedList<NodeType>::total(DoublyNodePtr<NodeType> p)
   } while (p != this->head);
 
   return sum;
-}
-
-// Method Overload
-template <class NodeType>
-NodeType NumberCircularLinkedList<NodeType>::total()
-{
-  return this->total(this->head); // Set Head Node as p Node
 }
 
 // Method that Returns the Highest Number in Linked List
@@ -123,13 +106,6 @@ NodeType NumberCircularLinkedList<NodeType>::max(DoublyNodePtr<NodeType> p)
   } while (p != this->head);
 
   return m;
-}
-
-// Method Overload
-template <class NodeType>
-NodeType NumberCircularLinkedList<NodeType>::max()
-{
-  return this->max(this->head); // Set Head Node as p Node
 }
 
 // Method that Checks if the Given Number is Inside Linked List
@@ -151,7 +127,7 @@ DoublyNodePtr<NodeType> NumberCircularLinkedList<NodeType>::linearSearch(DoublyN
 template <class NodeType>
 DoublyNodePtr<NodeType> NumberCircularLinkedList<NodeType>::linearSearch(NodeType key)
 {
-  return this->linearSearch(this->head, key); // Set Head Node as p Node
+  return this->linearSearch(this->head, key);
 }
 
 // Method to Compare Two Nodes Values

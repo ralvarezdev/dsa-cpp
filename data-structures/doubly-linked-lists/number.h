@@ -29,14 +29,18 @@ public:
   NumberDoublyLinkedList() : DoublyLinkedList<NodeType>(-1){};
 
   // Public Methods
-  void print();
   void print(DoublyNodePtr<NodeType>);
-  void printReverse();
+  void print() { return print(head); }; // Set Head Node as p Node
+
   void printReverse(DoublyNodePtr<NodeType>);
-  NodeType total();
+  void printReverse() { return printReverse(tail); }; // Set Tail Node as p Node
+
   NodeType total(DoublyNodePtr<NodeType>);
-  NodeType max();
+  NodeType total() { return total(head); }; // Set Head Node as p Node
+
   NodeType max(DoublyNodePtr<NodeType>);
+  NodeType max() { return max(head); }; // Set Head Node as p Node
+
   DoublyNodePtr<NodeType> linearSearch(NodeType);
   DoublyNodePtr<NodeType> linearSearch(DoublyNodePtr<NodeType>, NodeType);
   int compare(int, int);
@@ -58,13 +62,6 @@ void NumberDoublyLinkedList<NodeType>::print(DoublyNodePtr<NodeType> p)
   }
 }
 
-// Method Overload
-template <class NodeType>
-void NumberDoublyLinkedList<NodeType>::print()
-{
-  this->print(this->head); // Set Head Node as p Node
-}
-
 // Method to Print Nodes from Tail to Head
 template <class NodeType>
 void NumberDoublyLinkedList<NodeType>::printReverse(DoublyNodePtr<NodeType> p)
@@ -80,13 +77,6 @@ void NumberDoublyLinkedList<NodeType>::printReverse(DoublyNodePtr<NodeType> p)
   }
 }
 
-// Method Overload
-template <class NodeType>
-void NumberDoublyLinkedList<NodeType>::printReverse()
-{
-  this->printReverse(this->tail); // Set Head Node as p Node
-}
-
 // Method that Returns the Sum of All Node's Data Field
 template <class NodeType>
 NodeType NumberDoublyLinkedList<NodeType>::total(DoublyNodePtr<NodeType> p)
@@ -100,13 +90,6 @@ NodeType NumberDoublyLinkedList<NodeType>::total(DoublyNodePtr<NodeType> p)
   }
 
   return sum;
-}
-
-// Method Overload
-template <class NodeType>
-NodeType NumberDoublyLinkedList<NodeType>::total()
-{
-  return this->total(this->head); // Set Head Node as p Node
 }
 
 // Method that Returns the Highest Number in Linked List
@@ -125,13 +108,6 @@ NodeType NumberDoublyLinkedList<NodeType>::max(DoublyNodePtr<NodeType> p)
   }
 
   return m;
-}
-
-// Method Overload
-template <class NodeType>
-NodeType NumberDoublyLinkedList<NodeType>::max()
-{
-  return this->max(this->head); // Set Head Node as p Node
 }
 
 // Method that Checks if the Given Number is Inside Linked List

@@ -41,13 +41,14 @@ public:
   ~DoublyLinkedList();
 
   // Public Methods
+  NodeType remove() { return remove(false); };
+  NodeType pop() { return pop(false); };
+
   NodeType getError();
   bool isEmpty();
   void push(NodeType);
   void pushBack(NodeType);
   void insertAt(NodeType, int);
-  NodeType remove();
-  NodeType pop();
   NodeType removeAt(int);
   NodeType change(NodeType, int);
   NodeType get(int);
@@ -310,13 +311,6 @@ NodeType DoublyLinkedList<NodeType>::remove(bool destructor)
   return data;
 }
 
-// Method Overloads
-template <class NodeType>
-NodeType DoublyLinkedList<NodeType>::remove()
-{
-  return this->remove(false);
-}
-
 // Method to Remove Node at Tail
 template <class NodeType>
 NodeType DoublyLinkedList<NodeType>::pop(bool destructor)
@@ -354,13 +348,6 @@ NodeType DoublyLinkedList<NodeType>::pop(bool destructor)
     delete t;
 
   return data;
-}
-
-// Method Overloads
-template <class NodeType>
-NodeType DoublyLinkedList<NodeType>::pop()
-{
-  return this->pop(false);
 }
 
 // Method to Remove Node at Given Index

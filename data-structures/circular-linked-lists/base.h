@@ -41,8 +41,8 @@ public:
   void push(NodeType);
   void pushBack(NodeType);
   void insertAt(NodeType, int);
-  NodeType remove();
-  NodeType pop();
+  NodeType remove() { return remove(false); };
+  NodeType pop() { return pop(false); };
   NodeType removeAt(int);
   NodeType change(NodeType, int);
   NodeType get(int);
@@ -298,13 +298,6 @@ NodeType CircularLinkedList<NodeType>::remove(bool destructor)
   return data;
 }
 
-// Method Overloads
-template <class NodeType>
-NodeType CircularLinkedList<NodeType>::remove()
-{
-  return this->remove(false);
-}
-
 // Method to Remove Node at Head Previous Node
 template <class NodeType>
 NodeType CircularLinkedList<NodeType>::pop(bool destructor)
@@ -342,13 +335,6 @@ NodeType CircularLinkedList<NodeType>::pop(bool destructor)
     delete t;
 
   return data;
-}
-
-// Method Overloads
-template <class NodeType>
-NodeType CircularLinkedList<NodeType>::pop()
-{
-  return this->pop(false);
 }
 
 // Method to Remove Node at Given Index

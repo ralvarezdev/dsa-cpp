@@ -37,21 +37,23 @@ public:
   ~SingleLinkedList();
 
   // Public Methods
+  NodeType remove() { return remove(false); };
+
   NodeType getError();
   bool isEmpty();
   void push(NodeType);
   void pushBack(NodeType);
   void insertAt(NodeType, int);
-  NodeType remove();
   NodeType pop();
   NodeType removeAt(int);
   NodeType change(NodeType, int);
   NodeType get(int);
+  int getLength();
+  void concat(SingleLinkedList);
+
   // void setCurrent(SingleNodePtr<NodeType>);
   // void setCurrent();
   //  int count(SingleNodePtr<NodeType>);
-  int getLength();
-  void concat(SingleLinkedList);
 };
 
 // Single Linked List Constructors
@@ -274,13 +276,6 @@ NodeType SingleLinkedList<NodeType>::remove(bool destructor)
   return data;
 }
 
-// Method Overloads
-template <class NodeType>
-NodeType SingleLinkedList<NodeType>::remove()
-{
-  return this->remove(false);
-}
-
 // Method to Remove Node at Tail
 template <class NodeType>
 NodeType SingleLinkedList<NodeType>::pop()
@@ -462,6 +457,27 @@ void SingleLinkedList<NodeType>::decreaseLength()
   this->length -= 1;
 }
 
+// Method to Get Linked List Length
+template <class NodeType>
+int SingleLinkedList<NodeType>::getLength()
+{
+  return this->length;
+}
+
+// Method to Concat Two Linked Lists
+template <class NodeType>
+void SingleLinkedList<NodeType>::concat(SingleLinkedList<NodeType> l)
+{
+  // Assign l First Node Next to this Linked List Tail
+  this->tail->next = l->head->next;
+
+  // Save New Tail Node
+  this->tail = l->tail;
+
+  // Save New Length
+  this->increaseLength(l->getLength());
+}
+
 /*
 // Method to Set Current Node
 template <class NodeType>
@@ -492,26 +508,5 @@ int SingleLinkedList<NodeType>::count(SingleNodePtr<NodeType> p)
   return 0;
 }
 */
-
-// Method to Get Linked List Length
-template <class NodeType>
-int SingleLinkedList<NodeType>::getLength()
-{
-  return this->length;
-}
-
-// Method to Concat Two Linked Lists
-template <class NodeType>
-void SingleLinkedList<NodeType>::concat(SingleLinkedList<NodeType> l)
-{
-  // Assign l First Node Next to this Linked List Tail
-  this->tail->next = l->head->next;
-
-  // Save New Tail Node
-  this->tail = l->tail;
-
-  // Save New Length
-  this->increaseLength(l->getLength());
-}
 
 #endif

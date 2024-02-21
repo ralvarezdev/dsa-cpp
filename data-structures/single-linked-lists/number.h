@@ -28,15 +28,19 @@ public:
   NumberSingleLinkedList() : SingleLinkedList<NodeType>(-1){};
 
   // Public Methods
-  void insertionSort(NodeType);
-  void print();
   void print(SingleNodePtr<NodeType>);
-  void printReverse();
+  void print() { return print(head->next); }; // Set Head Node as p Node
+
   void printReverse(SingleNodePtr<NodeType>);
-  NodeType total();
+  void printReverse() { return printReverse(head->next); }; // Set Head Node as p Node
+
   NodeType total(SingleNodePtr<NodeType>);
-  NodeType max();
+  NodeType total() { return total(head->next); }; // Set Head Node as p Node
+
   NodeType max(SingleNodePtr<NodeType>);
+  NodeType max() { return max(head->next); }; // Set Head Node as p Node
+
+  void insertionSort(NodeType);
   SingleNodePtr<NodeType> linearSearch(NodeType);
   SingleNodePtr<NodeType> linearSearch(SingleNodePtr<NodeType>, NodeType);
   int compare(int, int);
@@ -92,13 +96,6 @@ void NumberSingleLinkedList<NodeType>::print(SingleNodePtr<NodeType> p)
   }
 }
 
-// Method Overload
-template <class NodeType>
-void NumberSingleLinkedList<NodeType>::print()
-{
-  this->print(this->head->next); // Set Head Node as p Node
-}
-
 // Print Nodes with a Recursive Method from Tail to Head
 template <class NodeType>
 void NumberSingleLinkedList<NodeType>::printReverse(SingleNodePtr<NodeType> p)
@@ -118,13 +115,6 @@ void NumberSingleLinkedList<NodeType>::printReverse(SingleNodePtr<NodeType> p)
   cout << setw(6) << left << setfill(' ') << "Index" << setw(10) << "Node" << '\n';
 }
 
-// Method Overload
-template <class NodeType>
-void NumberSingleLinkedList<NodeType>::printReverse()
-{
-  this->printReverse(this->head->next); // Set Head Node as p Node
-}
-
 // Method that Returns the Sum of All Node's Data Field
 template <class NodeType>
 NodeType NumberSingleLinkedList<NodeType>::total(SingleNodePtr<NodeType> p)
@@ -138,13 +128,6 @@ NodeType NumberSingleLinkedList<NodeType>::total(SingleNodePtr<NodeType> p)
   }
 
   return sum;
-}
-
-// Method Overload
-template <class NodeType>
-NodeType NumberSingleLinkedList<NodeType>::total()
-{
-  return this->total(this->head->next); // Set Head Node as p Node
 }
 
 // Method that Returns the Highest Number in Linked List
@@ -163,13 +146,6 @@ NodeType NumberSingleLinkedList<NodeType>::max(SingleNodePtr<NodeType> p)
   }
 
   return m;
-}
-
-// Method Overload
-template <class NodeType>
-NodeType NumberSingleLinkedList<NodeType>::max()
-{
-  return this->max(this->head->next); // Set Head Node as p Node
 }
 
 /*
