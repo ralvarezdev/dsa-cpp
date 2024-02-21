@@ -53,7 +53,7 @@ public:
 
   // void setCurrent(SingleNodePtr<NodeType>);
   // void setCurrent();
-  //  int count(SingleNodePtr<NodeType>);
+  // int count(SingleNodePtr<NodeType>);
 };
 
 // Single Linked List Constructors
