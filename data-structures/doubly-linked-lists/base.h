@@ -26,9 +26,11 @@ protected:
   NodeType error;
 
   // Protected Methods
-  void increaseLength();
-  void increaseLength(int);
-  void decreaseLength();
+  void increaseLength(int length) { this->length += length; };
+  void increaseLength() { this->increaseLength(1); };
+  void decreaseLength() { this->increaseLength(-1); };
+  void empty() { this->length = 0; };
+
   DoublyNodePtr<NodeType> move(int);
   NodeType remove(bool);
   NodeType pop(bool);
@@ -43,19 +45,19 @@ public:
   ~DoublyLinkedList();
 
   // Public Methods
-  NodeType remove() { return remove(false); };
-  NodeType pop() { return pop(false); };
+  NodeType getError() { return this->error; };
+  int getLength() { return this->length; };
+  bool isEmpty() { return this->head == NULL; };
 
-  NodeType getError();
-  bool isEmpty();
   void push(NodeType);
   void pushBack(NodeType);
   void insertAt(NodeType, int);
+  NodeType pop() { return pop(false); };
+  NodeType remove() { return remove(false); };
   NodeType removeAt(int);
   NodeType change(NodeType, int);
   NodeType get(int);
-  int getLength();
-  void concat(DoublyLinkedList);
+  void concat(DoublyLinkedList *);
 };
 
 // Doubly Linked List Constructors
@@ -146,16 +148,9 @@ DoublyLinkedList<NodeType>::DoublyLinkedList(SingleLinkedList<NodeType> list, No
 template <class NodeType>
 DoublyLinkedList<NodeType>::~DoublyLinkedList()
 {
-  // Remove Tail Node if Linked List isn't Empty
+  // Remove Tail Node if Doubly Linked List isn't Empty
   while (!isEmpty())
     this->pop(true);
-}
-
-// Method to Get Error Value
-template <class NodeType>
-NodeType DoublyLinkedList<NodeType>::getError()
-{
-  return this->error;
 }
 
 // Method to Move to Next Node N Times
@@ -230,13 +225,16 @@ template <class NodeType>
 void DoublyLinkedList<NodeType>::insertAt(NodeType data, int pos)
 {
   // Check pos
-  if (pos == 0)
+  if (this->isEmpty() || pos > this->length || abs(pos) > this->length + 1)
+    return; // pos Out of Range
+
+  if (pos == 0 || abs(pos) == this->length + 1)
   {
-    this->push(data); // Insert Node Next to Head
+    this->push(data); // Insert Node at Head
     return;
   }
 
-  if (pos == -1 || pos >= this->length)
+  if (pos == this->length || pos == -1)
   {
     this->pushBack(data); // Insert Node at Tail
     return;
@@ -247,7 +245,7 @@ void DoublyLinkedList<NodeType>::insertAt(NodeType data, int pos)
 
   DoublyNodePtr<NodeType> p, n;
 
-  // Move to Next or Prev Node pos Times
+  // Move to Next or Previous Node pos Times
   p = this->move(pos);
 
   // pos is Out of Range
@@ -257,7 +255,7 @@ void DoublyLinkedList<NodeType>::insertAt(NodeType data, int pos)
   // Get Next Node
   n = p->next;
 
-  // Create New Node
+  // Create New Node Between p and n Node
   new DoublyNode<NodeType>(data, p, n);
 
   this->increaseLength();
@@ -284,24 +282,23 @@ void DoublyLinkedList<NodeType>::pushBack(NodeType data)
 template <class NodeType>
 NodeType DoublyLinkedList<NodeType>::setNULL(bool destructor)
 {
-  DoublyNodePtr<NodeType> t;
+  DoublyNodePtr<NodeType> t, h;
 
-  // Get Tail
+  // Get Head and Tail Node and Data
+  h = this->head;
   t = this->tail;
-
-  // Get Tail Data
-  NodeType data = t->data;
+  NodeType data = h->data;
 
   // Set Head and Tail Node as NULL
   this->head = this->tail = NULL;
 
   // Deallocate Memory
   if (destructor)
-    delete[] t;
+    delete[] t, h;
   else
-    delete t;
+    delete t, h;
 
-  decreaseLength();
+  this->decreaseLength();
 
   return data;
 }
@@ -310,6 +307,7 @@ NodeType DoublyLinkedList<NodeType>::setNULL(bool destructor)
 template <class NodeType>
 NodeType DoublyLinkedList<NodeType>::remove(bool destructor)
 {
+  // Check if It's Empty
   if (this->isEmpty())
     return this->error;
 
@@ -319,14 +317,14 @@ NodeType DoublyLinkedList<NodeType>::remove(bool destructor)
 
   DoublyNodePtr<NodeType> m, n;
 
-  // Get Head Node
+  // Get Head Node and Data
   m = this->head;
   NodeType data = m->data;
 
-  // Get Next Node to the One that will be Removed
+  // Get Head Next Node
   n = m->next;
 
-  // Remove m Node from Linked List
+  // Remove m Node from Doubly Linked List
   this->head = n;
   n->prev = NULL;
 
@@ -345,6 +343,7 @@ NodeType DoublyLinkedList<NodeType>::remove(bool destructor)
 template <class NodeType>
 NodeType DoublyLinkedList<NodeType>::pop(bool destructor)
 {
+  // Check if It's Empty
   if (this->isEmpty())
     return this->error;
 
@@ -354,12 +353,8 @@ NodeType DoublyLinkedList<NodeType>::pop(bool destructor)
 
   DoublyNodePtr<NodeType> t, p;
 
-  this->decreaseLength();
-
-  // Get Tail
+  // Get Tail Node and Data
   t = this->tail;
-
-  // Get Tail Data
   NodeType data = t->data;
 
   // Get Tail Previous Node
@@ -377,6 +372,8 @@ NodeType DoublyLinkedList<NodeType>::pop(bool destructor)
   else
     delete t;
 
+  this->decreaseLength();
+
   return data;
 }
 
@@ -384,40 +381,38 @@ NodeType DoublyLinkedList<NodeType>::pop(bool destructor)
 template <class NodeType>
 NodeType DoublyLinkedList<NodeType>::removeAt(int pos)
 {
-  // Check pos
-  if (pos == -1 || pos >= this->length)
+  // Check if It's Empty and Check pos
+  if (this->isEmpty() || pos >= this->length || abs(pos) >= this->length + 1)
     return this->error; // Node not Found
 
-  if (pos == 0)
+  if (pos == 0 || pos == -1 * this->length)
     return this->remove(); // Remove Node at Head
 
-  if (pos == this->length - 1)
+  if (pos == -1 || pos == this->length - 1)
     return this->pop(); // Remove Tail
-
-  pos -= 1;
 
   DoublyNodePtr<NodeType> p, m, n;
 
-  this->decreaseLength();
-
-  // Move to Next Node pos Times
-  p = this->move(pos);
+  // Move from Head Node to Next Node pos-1 Times. Get to Previous Node to the One to be Removed
+  p = this->move(pos - 1);
 
   // pos is Out of Range
   if (p == NULL)
     return this->error;
 
-  // Get Node to Remove
+  // Get Node and Data to Remove
   m = p->next;
+  NodeType data = m->data;
 
   // Remove Node
   n = m->next;
-  NodeType data = m->data;
   p->next = n;
   n->prev = p;
 
   // Deallocate Memory
   delete m;
+
+  this->decreaseLength();
 
   return data;
 }
@@ -426,6 +421,7 @@ NodeType DoublyLinkedList<NodeType>::removeAt(int pos)
 template <class NodeType>
 NodeType DoublyLinkedList<NodeType>::change(NodeType data, int pos)
 {
+  // Check if It's Empty and Check pos
   if (this->isEmpty() || pos >= this->length || abs(pos) >= this->length + 1)
     return this->error; // Node not Found
 
@@ -449,15 +445,15 @@ NodeType DoublyLinkedList<NodeType>::change(NodeType data, int pos)
 template <class NodeType>
 NodeType DoublyLinkedList<NodeType>::get(int pos)
 {
-  // Check pos
+  // Check if It's Empty and Check pos
   if (this->isEmpty() || pos >= this->length || abs(pos) >= length + 1)
     return this->error; // Node not Found
 
   if (pos == 0 || pos == -1 * length)
-    return this->head->data; // Get Node Next to Head
+    return this->head->data; // Get Head Node Data
 
-  if (pos == this->length - 1 || pos == -1)
-    return this->tail->data; // Get Tail
+  if (pos == -1 || pos == this->length - 1)
+    return this->tail->data; // Get Tail Node Data
 
   // Move to Node
   DoublyNodePtr<NodeType> m = this->move(pos);
@@ -470,45 +466,15 @@ NodeType DoublyLinkedList<NodeType>::get(int pos)
   return m->data;
 }
 
-// Method to Check if Linked List is Empty
+// Method to Concat Two Doubly Linked Lists
 template <class NodeType>
-bool DoublyLinkedList<NodeType>::isEmpty()
+void DoublyLinkedList<NodeType>::concat(DoublyLinkedList<NodeType> *l)
 {
-  return this->head == NULL;
-}
+  // Check if l is Empty
+  if (l->isEmpty())
+    return;
 
-// Method to Increase Linked List Length
-template <class NodeType>
-void DoublyLinkedList<NodeType>::increaseLength()
-{
-  this->length += 1;
-}
-
-template <class NodeType>
-void DoublyLinkedList<NodeType>::increaseLength(int length)
-{
-  this->length += length;
-}
-
-// Method to Decrease Linked List Length
-template <class NodeType>
-void DoublyLinkedList<NodeType>::decreaseLength()
-{
-  this->length -= 1;
-}
-
-// Method to Get Linked List Length
-template <class NodeType>
-int DoublyLinkedList<NodeType>::getLength()
-{
-  return this->length;
-}
-
-// Method to Concat Two Linked Lists
-template <class NodeType>
-void DoublyLinkedList<NodeType>::concat(DoublyLinkedList<NodeType> l)
-{
-  // Assign l First Node Next to this Linked List Tail
+  // Assign l First Node Next to this Doubly Linked List Tail
   this->tail->next = l->head;
   l->head->prev = this->tail;
 
@@ -517,6 +483,12 @@ void DoublyLinkedList<NodeType>::concat(DoublyLinkedList<NodeType> l)
 
   // Save New Length
   this->increaseLength(l->getLength());
+
+  // Set l Head and Tail Node to NULL
+  l->head = l->tail = NULL;
+
+  // Set l Length to 0
+  l->empty();
 }
 
 #endif

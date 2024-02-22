@@ -37,11 +37,10 @@ public:
   ~StackLinkedList();
 
   // Public Methods
-  NodeType pop() { return pop(false); };
-
   NodeType getError();
   bool isEmpty();
   void push(NodeType);
+  NodeType pop() { return pop(false); };
   NodeType top();
   int getLength();
 };

@@ -27,7 +27,9 @@ protected:
   void increaseLength(int);
   void decreaseLength();
   SingleNodePtr<NodeType> move(SingleNodePtr<NodeType>, int);
+  SingleNodePtr<NodeType> move(int n) { return move(this->head, n); }; // Set Head as p Node
   NodeType remove(bool);
+  void empty() { this->length = 0; };
 
 public:
   // Constructors
@@ -37,8 +39,6 @@ public:
   ~SingleLinkedList();
 
   // Public Methods
-  NodeType remove() { return remove(false); };
-
   NodeType getError();
   bool isEmpty();
   void push(NodeType);
@@ -46,10 +46,11 @@ public:
   void insertAt(NodeType, int);
   NodeType pop();
   NodeType removeAt(int);
+  NodeType remove() { return remove(false); };
   NodeType change(NodeType, int);
   NodeType get(int);
   int getLength();
-  void concat(SingleLinkedList);
+  void concat(SingleLinkedList *);
 
   // void setCurrent(SingleNodePtr<NodeType>);
   // void setCurrent();
@@ -215,23 +216,17 @@ void SingleLinkedList<NodeType>::insertAt(NodeType data, int pos)
   if (pos < 0)
     pos = this->length + pos + 1; // Get Position
 
-  SingleNodePtr<NodeType> p, m, n;
+  SingleNodePtr<NodeType> p;
 
-  // Move to Next Node pos Times
-  p = this->move(this->head, pos);
+  // Move from Head Node to Next Node pos Times
+  p = this->move(pos);
 
   // pos is Out of Range
   if (p == NULL)
     return;
 
-  // Get Next Node
-  n = p->next;
-
   // Create New Node and Set m as Next Node
-  m = new SingleNode<NodeType>(data, n);
-
-  // Set Node at Given Position
-  p->next = m;
+  new SingleNode<NodeType>(data, p, p->next);
 
   this->increaseLength();
 }
@@ -240,10 +235,7 @@ void SingleLinkedList<NodeType>::insertAt(NodeType data, int pos)
 template <class NodeType>
 void SingleLinkedList<NodeType>::pushBack(NodeType data)
 {
-  SingleNodePtr<NodeType> n = new SingleNode<NodeType>(data);
-
-  // Set Node at Tail
-  this->tail->next = n;
+  SingleNodePtr<NodeType> n = new SingleNode<NodeType>(data, this->tail, NULL);
 
   // Set Tail
   this->tail = n;
@@ -262,7 +254,7 @@ NodeType SingleLinkedList<NodeType>::remove(bool destructor)
   SingleNodePtr<NodeType> n = this->head->next;
   NodeType data = n->data;
 
-  // Remove n Node from Linked List
+  // Remove n Node from Single Linked List
   head->next = n->next;
 
   // Deallocate Memory
@@ -287,8 +279,8 @@ NodeType SingleLinkedList<NodeType>::pop()
 
   this->decreaseLength();
 
-  // Move to Tail Previous Node
-  p = this->move(this->head, this->length);
+  // Move from Head Node to Tail Previous Node
+  p = this->move(this->length);
 
   // Get Tail
   t = this->tail;
@@ -325,8 +317,8 @@ NodeType SingleLinkedList<NodeType>::removeAt(int pos)
 
   this->decreaseLength();
 
-  // Move to Next Node pos Times
-  p = this->move(this->head, pos);
+  // Move from Head Node to Next Node pos Times
+  p = this->move(pos);
 
   // pos is Out of Range
   if (p == NULL)
@@ -377,11 +369,8 @@ NodeType SingleLinkedList<NodeType>::change(NodeType data, int pos)
   if (this->isEmpty())
     return this->error;
 
-  // Set Head to n
-  n = this->head;
-
-  // Move to Node
-  n = this->move(n, pos);
+  // Move from Head Node to Next Node pos Times
+  n = this->move(pos);
 
   // pos is Out of Range
   if (n == NULL)
@@ -419,8 +408,8 @@ NodeType SingleLinkedList<NodeType>::get(int pos)
 
   n = this->head;
 
-  // Move to Node
-  n = this->move(n, pos);
+  // Move from Head Node to Next Node pos Times
+  n = this->move(pos);
 
   // pos is Out of Range
   if (n == NULL)
@@ -430,14 +419,14 @@ NodeType SingleLinkedList<NodeType>::get(int pos)
   return n->data;
 }
 
-// Method to Check if Linked List is Empty
+// Method to Check if Single Linked List is Empty
 template <class NodeType>
 bool SingleLinkedList<NodeType>::isEmpty()
 {
   return this->head->next == NULL;
 }
 
-// Method to Increase Linked List Length
+// Method to Increase Single Linked List Length
 template <class NodeType>
 void SingleLinkedList<NodeType>::increaseLength()
 {
@@ -450,25 +439,25 @@ void SingleLinkedList<NodeType>::increaseLength(int length)
   this->length += length;
 }
 
-// Method to Decrease Linked List Length
+// Method to Decrease Single Linked List Length
 template <class NodeType>
 void SingleLinkedList<NodeType>::decreaseLength()
 {
   this->length -= 1;
 }
 
-// Method to Get Linked List Length
+// Method to Get Single Linked List Length
 template <class NodeType>
 int SingleLinkedList<NodeType>::getLength()
 {
   return this->length;
 }
 
-// Method to Concat Two Linked Lists
+// Method to Concat Two Single Linked Lists
 template <class NodeType>
-void SingleLinkedList<NodeType>::concat(SingleLinkedList<NodeType> l)
+void SingleLinkedList<NodeType>::concat(SingleLinkedList<NodeType> *l)
 {
-  // Assign l First Node Next to this Linked List Tail
+  // Assign l First Node Next to this Single Linked List Tail
   this->tail->next = l->head->next;
 
   // Save New Tail Node
@@ -476,6 +465,12 @@ void SingleLinkedList<NodeType>::concat(SingleLinkedList<NodeType> l)
 
   // Save New Length
   this->increaseLength(l->getLength());
+
+  // Set l Head and Tail Node to NULL
+  l->head = l->tail = NULL;
+
+  // Set l Length to 0
+  l->empty();
 }
 
 /*

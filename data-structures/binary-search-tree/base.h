@@ -21,7 +21,7 @@ public:
 
   // Public Methods
   void inorder() { inorder(root); };
-  bool search(NodeType) { return search(root, NodeType); };
+  bool search(NodeType key) { return search(root, key); };
   void insert(NodeType);
 };
 

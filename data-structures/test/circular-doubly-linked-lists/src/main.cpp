@@ -1,8 +1,7 @@
 #include <string>
 #include <iostream>
 
-#include "../../../doubly-linked-lists/number.h"
-#include "../../../single-linked-lists/number.h"
+#include "../../../circular-doubly-linked-lists/number.h"
 
 using namespace std;
 
@@ -36,9 +35,9 @@ string checkCompare(int r)
 int main()
 {
   // Memory Allocation
-  double numbers[14] = {10, 1, 2, 3, 9, 4, 5, 4, 6, 7, 8, 9, 10, 25};
+  double numbers[11] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 25};
 
-  NumberDoublyLinkedList<double> list(numbers, 14, -1);
+  NumberCircularDoublyLinkedList<double> list(numbers, 11, -1);
 
   // Check if it's Empty
   string isEmpty = list.isEmpty() ? "True" : "False";
@@ -82,17 +81,15 @@ int main()
   cout << "Search for Key '" << key << "': " << isKey<double>(nodeFound) << '\n';
 
   // Insert Node
-  list.push(55);           // At Head
-  list.insertAt(88, 3);    // At Index 3
-  list.insertAt(100, 6);   // At Index 6
-  list.insertAt(200, 11);  // At Index 11
-  list.pushBack(33);       // At Tail
-  list.insertAt(77, -1);   // At Tail
-  list.insertAt(300, -15); // At Index -15
-  list.insertAt(400, -2);  // Before Tail
-  list.insertAt(898, 30);  // At Tail
-  list.insertAt(999, -1);  // At Tail
-  list.push(13);           // At Head
+  list.push(55);          // Next to Head
+  list.insertAt(100, 6);  // At Index 6
+  list.insertAt(200, 11); // At Index 11
+  list.pushBack(33);      // At Head Previous Node
+  list.insertAt(77, -1);  // At Head Previous Node
+  list.insertAt(400, -2); // Before Head Previous Node
+  list.insertAt(898, 20); // At Head Previous Node
+  list.insertAt(999, -1); // At Head Previous Node
+  list.push(13);          // Next to Head
 
   cout << "\nNodes after Insertion:\n";
   list.print();
@@ -101,7 +98,7 @@ int main()
   list.remove();     // Remove Head
   list.removeAt(8);  // At Index 8
   list.removeAt(-4); // At Index -4
-  list.pop();        // Remove Tail
+  list.pop();        // Remove Head Previous Node
 
   cout << "\nNodes after Deletion:\n";
   list.print();
@@ -109,19 +106,16 @@ int main()
   // Get Node
   int pos;
 
-  pos = 7;
+  pos = 5;
   cout << "\nGet Node at Index \'" << pos << "\': " << list.get(pos) << '\n';
 
-  pos = 13;
+  pos = 12;
   cout << "Get Node at Index \'" << pos << "\': " << list.get(pos) << '\n';
 
   pos = 20;
   cout << "Get Node at Index \'" << pos << "\': " << list.get(pos) << '\n';
 
   pos = -5;
-  cout << "Get Node at Index \'" << pos << "\': " << list.get(pos) << '\n';
-
-  pos = -12;
   cout << "Get Node at Index \'" << pos << "\': " << list.get(pos) << '\n';
 
   // Modify Node
@@ -136,10 +130,4 @@ int main()
   cout << "\nCompare Node at Index \'" << pos1
        << "\' with Node at Index \'" << pos2 << "\': "
        << checkCompare(list.compare(pos1, pos2)) << '\n';
-
-  // Create Copy Single Linked List
-  NumberSingleLinkedList<double> *listCopy = list.SingleLinkedList();
-
-  cout << "\nSingle List:\n";
-  listCopy->print();
 }

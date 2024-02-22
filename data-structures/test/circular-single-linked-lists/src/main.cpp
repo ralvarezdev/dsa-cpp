@@ -1,20 +1,20 @@
 #include <string>
 #include <iostream>
 
-#include "../../../circular-linked-lists/number.h"
+#include "../../../circular-single-linked-lists/number.h"
 
 using namespace std;
 
 // Function to Check if Key was Found
 template <typename T>
-string isKey(DoublyNodePtr<T> p)
+string isKey(SingleNodePtr<T> p)
 {
   return p ? "Key Found" : "Key not Found";
 }
 
 // Method to Check if Node is not NULL
 template <typename T>
-string isNull(DoublyNodePtr<T> p)
+string isNull(SingleNodePtr<T> p)
 {
   return p ? "Node is NULL" : "Node is not NULL";
 }
@@ -37,7 +37,7 @@ int main()
   // Memory Allocation
   double numbers[11] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 25};
 
-  NumberCircularLinkedList<double> list(numbers, 11, -1);
+  NumberCircularSingleLinkedList<double> list(numbers, 11, -1);
 
   // Check if it's Empty
   string isEmpty = list.isEmpty() ? "True" : "False";
@@ -65,7 +65,7 @@ int main()
   cout << "\nMax Number: " << list.max() << '\n';
 
   // Search for Number in Linked List
-  DoublyNodePtr<double> nodeFound;
+  SingleNodePtr<double> nodeFound;
   double key;
 
   key = 24;
@@ -81,15 +81,16 @@ int main()
   cout << "Search for Key '" << key << "': " << isKey<double>(nodeFound) << '\n';
 
   // Insert Node
-  list.push(55);          // Next to Head
-  list.insertAt(100, 6);  // At Index 6
-  list.insertAt(200, 11); // At Index 11
-  list.pushBack(33);      // At Head Previous Node
-  list.insertAt(77, -1);  // At Head Previous Node
-  list.insertAt(400, -2); // Before Head Previous Node
-  list.insertAt(898, 20); // At Head Previous Node
-  list.insertAt(999, -1); // At Head Previous Node
-  list.push(13);          // Next to Head
+  list.push(55);           // Next to Head
+  list.insertAt(100, 6);   // At Index 6
+  list.insertAt(200, 11);  // At Index 11
+  list.pushBack(33);       // At Head Previous Node
+  list.insertAt(77, -1);   // At Head Previous Node
+  list.insertAt(400, -2);  // Before Head Previous Node
+  list.insertAt(898, 20);  // At Index 20
+  list.insertAt(999, -1);  // At Head Previous Node
+  list.push(13);           // Next to Head
+  list.insertAt(555, -20); // At Index 20
 
   cout << "\nNodes after Insertion:\n";
   list.print();

@@ -37,15 +37,14 @@ public:
   QueueLinkedList(SingleLinkedList<NodeType>, NodeType);
   ~QueueLinkedList();
 
-  // Public Methods
-  NodeType pop() { return pop(false); };
-
+  // Public Method
   NodeType setNULL(bool);
   NodeType getError();
   bool isEmpty();
-  void enqueue(NodeType);
   void push(NodeType);
-  NodeType dequeue();
+  void enqueue(NodeType data) { push(data); }; // Calls Push Method
+  NodeType pop() { return pop(false); };
+  NodeType dequeue() { return pop(); }; // Calls Pop Method
   NodeType first();
   NodeType last();
   int getLength();
@@ -204,13 +203,6 @@ void QueueLinkedList<NodeType>::push(NodeType data)
   this->increaseLength();
 }
 
-// Calls Push Method
-template <class NodeType>
-void QueueLinkedList<NodeType>::enqueue(NodeType data)
-{
-  this->push(data);
-}
-
 // Method to Remove Head Node
 template <class NodeType>
 NodeType QueueLinkedList<NodeType>::pop(bool destructor)
@@ -245,13 +237,6 @@ NodeType QueueLinkedList<NodeType>::pop(bool destructor)
   return data;
 }
 
-// Calls Pop Method
-template <class NodeType>
-NodeType QueueLinkedList<NodeType>::dequeue()
-{
-  return this->pop(data);
-}
-
 // Method to Get First Node Data
 template <class NodeType>
 NodeType QueueLinkedList<NodeType>::first()
@@ -274,14 +259,14 @@ NodeType QueueLinkedList<NodeType>::last()
   return this->tail->data;
 }
 
-// Method to Check if Linked List is Empty
+// Method to Check if Queue is Empty
 template <class NodeType>
 bool QueueLinkedList<NodeType>::isEmpty()
 {
   return this->head == NULL;
 }
 
-// Method to Increase Linked List Length
+// Method to Increase Queue Length
 template <class NodeType>
 void QueueLinkedList<NodeType>::increaseLength()
 {
@@ -294,14 +279,14 @@ void QueueLinkedList<NodeType>::increaseLength(int length)
   this->length += length;
 }
 
-// Method to Decrease Linked List Length
+// Method to Decrease Queue Length
 template <class NodeType>
 void QueueLinkedList<NodeType>::decreaseLength()
 {
   this->length -= 1;
 }
 
-// Method to Get Linked List Length
+// Method to Get Queue Length
 template <class NodeType>
 int QueueLinkedList<NodeType>::getLength()
 {

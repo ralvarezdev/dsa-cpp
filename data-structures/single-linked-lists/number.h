@@ -15,11 +15,19 @@ using std::string;
 #ifndef NUMBER_SINGLE_LINKED_LISTS
 #define NUMBER_SINGLE_LINKED_LISTS
 
-// NUMBER LINKED LIST CLASS
+// NUMBER SINGLE LINKED LIST CLASS
 
 template <class NodeType>
 class NumberSingleLinkedList : public SingleLinkedList<NodeType>
 {
+protected:
+  // Protected Methods
+  void print(SingleNodePtr<NodeType>);
+  void printReverse(SingleNodePtr<NodeType>);
+  NodeType total(SingleNodePtr<NodeType>);
+  NodeType max(SingleNodePtr<NodeType>);
+  SingleNodePtr<NodeType> linearSearch(SingleNodePtr<NodeType>, NodeType);
+
 public:
   // Inherit Constructors
   using SingleLinkedList<NodeType>::SingleLinkedList;
@@ -28,21 +36,13 @@ public:
   NumberSingleLinkedList() : SingleLinkedList<NodeType>(-1){};
 
   // Public Methods
-  void print(SingleNodePtr<NodeType>);
-  void print() { return print(head->next); }; // Set Head Node as p Node
-
-  void printReverse(SingleNodePtr<NodeType>);
-  void printReverse() { return printReverse(head->next); }; // Set Head Node as p Node
-
-  NodeType total(SingleNodePtr<NodeType>);
-  NodeType total() { return total(head->next); }; // Set Head Node as p Node
-
-  NodeType max(SingleNodePtr<NodeType>);
-  NodeType max() { return max(head->next); }; // Set Head Node as p Node
+  void print() { return print(this->head->next); };                                                   // Set Head Next Node as p Node
+  void printReverse() { return printReverse(this->head->next); };                                     // ...
+  NodeType total() { return total(this->head->next); };                                               // ...
+  NodeType max() { return max(this->head->next); };                                                   // ...
+  SingleNodePtr<NodeType> linearSearch(NodeType key) { return linearSearch(this->head->next, key); }; // ...
 
   void insertionSort(NodeType);
-  SingleNodePtr<NodeType> linearSearch(NodeType);
-  SingleNodePtr<NodeType> linearSearch(SingleNodePtr<NodeType>, NodeType);
   int compare(int, int);
 };
 
@@ -148,29 +148,6 @@ NodeType NumberSingleLinkedList<NodeType>::max(SingleNodePtr<NodeType> p)
   return m;
 }
 
-/*
-// Recursive Method that Returns the Highest Number in Linked List
-template <class NodeType>
-NodeType NumberSingleLinkedList<NodeType>::max()
-{
-  static NodeType m = -1;
-  SingleNodePtr p = this->curr;
-
-  if (p == NULL)
-  {
-    // Set Head Node as Current Node
-    SingleLinkedList<NodeType>::setCurrent();
-
-    return -1;
-  }
-
-  this->curr = this->curr->next;
-  m = this->max();
-
-  return m > p->data ? m : p->data;
-}
-*/
-
 // Method that Checks if the Given Number is Inside Linked List
 template <class NodeType>
 SingleNodePtr<NodeType> NumberSingleLinkedList<NodeType>::linearSearch(SingleNodePtr<NodeType> p, NodeType key)
@@ -209,36 +186,6 @@ SingleNodePtr<NodeType> NumberSingleLinkedList<NodeType>::linearSearch(SingleNod
   return NULL;
 }
 
-// Method Overload
-template <class NodeType>
-SingleNodePtr<NodeType> NumberSingleLinkedList<NodeType>::linearSearch(NodeType key)
-{
-  return this->linearSearch(this->head->next, key); // Set Head Node as p Node
-}
-
-/*
-// Recursive Method that Checks if the Given Number is Inside Linked List
-template <class NodeType>
-SingleNodePtr<NodeType> NumberSingleLinkedList<NodeType>::linearSearch(NodeType key)
-{
-  // Get Current Node
-  SingleNodePtr<NodeType> p = this->curr;
-
-  if (p == NULL)
-  {
-    // Set Head Node as Current Node
-    SingleLinkedList<NodeType>::setCurrent();
-    return NULL;
-  }
-
-  if (key == p->data)
-    return p;
-
-  this->curr = this->curr->next;
-  return this->linearSearch(key);
-}
-*/
-
 // Method to Compare Two Nodes Values
 template <class NodeType>
 int NumberSingleLinkedList<NodeType>::compare(int index1, int index2)
@@ -266,5 +213,51 @@ int NumberSingleLinkedList<NodeType>::compare(int index1, int index2)
 
   return index1 > index2 ? 1 : 2;
 }
+
+/*
+// Recursive Method that Returns the Highest Number in Linked List
+template <class NodeType>
+NodeType NumberSingleLinkedList<NodeType>::max()
+{
+  static NodeType m = -1;
+  SingleNodePtr p = this->curr;
+
+  if (p == NULL)
+  {
+    // Set Head Node as Current Node
+    SingleLinkedList<NodeType>::setCurrent();
+
+    return -1;
+  }
+
+  this->curr = this->curr->next;
+  m = this->max();
+
+  return m > p->data ? m : p->data;
+}
+*/
+
+/*
+// Recursive Method that Checks if the Given Number is Inside Linked List
+template <class NodeType>
+SingleNodePtr<NodeType> NumberSingleLinkedList<NodeType>::linearSearch(NodeType key)
+{
+  // Get Current Node
+  SingleNodePtr<NodeType> p = this->curr;
+
+  if (p == NULL)
+  {
+    // Set Head Node as Current Node
+    SingleLinkedList<NodeType>::setCurrent();
+    return NULL;
+  }
+
+  if (key == p->data)
+    return p;
+
+  this->curr = this->curr->next;
+  return this->linearSearch(key);
+}
+*/
 
 #endif

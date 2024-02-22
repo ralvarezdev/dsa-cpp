@@ -15,6 +15,7 @@ public:
   SingleNode();
   SingleNode(NodeType);
   SingleNode(NodeType, SingleNode *);
+  SingleNode(NodeType, SingleNode *, SingleNode *);
 };
 
 // Node Class Constructors
@@ -34,6 +35,14 @@ template <class NodeType>
 SingleNode<NodeType>::SingleNode(NodeType data, SingleNode<NodeType> *next)
 {
   this->data = data;
+  this->next = next;
+}
+
+template <class NodeType>
+SingleNode<NodeType>::SingleNode(NodeType data, SingleNode<NodeType> *prev, SingleNode<NodeType> *next)
+{
+  this->data = data;
+  prev->next = this;
   this->next = next;
 }
 
