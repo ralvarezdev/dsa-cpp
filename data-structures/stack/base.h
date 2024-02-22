@@ -1,6 +1,6 @@
 #include <cstdlib>
 
-#include "../nodes/singleNode.h"
+#include "../single-linked-lists/base.h"
 
 #ifndef STACK_LINKED_LISTS
 #define STACK_LINKED_LISTS
@@ -33,6 +33,7 @@ public:
   StackLinkedList(NodeType);
   StackLinkedList(NodeType, NodeType);
   StackLinkedList(NodeType[], int, NodeType);
+  StackLinkedList(SingleLinkedList<NodeType>, NodeType);
   ~StackLinkedList();
 
   // Public Methods
@@ -74,7 +75,7 @@ StackLinkedList<NodeType>::StackLinkedList(NodeType data, NodeType error)
   this->increaseLength();
 }
 
-// Add Head and Multiple Next Nodes
+// Add Head and Multiple Next Nodes through an Array
 template <class NodeType>
 StackLinkedList<NodeType>::StackLinkedList(NodeType data[], int length, NodeType error)
 {
@@ -88,6 +89,27 @@ StackLinkedList<NodeType>::StackLinkedList(NodeType data[], int length, NodeType
   for (int i = 1; i < length; i++)
     // Add Node
     this->head = new SingleNode<NodeType>(data[i], this->head);
+
+  // Increase Length
+  this->increaseLength(length);
+}
+
+// Add Head and Multiple Next Nodes through a Single Linked List
+template <class NodeType>
+StackLinkedList<NodeType>::StackLinkedList(SingleLinkedList<NodeType> list, NodeType error)
+{
+  int length = list.getLength();
+
+  // Default Error Value
+  this->error = error;
+
+  // Create First Node
+  this->head = new SingleNode<NodeType>(list.get(0));
+
+  // Add Next Nodes
+  for (int i = 1; i < length; i++)
+    // Add Node
+    this->head = new SingleNode<NodeType>(list.get(i), this->head);
 
   // Increase Length
   this->increaseLength(length);

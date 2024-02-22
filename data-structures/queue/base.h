@@ -1,6 +1,6 @@
 #include <cstdlib>
 
-#include "../nodes/singleNode.h"
+#include "../single-linked-lists/base.h"
 
 #ifndef QUEUE_LINKED_LISTS
 #define QUEUE_LINKED_LISTS
@@ -34,6 +34,7 @@ public:
   QueueLinkedList(NodeType);
   QueueLinkedList(NodeType, NodeType);
   QueueLinkedList(NodeType[], int, NodeType);
+  QueueLinkedList(SingleLinkedList<NodeType>, NodeType);
   ~QueueLinkedList();
 
   // Public Methods
@@ -79,7 +80,7 @@ QueueLinkedList<NodeType>::QueueLinkedList(NodeType data, NodeType error)
   this->increaseLength();
 }
 
-// Add Head and Multiple Next Nodes
+// Add Head and Multiple Next Nodes through an Array
 template <class NodeType>
 QueueLinkedList<NodeType>::QueueLinkedList(NodeType data[], int length, NodeType error)
 {
@@ -98,6 +99,34 @@ QueueLinkedList<NodeType>::QueueLinkedList(NodeType data[], int length, NodeType
   for (int i = 1; i < length; i++)
     // Add Node
     p = new SingleNode<NodeType>(data[i], p);
+
+  // Set p Node as Tail
+  this->tail = p;
+
+  // Increase Length
+  this->increaseLength(length);
+}
+
+// Add Head and Multiple Next Nodes through a Single Linked List
+template <class NodeType>
+QueueLinkedList<NodeType>::QueueLinkedList(SingleLinkedList<NodeType> list, NodeType error)
+{
+  SingleNodePtr<NodeType> p;
+  int length = list.getLength();
+
+  // Default Error Value
+  this->error = error;
+
+  // Create First Node
+  p = new SingleNode<NodeType>(list.get(0));
+
+  // Set p Node as Head
+  this->head = p;
+
+  // Add Next Nodes
+  for (int i = 1; i < length; i++)
+    // Add Node
+    p = new SingleNode<NodeType>(list.get(i), p);
 
   // Set p Node as Tail
   this->tail = p;

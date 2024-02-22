@@ -14,11 +14,61 @@ protected:
   bool search(BinNodePtr<NodeType>, NodeType);
 
 public:
+  // Constructors
+  BinarySearchTree(NodeType[], int, NodeType);
+  BinarySearchTree(QueueLinkedList<NodeType>, NodeType);
+  // ~DoublyLinkedList();
+
   // Public Methods
   void inorder() { inorder(root); };
   bool search(NodeType) { return search(root, NodeType); };
   void insert(NodeType);
 };
+
+// Binary Search Tree Constructors
+
+// Add Nodes through an Array
+template <class NodeType>
+BinarySearchTree<NodeType>::BinarySearchTree(NodeType data[], int length, NodeType error)
+{
+  // Default Error Value
+  this->error = error;
+
+  // Create New Node and Set It as Root
+  this->root = new BinNode<NodeType>(data[0]);
+
+  // Insert Nodes
+  for (int i = 1; i < length; i++)
+    // Insert Node
+    this->insert(data[i]);
+}
+
+// Add Nodes through a Queue Linked list
+template <class NodeType>
+BinarySearchTree<NodeType>::BinarySearchTree(QueueLinkedList<NodeType> queue, NodeType error)
+{
+  NodeType data;
+
+  // Default Error Value
+  this->error = error;
+
+  // Check Queue Length
+  if (queue.getLength() == 0)
+    return;
+
+  // Create New Node and Set It as Root
+  this->root = new BinNode<NodeType>(queue.dequeue());
+
+  // Insert Nodes while Queue isn't Empty
+  while (!queue.isEmpty())
+  {
+    // Get Node Data from Queue
+    data = queue.dequeue();
+
+    // Insert Node to Binary Search Tree
+    this->insert(data);
+  }
+}
 
 // Method to Print Nodes through Inorder Traversal
 template <class NodeType>

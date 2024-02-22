@@ -2,6 +2,7 @@
 #include <math.h>
 
 #include "../nodes/doublyNode.h"
+#include "../single-linked-lists/base.h"
 
 using std::abs;
 
@@ -38,6 +39,7 @@ public:
   DoublyLinkedList(NodeType);
   DoublyLinkedList(NodeType, NodeType);
   DoublyLinkedList(NodeType[], int, NodeType);
+  DoublyLinkedList(SingleLinkedList<NodeType>, NodeType);
   ~DoublyLinkedList();
 
   // Public Methods
@@ -85,7 +87,7 @@ DoublyLinkedList<NodeType>::DoublyLinkedList(NodeType data, NodeType error)
   this->increaseLength();
 }
 
-// Add Head and Multiple Next Nodes
+// Add Head and Multiple Next Nodes through an Array
 template <class NodeType>
 DoublyLinkedList<NodeType>::DoublyLinkedList(NodeType data[], int length, NodeType error)
 {
@@ -104,6 +106,34 @@ DoublyLinkedList<NodeType>::DoublyLinkedList(NodeType data[], int length, NodeTy
   for (int i = 1; i < length; i++)
     // Add Node
     p = new DoublyNode<NodeType>(data[i], p);
+
+  // Set p Node as Tail
+  this->tail = p;
+
+  // Increase Length
+  this->increaseLength(length);
+}
+
+// Add Head and Multiple Next Nodes through a Single Linked List
+template <class NodeType>
+DoublyLinkedList<NodeType>::DoublyLinkedList(SingleLinkedList<NodeType> list, NodeType error)
+{
+  DoublyNodePtr<NodeType> p;
+  int length = list.getLength();
+
+  // Default Error Value
+  this->error = error;
+
+  // Create First Node
+  p = new DoublyNode<NodeType>(list.get(0));
+
+  // Set p Node as Head
+  this->head = p;
+
+  // Add Next Nodes
+  for (int i = 1; i < length; i++)
+    // Add Node
+    p = new DoublyNode<NodeType>(list.get(i), p);
 
   // Set p Node as Tail
   this->tail = p;

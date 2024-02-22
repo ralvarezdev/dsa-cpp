@@ -33,6 +33,10 @@ protected:
   int getHeight(BinNodePtr<NodeType>);
 
 public:
+  // Constructors
+  BinaryTree(NodeType);
+  BinaryTree(NodeType, NodeType);
+
   // Public Methods
   void preorder() { preorder(root); };
   void inorder() { inorder(root); };
@@ -43,6 +47,27 @@ public:
   int countNonLeafNodes() { return countTypeNodes(root, false); };
   int getHeight() { return getHeight(root); };
 };
+
+// Binary Tree Constructors
+
+// Create Binary Tree and Set Error Value
+template <class NodeType>
+BinaryTree<NodeType>::BinaryTree(NodeType error)
+{
+  // Default Error Value
+  this->error = error;
+}
+
+// Add Only Root Node
+template <class NodeType>
+BinaryTree<NodeType>::BinaryTree(NodeType data, NodeType error)
+{
+  // Default Error Value
+  this->error = error;
+
+  // Create New Node and Set It as Root
+  this->root = new BinNode<NodeType>(data);
+}
 
 // Method to Print Nodes through Preorder Traversal
 template <class NodeType>

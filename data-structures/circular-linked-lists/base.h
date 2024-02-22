@@ -33,6 +33,7 @@ public:
   CircularLinkedList(NodeType);
   CircularLinkedList(NodeType, NodeType);
   CircularLinkedList(NodeType[], int, NodeType);
+  CircularLinkedList(DoublyLinkedList<NodeType>, NodeType);
   ~CircularLinkedList();
 
   // Public Methods
@@ -82,7 +83,7 @@ CircularLinkedList<NodeType>::CircularLinkedList(NodeType data, NodeType error)
   this->increaseLength();
 }
 
-// Add Head and Multiple Next Nodes
+// Add Head and Multiple Next Nodes through an Array
 template <class NodeType>
 CircularLinkedList<NodeType>::CircularLinkedList(NodeType data[], int length, NodeType error)
 {
@@ -101,6 +102,35 @@ CircularLinkedList<NodeType>::CircularLinkedList(NodeType data[], int length, No
   for (int i = 1; i < length; i++)
     // Add Node
     p = new DoublyNode<NodeType>(data[i], p);
+
+  // Set p Next Node to Head, and Set Head Previous Node to p
+  p->next = this->head;
+  this->head->prev = p;
+
+  // Increase Length
+  this->increaseLength(length);
+}
+
+// Add Head and Multiple Next Nodes through an Doubly Linked list
+template <class NodeType>
+CircularLinkedList<NodeType>::CircularLinkedList(DoublyLinkedList<NodeType> list, NodeType error)
+{
+  DoublyNodePtr<NodeType> p;
+  int length = list.getLength();
+
+  // Default Error Value
+  this->error = error;
+
+  // Create First Node
+  p = new DoublyNode<NodeType>(list.get(0));
+
+  // Set p Node as Head
+  this->head = p;
+
+  // Add Next Nodes
+  for (int i = 1; i < length; i++)
+    // Add Node
+    p = new DoublyNode<NodeType>(list.get(i), p);
 
   // Set p Next Node to Head, and Set Head Previous Node to p
   p->next = this->head;
