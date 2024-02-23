@@ -23,9 +23,10 @@ protected:
   NodeType error;
 
   // Protected Methods
-  void increaseLength();
-  void increaseLength(int);
-  void decreaseLength();
+  void increaseLength(int length) { this->length += length; };
+  void increaseLength() { this->increaseLength(1); };
+  void decreaseLength() { this->increaseLength(-1); };
+
   NodeType pop(bool);
 
 public:
@@ -37,12 +38,13 @@ public:
   ~StackLinkedList();
 
   // Public Methods
-  NodeType getError();
-  bool isEmpty();
+  NodeType getError() { return this->error; };
+  int getLength() { return this->length; };
+  bool isEmpty() { return this->head == NULL; };
+
   void push(NodeType);
   NodeType pop() { return pop(false); };
   NodeType top();
-  int getLength();
 };
 
 // Stack Constructors
@@ -59,16 +61,11 @@ StackLinkedList<NodeType>::StackLinkedList(NodeType error)
 template <class NodeType>
 StackLinkedList<NodeType>::StackLinkedList(NodeType data, NodeType error)
 {
-  SingleNodePtr<NodeType> p;
-
   // Default Error Value
   this->error = error;
 
-  // Create New Node
-  p = new SingleNode<NodeType>(data);
-
-  // Set Node as Head
-  this->head = p;
+  // Create New Node and Assign It as Head Node
+  this->head = new SingleNode<NodeType>(data);
 
   // Increase Length
   this->increaseLength();
@@ -129,13 +126,6 @@ StackLinkedList<NodeType>::~StackLinkedList()
   delete[] temp;
 }
 
-// Method to Get Error Value
-template <class NodeType>
-NodeType StackLinkedList<NodeType>::getError()
-{
-  return this->error;
-}
-
 // Method to Insert Node Before Head
 template <class NodeType>
 void StackLinkedList<NodeType>::push(NodeType data)
@@ -188,40 +178,6 @@ NodeType StackLinkedList<NodeType>::top()
     return this->error;
 
   return this->head->data;
-}
-
-// Method to Check if Stack is Empty
-template <class NodeType>
-bool StackLinkedList<NodeType>::isEmpty()
-{
-  return this->head == NULL;
-}
-
-// Method to Increase Stack Length
-template <class NodeType>
-void StackLinkedList<NodeType>::increaseLength()
-{
-  this->length += 1;
-}
-
-template <class NodeType>
-void StackLinkedList<NodeType>::increaseLength(int length)
-{
-  this->length += length;
-}
-
-// Method to Decrease Stack Length
-template <class NodeType>
-void StackLinkedList<NodeType>::decreaseLength()
-{
-  this->length -= 1;
-}
-
-// Method to Get Stack Length
-template <class NodeType>
-int StackLinkedList<NodeType>::getLength()
-{
-  return this->length;
 }
 
 #endif

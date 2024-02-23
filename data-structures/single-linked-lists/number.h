@@ -15,6 +15,13 @@ using std::string;
 #ifndef NUMBER_SINGLE_LINKED_LISTS
 #define NUMBER_SINGLE_LINKED_LISTS
 
+// NUMBER SINGLE LINKED LIST NAMESPACE
+namespace numberSLL
+{
+  const int nIndex = 6;
+  const int nDigits = 10;
+}
+
 // NUMBER SINGLE LINKED LIST CLASS
 
 template <class NodeType>
@@ -53,7 +60,7 @@ void NumberSingleLinkedList<NodeType>::insertionSort(NodeType data)
   SingleNodePtr<NodeType> p, m, n;
 
   // Insert Node Next to Head
-  if (this->getLength() == 0)
+  if (this->isEmpty())
   {
     this->push(data);
     return;
@@ -87,11 +94,17 @@ void NumberSingleLinkedList<NodeType>::print(SingleNodePtr<NodeType> p)
 {
   int n = 0;
 
+  // Prints Header
+  cout << left << setw(numberSLL::nIndex) << setfill(' ') << "Index"
+       << setw(numberSLL::nDigits + 1) << setfill(' ') << "Node"
+       << '\n';
+
   // Prints from Head to Tail
-  cout << setw(6) << left << setfill(' ') << "Index" << setw(10) << "Node" << '\n';
   while (p != NULL)
   {
-    cout << setw(6) << n++ << p->data << '\n';
+    cout << setw(numberSLL::nIndex) << setfill(' ') << n++
+         << setw(numberSLL::nDigits + 1) << setfill(' ') << p->data
+         << '\n';
     p = p->next;
   }
 }
@@ -104,15 +117,20 @@ void NumberSingleLinkedList<NodeType>::printReverse(SingleNodePtr<NodeType> p)
 
   // Prints from Tail to Head
   // NOTE: If the Print Statement is before the Recursive Function Call, Nodes will be Printed from Head to Tail
-
   if (p != NULL) // Same Expression as !p or p==0
   {
     this->printReverse(p->next);
-    cout << setw(6) << n-- << p->data << '\n';
+    cout << setw(numberSLL::nIndex) << setfill(' ') << n--
+         << setw(numberSLL::nDigits + 1) << setfill(' ') << p->data
+         << '\n';
 
     return;
   }
-  cout << setw(6) << left << setfill(' ') << "Index" << setw(10) << "Node" << '\n';
+
+  // Prints Header
+  cout << left << setw(numberSLL::nIndex) << setfill(' ') << "Index"
+       << setw(numberSLL::nDigits + 1) << setfill(' ') << "Node"
+       << '\n';
 }
 
 // Method that Returns the Sum of All Node's Data Field

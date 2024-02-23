@@ -35,6 +35,8 @@ template <class NodeType>
 SingleNode<NodeType>::SingleNode(NodeType data, SingleNode<NodeType> *next)
 {
   this->data = data;
+
+  // Set Before Next Node
   this->next = next;
 }
 
@@ -42,8 +44,12 @@ template <class NodeType>
 SingleNode<NodeType>::SingleNode(NodeType data, SingleNode<NodeType> *prev, SingleNode<NodeType> *next)
 {
   this->data = data;
-  prev->next = this;
+
+  // Set Between prev and next Nodes
   this->next = next;
+
+  if (prev != NULL)
+    prev->next = this;
 }
 
 #endif

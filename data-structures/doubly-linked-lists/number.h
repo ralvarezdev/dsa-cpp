@@ -16,6 +16,13 @@ using std::string;
 #ifndef NUMBER_DOUBLY_LINKED_LISTS
 #define NUMBER_DOUBLY_LINKED_LISTS
 
+// NUMBER DOUBLY LINKED LIST NAMESPACE
+namespace numberDLL
+{
+  const int nIndex = 6;
+  const int nDigits = 10;
+}
+
 // NUMBER DOUBLY LINKED LIST CLASS
 
 template <class NodeType>
@@ -53,11 +60,17 @@ void NumberDoublyLinkedList<NodeType>::print(DoublyNodePtr<NodeType> p)
 {
   int n = 0;
 
+  // Prints Header
+  cout << left << setw(numberDLL::nIndex) << setfill(' ') << "Index"
+       << setw(numberDLL::nDigits + 1) << setfill(' ') << "Node"
+       << '\n';
+
   // Prints from Head to Tail
-  cout << setw(6) << left << setfill(' ') << "Index" << setw(10) << "Node" << '\n';
   while (p != NULL)
   {
-    cout << setw(6) << n++ << p->data << '\n';
+    cout << setw(numberDLL::nIndex) << setfill(' ') << n++
+         << setw(numberDLL::nDigits + 1) << setfill(' ') << p->data
+         << '\n';
     p = p->next;
   }
 }
@@ -68,11 +81,17 @@ void NumberDoublyLinkedList<NodeType>::printReverse(DoublyNodePtr<NodeType> p)
 {
   int n = this->length - 1;
 
+  // Prints Header
+  cout << left << setw(numberDLL::nIndex) << setfill(' ') << "Index"
+       << setw(numberDLL::nDigits + 1) << setfill(' ') << "Node"
+       << '\n';
+
   // Prints from Tail to Head
-  cout << setw(6) << left << setfill(' ') << "Index" << setw(10) << "Node" << '\n';
   while (p != NULL)
   {
-    cout << setw(6) << n-- << p->data << '\n';
+    cout << setw(numberDLL::nIndex) << setfill(' ') << n--
+         << setw(numberDLL::nDigits + 1) << setfill(' ') << p->data
+         << '\n';
     p = p->prev;
   }
 }

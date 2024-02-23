@@ -36,6 +36,8 @@ template <class NodeType>
 DoublyNode<NodeType>::DoublyNode(NodeType data, DoublyNode<NodeType> *prev)
 {
   this->data = data;
+
+  // Set After prev Node
   this->prev = prev;
 
   if (prev != NULL)
@@ -46,6 +48,8 @@ template <class NodeType>
 DoublyNode<NodeType>::DoublyNode(NodeType data, DoublyNode<NodeType> *prev, DoublyNode<NodeType> *next)
 {
   this->data = data;
+
+  // Set Between prev and next Nodes
   this->prev = prev;
   this->next = next;
 

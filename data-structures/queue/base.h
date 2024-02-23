@@ -24,9 +24,10 @@ protected:
   NodeType error;
 
   // Protected Methods
-  void increaseLength();
-  void increaseLength(int);
-  void decreaseLength();
+  void increaseLength(int length) { this->length = length; };
+  void increaseLength() { this->increaseLength(1); };
+  void decreaseLength() { this->increaseLength(-1); };
+
   NodeType pop(bool);
 
 public:
@@ -38,16 +39,17 @@ public:
   ~QueueLinkedList();
 
   // Public Method
+  NodeType getError() { return this->error; };
+  int getLength() { return this->length; };
+  bool isEmpty() { return this->head == NULL; };
+
   NodeType setNULL(bool);
-  NodeType getError();
-  bool isEmpty();
   void push(NodeType);
   void enqueue(NodeType data) { push(data); }; // Calls Push Method
   NodeType pop() { return pop(false); };
   NodeType dequeue() { return pop(); }; // Calls Pop Method
   NodeType first();
   NodeType last();
-  int getLength();
 };
 
 // Queue Constructors
@@ -257,40 +259,6 @@ NodeType QueueLinkedList<NodeType>::last()
     return this->error;
 
   return this->tail->data;
-}
-
-// Method to Check if Queue is Empty
-template <class NodeType>
-bool QueueLinkedList<NodeType>::isEmpty()
-{
-  return this->head == NULL;
-}
-
-// Method to Increase Queue Length
-template <class NodeType>
-void QueueLinkedList<NodeType>::increaseLength()
-{
-  this->length += 1;
-}
-
-template <class NodeType>
-void QueueLinkedList<NodeType>::increaseLength(int length)
-{
-  this->length += length;
-}
-
-// Method to Decrease Queue Length
-template <class NodeType>
-void QueueLinkedList<NodeType>::decreaseLength()
-{
-  this->length -= 1;
-}
-
-// Method to Get Queue Length
-template <class NodeType>
-int QueueLinkedList<NodeType>::getLength()
-{
-  return this->length;
 }
 
 #endif

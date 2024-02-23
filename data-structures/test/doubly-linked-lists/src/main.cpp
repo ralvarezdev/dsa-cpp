@@ -90,7 +90,7 @@ int main()
   list.insertAt(77, -1);   // At Tail
   list.insertAt(300, -15); // At Index -15
   list.insertAt(400, -2);  // Before Tail
-  list.insertAt(898, 30);  // At Tail
+  list.insertAt(898, 30);  // Should not be Inserted
   list.insertAt(999, -1);  // At Tail
   list.push(13);           // At Head
 

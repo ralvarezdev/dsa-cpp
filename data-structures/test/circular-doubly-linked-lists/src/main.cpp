@@ -81,15 +81,16 @@ int main()
   cout << "Search for Key '" << key << "': " << isKey<double>(nodeFound) << '\n';
 
   // Insert Node
-  list.push(55);          // Next to Head
-  list.insertAt(100, 6);  // At Index 6
-  list.insertAt(200, 11); // At Index 11
-  list.pushBack(33);      // At Head Previous Node
-  list.insertAt(77, -1);  // At Head Previous Node
-  list.insertAt(400, -2); // Before Head Previous Node
-  list.insertAt(898, 20); // At Head Previous Node
-  list.insertAt(999, -1); // At Head Previous Node
-  list.push(13);          // Next to Head
+  list.push(55);           // Next to Head
+  list.insertAt(100, 6);   // At Index 6
+  list.insertAt(200, 11);  // At Index 11
+  list.pushBack(33);       // At Head Previous Node
+  list.insertAt(77, -1);   // At Head Previous Node
+  list.insertAt(400, -2);  // Before Head Previous Node
+  list.insertAt(898, 20);  // At Index 20
+  list.insertAt(999, -1);  // At Head Previous Node
+  list.push(13);           // Next to Head
+  list.insertAt(555, -20); // At Index 20
 
   cout << "\nNodes after Insertion:\n";
   list.print();

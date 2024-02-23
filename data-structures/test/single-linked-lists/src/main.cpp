@@ -80,7 +80,7 @@ int main()
   list.pushBack(33);      // At Tail
   list.insertAt(77, -1);  // At Tail
   list.insertAt(400, -2); // Before Tail
-  list.insertAt(898, 20); // At Tail
+  list.insertAt(898, 20); // Should not be Inserted
   list.insertAt(999, -1); // At Tail
   list.push(13);          // Next to Head
 
@@ -89,7 +89,7 @@ int main()
 
   // Remove Node
   list.remove();     // Remove Node Next to Head
-  list.removeAt(8);  // At Index 6
+  list.removeAt(8);  // At Index 8
   list.removeAt(-4); // At Index -4
   list.pop();        // Remove Tail
 

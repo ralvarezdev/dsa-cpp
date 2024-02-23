@@ -15,6 +15,13 @@ using std::string;
 #ifndef NUMBER_CIRCULAR_DOUBLY_LINKED_LISTS
 #define NUMBER_CIRCULAR_DOUBLY_LINKED_LISTS
 
+// NUMBER CIRCULAR DOUBLY LINKED LIST NAMESPACE
+namespace numberCDLL
+{
+  const int nIndex = 6;
+  const int nDigits = 10;
+}
+
 // NUMBER CIRCULAR DOUBLY LINKED LIST CLASS
 
 template <class NodeType>
@@ -36,7 +43,7 @@ public:
   NumberCircularDoublyLinkedList() : CircularDoublyLinkedList<NodeType>(-1){};
 
   // Public Methods
-  void print() { print(this->head); }                                                           // Set Head Node as p Node
+  void print() { print(this->head); };                                                          // Set Head Node as p Node
   void printReverse() { printReverse(this->head->prev); };                                      // ...
   NodeType total() { return total(this->head); };                                               // ...
   NodeType max() { return max(this->head); };                                                   // ...
@@ -51,11 +58,17 @@ void NumberCircularDoublyLinkedList<NodeType>::print(DoublyNodePtr<NodeType> p)
 {
   int n = 0;
 
+  // Prints Header
+  cout << left << setw(numberCDLL::nIndex) << setfill(' ') << "Index"
+       << setw(numberCDLL::nDigits + 1) << setfill(' ') << "Node"
+       << '\n';
+
   // Prints from Head to Tail
-  cout << setw(6) << left << setfill(' ') << "Index" << setw(10) << "Node" << '\n';
   do
   {
-    cout << setw(6) << n++ << p->data << '\n';
+    cout << setw(numberCDLL::nIndex) << setfill(' ') << n++
+         << setw(numberCDLL::nDigits + 1) << setfill(' ') << p->data
+         << '\n';
     p = p->next;
   } while (p != this->head);
 }
@@ -66,11 +79,17 @@ void NumberCircularDoublyLinkedList<NodeType>::printReverse(DoublyNodePtr<NodeTy
 {
   int n = this->length - 1;
 
+  // Prints Header
+  cout << left << setw(numberCDLL::nIndex) << setfill(' ') << "Index"
+       << setw(numberCDLL::nDigits + 1) << setfill(' ') << "Node"
+       << '\n';
+
   // Prints from Tail to Head
-  cout << setw(6) << left << setfill(' ') << "Index" << setw(10) << "Node" << '\n';
   do
   {
-    cout << setw(6) << n-- << p->data << '\n';
+    cout << setw(numberCDLL::nIndex) << setfill(' ') << n--
+         << setw(numberCDLL::nDigits + 1) << setfill(' ') << p->data
+         << '\n';
     p = p->prev;
   } while (p != this->head->prev);
 }
