@@ -33,7 +33,7 @@ protected:
   void printReverse(SingleNodePtr<NodeType>);
   NodeType total(SingleNodePtr<NodeType>);
   NodeType max(SingleNodePtr<NodeType>);
-  SingleNodePtr<NodeType> linearSearch(SingleNodePtr<NodeType>, NodeType);
+  bool linearSearch(SingleNodePtr<NodeType>, NodeType);
 
 public:
   // Inherit Constructors
@@ -47,7 +47,7 @@ public:
   void printReverse() { return printReverse(this->head->next); };                                     // ...
   NodeType total() { return total(this->head->next); };                                               // ...
   NodeType max() { return max(this->head->next); };                                                   // ...
-  SingleNodePtr<NodeType> linearSearch(NodeType key) { return linearSearch(this->head->next, key); }; // ...
+  bool linearSearch(NodeType key) { return linearSearch(this->head->next, key); }; // ...
 
   void insertionSort(NodeType);
   int compare(int, int);
@@ -168,7 +168,7 @@ NodeType NumberSingleLinkedList<NodeType>::max(SingleNodePtr<NodeType> p)
 
 // Method that Checks if the Given Number is Inside Linked List
 template <class NodeType>
-SingleNodePtr<NodeType> NumberSingleLinkedList<NodeType>::linearSearch(SingleNodePtr<NodeType> p, NodeType key)
+bool NumberSingleLinkedList<NodeType>::linearSearch(SingleNodePtr<NodeType> p, NodeType key)
 {
   SingleNodePtr<NodeType> q;
 
@@ -185,23 +185,14 @@ SingleNodePtr<NodeType> NumberSingleLinkedList<NodeType>::linearSearch(SingleNod
       p->next = this->head->next;
       this->head->next = p;
 
-      /*
-        // Set Head Node as Current Node
-        SingleLinkedList<NodeType>::setCurrent();
-      */
-
-      return p;
+      return true;
     }
+
     q = p;
     p = p->next;
   }
 
-  /*
-    // Set Head Node as Current Node
-    SingleLinkedList<NodeType>::setCurrent();
-  */
-
-  return NULL;
+  return false;
 }
 
 // Method to Compare Two Nodes Values
@@ -224,7 +215,7 @@ int NumberSingleLinkedList<NodeType>::compare(int index1, int index2)
   value2 = this->get(index2);
 
   if (value1 == this->error || value2 == this->error)
-    return -1; // One or Both Indexes don't Exist
+    return this->error; // One or Both Indexes don't Exist
 
   if (index1 == index2)
     return 0;

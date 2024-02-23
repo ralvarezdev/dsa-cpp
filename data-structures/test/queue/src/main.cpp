@@ -56,6 +56,9 @@ int main()
   cout << "Queue Nodes:\n";
   while (queue->getLength() > 0)
     cout << queue->pop() << '\n';
+
+  // Deallocate Memory
+  delete[] queue;
 }
 
 // Function to Change Current Working Directory to 'src/data'

@@ -34,13 +34,13 @@ int main(int argc, char **argv)
       Col("Priority", terminal::nPriority)};
 
   // Create Title Linked List
-  ColLinkedList titleList(cols, 5, Col());
+  ColLinkedList *titleList = new ColLinkedList(cols, 5, Col());
 
   // Create Requests Queue Linked List
-  RequestQueueLinkedList requestsQueue = RequestQueueLinkedList();
+  RequestQueueLinkedList *requestsQueue = new RequestQueueLinkedList();
 
   // Read requests.csv
-  requestsQueue.readFile();
+  requestsQueue->readFile();
 
   // - Program Status Variables
   bool exit, confirmation;
@@ -107,10 +107,10 @@ int main(int argc, char **argv)
       cout << clear;
 
       // Print Columns Header
-      titleList.print();
+      titleList->print();
 
       // Print Students
-      requestsQueue.print();
+      requestsQueue->print();
 
       // Print New Line
       cout << '\n';
@@ -168,10 +168,10 @@ int main(int argc, char **argv)
       newRequest = new Request(firstName, lastName, title, description, priority);
 
       // Insert Request
-      requestsQueue.insertByPriority(*newRequest);
+      requestsQueue->insertByPriority(*newRequest);
 
       // Overwrite requests.csv
-      requestsQueue.overwriteCSV();
+      requestsQueue->overwriteCSV();
 
       break;
 
@@ -187,7 +187,7 @@ int main(int argc, char **argv)
       printTitle("Top Request");
 
       // Pop First Request from requestsQueue
-      topRequest = requestsQueue.pop();
+      topRequest = requestsQueue->pop();
 
       // Print Top Request Data
       content << '\n'
@@ -227,7 +227,7 @@ int main(int argc, char **argv)
 
       // Ask to Overwrite CSV
       if (booleanQuestion("Do you want to Save Changes to requests.csv File?"))
-        requestsQueue.overwriteCSV();
+        requestsQueue->overwriteCSV();
       break;
 
     case requests::help:
@@ -244,6 +244,9 @@ int main(int argc, char **argv)
       break;
     }
   }
+
+  // Deallocate Memory
+  delete[] titleList, requestsQueue;
 }
 
 // --- Functions

@@ -38,7 +38,7 @@ using namespace stacks;
 int main(int argc, char **argv)
 {
   // Desynchronize C++ Streams from C I/O Operations to Increase Performance
-   std::ios::sync_with_stdio(false);
+  std::ios::sync_with_stdio(false);
 
   // Length of the Biggest Stack. Auxiliary Stacks Used to Sort Current Stack
   int maxLen, auxIndex, mainAuxIndex;
@@ -239,6 +239,5 @@ int main(int argc, char **argv)
   pressEnterToCont("COMPLETED");
 
   // Deallocate Memory
-  delete[] stacksArray;
-  delete[] listsArray;
+  delete[] stacksArray, listsArray;
 }

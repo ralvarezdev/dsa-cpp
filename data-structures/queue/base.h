@@ -24,7 +24,7 @@ protected:
   NodeType error;
 
   // Protected Methods
-  void increaseLength(int length) { this->length = length; };
+  void increaseLength(int length) { this->length += length; };
   void increaseLength() { this->increaseLength(1); };
   void decreaseLength() { this->increaseLength(-1); };
 
@@ -175,13 +175,6 @@ NodeType QueueLinkedList<NodeType>::setNULL(bool destructor)
   decreaseLength();
 
   return data;
-}
-
-// Method to Get Error Value
-template <class NodeType>
-NodeType QueueLinkedList<NodeType>::getError()
-{
-  return this->error;
 }
 
 // Method to Insert Node at Tail

@@ -222,7 +222,7 @@ void CircularDoublyLinkedList<NodeType>::insertAt(NodeType data, int pos)
     return;
   }
 
-  if ((pos > 0 && posRemainder == 0) || (pos < 0 && posRemainder == -1))
+  if ((pos > 0 && posRemainder == this->length) || (pos < 0 && posRemainder == -1))
   {
     this->pushBack(data); // Insert Node at Tail
     return;
@@ -378,7 +378,7 @@ NodeType CircularDoublyLinkedList<NodeType>::removeAt(int pos)
   if (posRemainder == 0)
     return this->remove(); // Remove Node at Head
 
-  if ((pos >= 0 && posRemainder == this->length - 1) || (pos < 0 && posRemainder == -1))
+  if ((pos > 0 && posRemainder == this->length - 1) || (pos < 0 && posRemainder == -1))
     return this->pop(); // Remove Tail
 
   DoublyNodePtr<NodeType> p, m, n;
@@ -437,7 +437,7 @@ NodeType CircularDoublyLinkedList<NodeType>::get(int pos)
   if (posRemainder == 0)
     return this->head->data; // Get Head Node Data
 
-  if ((pos > 0 && posRemainder == this->length) || (pos < 0 && posRemainder == -1))
+  if ((pos > 0 && posRemainder == this->length - 1) || (pos < 0 && posRemainder == -1))
     return this->head->prev->data; // Get Head Previous Node Data
 
   // Move to Node

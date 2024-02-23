@@ -169,6 +169,12 @@ CircularSingleLinkedList<NodeType>::~CircularSingleLinkedList()
 template <class NodeType>
 SingleNodePtr<NodeType> CircularSingleLinkedList<NodeType>::move(SingleNodePtr<NodeType> p, int n)
 {
+  // Check n
+  n = n % this->length;
+
+  if (n < 0)
+    n += this->length;
+
   // Move to Next N Nodes
   for (int i = 0; i < n; i++)
     p = p->next;
@@ -219,7 +225,7 @@ void CircularSingleLinkedList<NodeType>::insertAt(NodeType data, int pos)
     return;
   }
 
-  if ((pos >= 0 && posRemainder == this->length - 1) || (pos < 0 && posRemainder == -1))
+  if ((pos > 0 && posRemainder == this->length) || (pos < 0 && posRemainder == -1))
   {
     this->pushBack(data); // Insert Node at Tail
     return;
@@ -230,7 +236,7 @@ void CircularSingleLinkedList<NodeType>::insertAt(NodeType data, int pos)
 
   SingleNodePtr<NodeType> p, n;
 
-  // Move to Next or Prev Node pos Times
+  // Move to Next Node pos Times
   p = this->move(pos);
 
   // Get Next Node
@@ -355,6 +361,9 @@ NodeType CircularSingleLinkedList<NodeType>::pop(bool destructor)
   // Set p Next Node to Head
   p->next = this->head;
 
+  // Set Tail
+  this->tail = p;
+
   // Deallocate Memory
   if (destructor)
     delete[] t;
@@ -379,7 +388,7 @@ NodeType CircularSingleLinkedList<NodeType>::removeAt(int pos)
   if (posRemainder == 0)
     return this->remove(); // Remove Node at Head
 
-  if ((pos >= 0 && posRemainder == this->length - 1) || (pos < 0 && posRemainder == -1))
+  if ((pos > 0 && posRemainder == this->length - 1) || (pos < 0 && posRemainder == -1))
     return this->pop(); // Remove Node at Tail
 
   SingleNodePtr<NodeType> p, m, n;
@@ -437,11 +446,11 @@ NodeType CircularSingleLinkedList<NodeType>::get(int pos)
   if (posRemainder == 0)
     return this->head->data; // Get Head Node Data
 
-  if ((pos >= 0 && posRemainder == this->length - 1) || (pos < 0 && posRemainder == -1))
+  if ((pos > 0 && posRemainder == this->length - 1) || (pos < 0 && posRemainder == -1))
     return this->tail->data; // Get Tail Node Data
 
   if (pos < 0)
-    pos += this->length; // Get Position
+    pos += this->length - 1; // Get Position
 
   SingleNodePtr<NodeType> n;
 

@@ -33,7 +33,7 @@ protected:
   void printReverse(DoublyNodePtr<NodeType>);
   NodeType total(DoublyNodePtr<NodeType>);
   NodeType max(DoublyNodePtr<NodeType>);
-  DoublyNodePtr<NodeType> linearSearch(DoublyNodePtr<NodeType>, NodeType);
+  bool linearSearch(DoublyNodePtr<NodeType>, NodeType);
 
 public:
   // Inherit Constructors
@@ -43,11 +43,11 @@ public:
   NumberCircularDoublyLinkedList() : CircularDoublyLinkedList<NodeType>(-1){};
 
   // Public Methods
-  void print() { print(this->head); };                                                          // Set Head Node as p Node
-  void printReverse() { printReverse(this->head->prev); };                                      // ...
-  NodeType total() { return total(this->head); };                                               // ...
-  NodeType max() { return max(this->head); };                                                   // ...
-  DoublyNodePtr<NodeType> linearSearch(NodeType key) { return linearSearch(this->head, key); }; // ...
+  void print() { print(this->head); };                                       // Set Head Node as p Node
+  void printReverse() { printReverse(this->head->prev); };                   // ...
+  NodeType total() { return total(this->head); };                            // ...
+  NodeType max() { return max(this->head); };                                // ...
+  bool linearSearch(NodeType key) { return linearSearch(this->head, key); }; // ...
 
   int compare(int, int);
 };
@@ -129,17 +129,17 @@ NodeType NumberCircularDoublyLinkedList<NodeType>::max(DoublyNodePtr<NodeType> p
 
 // Method that Checks if the Given Number is Inside Linked List
 template <class NodeType>
-DoublyNodePtr<NodeType> NumberCircularDoublyLinkedList<NodeType>::linearSearch(DoublyNodePtr<NodeType> p, NodeType key)
+bool NumberCircularDoublyLinkedList<NodeType>::linearSearch(DoublyNodePtr<NodeType> p, NodeType key)
 {
   do
   {
     if (key == p->data)
-      return p;
+      return true;
 
     p = p->next;
   } while (p != this->head);
 
-  return NULL;
+  return false;
 }
 
 // Method to Compare Two Nodes Values
@@ -162,7 +162,7 @@ int NumberCircularDoublyLinkedList<NodeType>::compare(int index1, int index2)
   value2 = this->get(index2);
 
   if (value1 == this->error || value2 == this->error)
-    return -1; // One or Both Indexes don't Exist
+    return this->error; // One or Both Indexes don't Exist
 
   if (index1 == index2)
     return 0;

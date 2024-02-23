@@ -72,11 +72,6 @@ SingleLinkedList<NodeType>::SingleLinkedList(NodeType error)
 
   // Add Node as Head and Tail
   this->head = this->tail = p = new SingleNode<NodeType>();
-
-  /*
-    // Set Head as Current Node
-    this->setCurrent();
-  */
 }
 
 // Add Head with Only One Next Node
@@ -99,11 +94,6 @@ SingleLinkedList<NodeType>::SingleLinkedList(NodeType data, NodeType error)
 
   // Increase Length
   this->increaseLength();
-
-  /*
-    // Set Head as Current Node
-    this->setCurrent();
-  */
 }
 
 // Add Head and Multiple Next Nodes
@@ -133,11 +123,6 @@ SingleLinkedList<NodeType>::SingleLinkedList(NodeType data[], int length, NodeTy
 
   // Increase Length
   this->increaseLength(length);
-
-  /*
-    // Set Head as Current Node
-    this->setCurrent();
-  */
 }
 
 // Destructor

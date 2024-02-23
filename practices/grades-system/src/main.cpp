@@ -34,13 +34,13 @@ int main(int argc, char **argv)
       Col("Stats", terminal::nCourse)};
 
   // Create Title Linked List
-  ColLinkedList titleList(cols, 11, Col());
+  ColLinkedList *titleList = new ColLinkedList(cols, 11, Col());
 
   // Create Student Linked List
-  StudentLinkedList studentList = StudentLinkedList();
+  StudentLinkedList *studentList = new StudentLinkedList();
 
   // Read students.csv
-  studentList.readFile();
+  studentList->readFile();
 
   // - Program Status Variables
   bool exit, confirmation;
@@ -89,10 +89,10 @@ int main(int argc, char **argv)
       cout << clear;
 
       // Print Columns Header
-      titleList.print();
+      titleList->print();
 
       // Print Students
-      studentList.print();
+      studentList->print();
 
       // Print New Line
       cout << '\n';
@@ -105,10 +105,10 @@ int main(int argc, char **argv)
       cout << clear;
 
       // Print Columns Header
-      titleList.print();
+      titleList->print();
 
       // Print Students
-      studentList.print(10);
+      studentList->print(10);
 
       // Print New Line
       cout << '\n';
@@ -118,10 +118,10 @@ int main(int argc, char **argv)
 
     case students::generateStudentFile:
       // Ask for Student ID
-      id = getInteger("Enter Student ID", 1, studentList.getLength());
+      id = getInteger("Enter Student ID", 1, studentList->getLength());
 
       // Get Student Position in Linked List
-      pos = studentList.linearSearch(id);
+      pos = studentList->linearSearch(id);
 
       // Student not Found
       if (pos == -1)
@@ -131,15 +131,15 @@ int main(int argc, char **argv)
       }
 
       // Generate Student File
-      studentList.generateStudentFile(pos);
+      studentList->generateStudentFile(pos);
       break;
 
     case students::removeStudent:
       // Ask for Student ID
-      id = getInteger("Enter Student ID to Remove", 1, studentList.getLength());
+      id = getInteger("Enter Student ID to Remove", 1, studentList->getLength());
 
       // Get Student Position in Linked List
-      pos = studentList.linearSearch(id);
+      pos = studentList->linearSearch(id);
 
       // Student not Found
       if (pos == -1)
@@ -152,8 +152,8 @@ int main(int argc, char **argv)
       cout << "\n\n";
       if (booleanQuestion("Is this the Student you want to Remove?"))
       {
-        studentList.removeAt(pos);
-        studentList.overwriteCSV();
+        studentList->removeAt(pos);
+        studentList->overwriteCSV();
       }
       break;
 
@@ -171,6 +171,9 @@ int main(int argc, char **argv)
       break;
     }
   }
+
+  // Deallocate Memory
+  delete[] titleList, studentList;
 }
 
 // --- Functions
