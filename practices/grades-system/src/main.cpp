@@ -173,7 +173,7 @@ int main(int argc, char **argv)
   }
 
   // Deallocate Memory
-  delete[] titleList, studentList;
+  delete titleList, studentList;
 }
 
 // --- Functions

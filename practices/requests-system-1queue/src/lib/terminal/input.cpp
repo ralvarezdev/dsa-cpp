@@ -31,7 +31,6 @@ bool booleanQuestion(string message)
     getline(cin, input);
 
     c = tolower(input[0]);
-    cout << c;
 
     if (c == 'y')
     {

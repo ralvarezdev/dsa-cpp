@@ -5,6 +5,9 @@
 
 using std::abs;
 
+#include <iostream>
+using std::cout;
+
 #ifndef CIRCULAR_DOUBLY_LINKED_LISTS
 #define CIRCULAR_DOUBLY_LINKED_LISTS
 
@@ -26,9 +29,7 @@ protected:
   void empty() { this->length = 0; };
 
   DoublyNodePtr<NodeType> move(int);
-  NodeType remove(bool);
-  NodeType pop(bool);
-  NodeType setNULL(bool);
+  NodeType setNULL();
 
 public:
   // Constructors
@@ -36,18 +37,25 @@ public:
   CircularDoublyLinkedList(NodeType, NodeType);
   CircularDoublyLinkedList(NodeType[], int, NodeType);
   CircularDoublyLinkedList(DoublyLinkedList<NodeType>, NodeType);
-  ~CircularDoublyLinkedList();
+
+  // Destructor
+  virtual ~CircularDoublyLinkedList()
+  {
+    // Remove Head Previous Node if It isn't Empty
+    while (!this->isEmpty())
+      this->pop();
+  }
 
   // Public Methods
   NodeType getError() { return this->error; };
   int getLength() { return this->length; };
-  bool isEmpty() { return this->head == NULL; };
+  bool isEmpty() { return this->length == 0; };
 
   void push(NodeType);
   void pushBack(NodeType);
   void insertAt(NodeType, int);
-  NodeType remove() { return remove(false); };
-  NodeType pop() { return pop(false); };
+  NodeType remove();
+  NodeType pop();
   NodeType removeAt(int);
   NodeType change(NodeType, int);
   NodeType get(int);
@@ -136,15 +144,6 @@ CircularDoublyLinkedList<NodeType>::CircularDoublyLinkedList(DoublyLinkedList<No
 
   // Increase Length
   this->increaseLength(length);
-}
-
-// Destructor
-template <class NodeType>
-CircularDoublyLinkedList<NodeType>::~CircularDoublyLinkedList()
-{
-  // Remove Head Previous Node if It isn't Empty
-  while (!isEmpty())
-    this->pop(true);
 }
 
 // Method to Move to Next Node N Times
@@ -271,7 +270,7 @@ void CircularDoublyLinkedList<NodeType>::pushBack(NodeType data)
 
 // Method to Safely Remove Head Node when it's the Only Node in Circular Doubly Linked List
 template <class NodeType>
-NodeType CircularDoublyLinkedList<NodeType>::setNULL(bool destructor)
+NodeType CircularDoublyLinkedList<NodeType>::setNULL()
 {
   DoublyNodePtr<NodeType> h;
 
@@ -283,10 +282,7 @@ NodeType CircularDoublyLinkedList<NodeType>::setNULL(bool destructor)
   this->head = NULL;
 
   // Deallocate Memory
-  if (destructor)
-    delete[] h;
-  else
-    delete h;
+  delete h;
 
   this->decreaseLength();
 
@@ -295,7 +291,7 @@ NodeType CircularDoublyLinkedList<NodeType>::setNULL(bool destructor)
 
 // Method to Remove Head Node
 template <class NodeType>
-NodeType CircularDoublyLinkedList<NodeType>::remove(bool destructor)
+NodeType CircularDoublyLinkedList<NodeType>::remove()
 {
   DoublyNodePtr<NodeType> p, m, n;
 
@@ -305,7 +301,7 @@ NodeType CircularDoublyLinkedList<NodeType>::remove(bool destructor)
 
   // Circular Doubly Linked List Only have One Node which is Head
   if (this->getLength() == 1)
-    return this->setNULL(destructor);
+    return this->setNULL();
 
   // Get Head Node and Data
   m = this->head;
@@ -321,10 +317,7 @@ NodeType CircularDoublyLinkedList<NodeType>::remove(bool destructor)
   this->head = n;
 
   // Deallocate Memory
-  if (destructor)
-    delete[] m;
-  else
-    delete m;
+  delete m;
 
   this->decreaseLength();
 
@@ -333,7 +326,7 @@ NodeType CircularDoublyLinkedList<NodeType>::remove(bool destructor)
 
 // Method to Remove Node at Head Previous Node
 template <class NodeType>
-NodeType CircularDoublyLinkedList<NodeType>::pop(bool destructor)
+NodeType CircularDoublyLinkedList<NodeType>::pop()
 {
   // Check if It's Empty
   if (this->isEmpty())
@@ -341,7 +334,7 @@ NodeType CircularDoublyLinkedList<NodeType>::pop(bool destructor)
 
   // Circular Doubly Linked List Only have One Node which is Head
   if (this->getLength() == 1)
-    return this->setNULL(destructor);
+    return this->setNULL();
 
   DoublyNodePtr<NodeType> t, p;
 
@@ -359,10 +352,7 @@ NodeType CircularDoublyLinkedList<NodeType>::pop(bool destructor)
   this->head->prev = p;
 
   // Deallocate Memory
-  if (destructor)
-    delete[] t;
-  else
-    delete t;
+  delete t;
 
   this->decreaseLength();
 

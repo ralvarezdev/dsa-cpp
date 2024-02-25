@@ -110,5 +110,5 @@ int main()
   list->print();
 
   // Deallocate Memory
-  delete[] list;
+  delete list;
 }

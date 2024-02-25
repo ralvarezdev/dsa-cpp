@@ -136,5 +136,5 @@ int main()
   listCopy->print();
 
   // Deallocate Memory
-  delete[] list, listCopy;
+  delete list, listCopy;
 }

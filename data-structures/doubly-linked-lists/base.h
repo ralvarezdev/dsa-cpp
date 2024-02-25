@@ -32,9 +32,7 @@ protected:
   void empty() { this->length = 0; };
 
   DoublyNodePtr<NodeType> move(int);
-  NodeType remove(bool);
-  NodeType pop(bool);
-  NodeType setNULL(bool);
+  NodeType setNULL();
 
 public:
   // Constructors
@@ -42,18 +40,25 @@ public:
   DoublyLinkedList(NodeType, NodeType);
   DoublyLinkedList(NodeType[], int, NodeType);
   DoublyLinkedList(SingleLinkedList<NodeType>, NodeType);
-  ~DoublyLinkedList();
+
+  // Destructor
+  virtual ~DoublyLinkedList()
+  {
+    // Remove Tail Node if It isn't Empty
+    while (!this->isEmpty())
+      this->pop();
+  }
 
   // Public Methods
   NodeType getError() { return this->error; };
   int getLength() { return this->length; };
-  bool isEmpty() { return this->head == NULL; };
+  bool isEmpty() { return this->length == 0; };
 
   void push(NodeType);
   void pushBack(NodeType);
   void insertAt(NodeType, int);
-  NodeType pop() { return pop(false); };
-  NodeType remove() { return remove(false); };
+  NodeType pop();
+  NodeType remove();
   NodeType removeAt(int);
   NodeType change(NodeType, int);
   NodeType get(int);
@@ -142,15 +147,6 @@ DoublyLinkedList<NodeType>::DoublyLinkedList(SingleLinkedList<NodeType> list, No
 
   // Increase Length
   this->increaseLength(length);
-}
-
-// Destructor
-template <class NodeType>
-DoublyLinkedList<NodeType>::~DoublyLinkedList()
-{
-  // Remove Tail Node if Doubly Linked List isn't Empty
-  while (!isEmpty())
-    this->pop(true);
 }
 
 // Method to Move to Next Node N Times
@@ -280,7 +276,7 @@ void DoublyLinkedList<NodeType>::pushBack(NodeType data)
 
 // Method to Safely Remove Node that is Both Head and Tail
 template <class NodeType>
-NodeType DoublyLinkedList<NodeType>::setNULL(bool destructor)
+NodeType DoublyLinkedList<NodeType>::setNULL()
 {
   DoublyNodePtr<NodeType> t, h;
 
@@ -293,10 +289,7 @@ NodeType DoublyLinkedList<NodeType>::setNULL(bool destructor)
   this->head = this->tail = NULL;
 
   // Deallocate Memory
-  if (destructor)
-    delete[] t, h;
-  else
-    delete t, h;
+  delete t, h;
 
   this->decreaseLength();
 
@@ -305,7 +298,7 @@ NodeType DoublyLinkedList<NodeType>::setNULL(bool destructor)
 
 // Method to Remove Head Node
 template <class NodeType>
-NodeType DoublyLinkedList<NodeType>::remove(bool destructor)
+NodeType DoublyLinkedList<NodeType>::remove()
 {
   // Check if It's Empty
   if (this->isEmpty())
@@ -313,7 +306,7 @@ NodeType DoublyLinkedList<NodeType>::remove(bool destructor)
 
   // Head and Tail Node are the Same
   if (this->getLength() == 1)
-    return this->setNULL(destructor);
+    return this->setNULL();
 
   DoublyNodePtr<NodeType> m, n;
 
@@ -329,10 +322,7 @@ NodeType DoublyLinkedList<NodeType>::remove(bool destructor)
   n->prev = NULL;
 
   // Deallocate Memory
-  if (destructor)
-    delete[] m;
-  else
-    delete m;
+  delete m;
 
   decreaseLength();
 
@@ -341,7 +331,7 @@ NodeType DoublyLinkedList<NodeType>::remove(bool destructor)
 
 // Method to Remove Node at Tail
 template <class NodeType>
-NodeType DoublyLinkedList<NodeType>::pop(bool destructor)
+NodeType DoublyLinkedList<NodeType>::pop()
 {
   // Check if It's Empty
   if (this->isEmpty())
@@ -349,7 +339,7 @@ NodeType DoublyLinkedList<NodeType>::pop(bool destructor)
 
   // Head and Tail Node are the Same
   if (this->getLength() == 1)
-    return this->setNULL(destructor);
+    return this->setNULL();
 
   DoublyNodePtr<NodeType> t, p;
 
@@ -367,10 +357,7 @@ NodeType DoublyLinkedList<NodeType>::pop(bool destructor)
   this->tail = p;
 
   // Deallocate Memory
-  if (destructor)
-    delete[] t;
-  else
-    delete t;
+  delete t;
 
   this->decreaseLength();
 

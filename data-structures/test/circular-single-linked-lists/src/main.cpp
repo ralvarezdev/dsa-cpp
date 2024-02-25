@@ -114,16 +114,16 @@ int main()
   // Modify Node
   list->change(19, 4);
 
+  cout << "\nNodes after Change:\n";
+  list->print();
+
   // Compare Nodes
-  int pos1 = 5, pos2 = 14;
+  int pos1 = 15, pos2 = 16;
 
   cout << "\nCompare Node at Index \'" << pos1
        << "\' with Node at Index \'" << pos2 << "\': "
        << checkCompare(list->compare(pos1, pos2)) << '\n';
 
-  cout << "\nNodes after Change:\n";
-  list->print();
-
   // Deallocate Memory
-  delete[] list;
+  delete list;
 }

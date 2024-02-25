@@ -28,9 +28,7 @@ protected:
 
   SingleNodePtr<NodeType> move(SingleNodePtr<NodeType>, int);
   SingleNodePtr<NodeType> move(int n) { return move(this->head, n); }; // Set Head as p Node
-  NodeType remove(bool);
-  NodeType pop(bool);
-  NodeType setNULL(bool);
+  NodeType setNULL();
 
 public:
   // Constructors
@@ -38,18 +36,25 @@ public:
   CircularSingleLinkedList(NodeType, NodeType);
   CircularSingleLinkedList(NodeType[], int, NodeType);
   CircularSingleLinkedList(SingleLinkedList<NodeType>, NodeType);
-  ~CircularSingleLinkedList();
+
+  // Destructor
+  virtual ~CircularSingleLinkedList()
+  {
+    // Remove Head Node if It isn't Empty
+    while (!this->isEmpty())
+      this->remove();
+  }
 
   // Public Methods
   NodeType getError() { return this->error; };
   int getLength() { return this->length; };
-  bool isEmpty() { return this->head == NULL; };
+  bool isEmpty() { return this->length == 0; };
 
   void push(NodeType);
   void pushBack(NodeType);
   void insertAt(NodeType, int);
-  NodeType pop() { return pop(false); };
-  NodeType remove() { return remove(false); };
+  NodeType pop();
+  NodeType remove();
   NodeType removeAt(int);
   NodeType change(NodeType, int);
   NodeType get(int);
@@ -154,15 +159,6 @@ CircularSingleLinkedList<NodeType>::CircularSingleLinkedList(SingleLinkedList<No
 
   // Set Tail Next Node to Head
   this->tail->next = this->head;
-}
-
-// Destructor
-template <class NodeType>
-CircularSingleLinkedList<NodeType>::~CircularSingleLinkedList()
-{
-  // Remove Head Previous Node if It isn't Empty
-  while (!isEmpty())
-    this->pop(true);
 }
 
 // Method to Move to Next Node N Times
@@ -277,7 +273,7 @@ void CircularSingleLinkedList<NodeType>::pushBack(NodeType data)
 
 // Method to Safely Remove Head Node when it's the Only Node in Circular Single Linked List
 template <class NodeType>
-NodeType CircularSingleLinkedList<NodeType>::setNULL(bool destructor)
+NodeType CircularSingleLinkedList<NodeType>::setNULL()
 {
   SingleNodePtr<NodeType> h, t;
 
@@ -290,10 +286,7 @@ NodeType CircularSingleLinkedList<NodeType>::setNULL(bool destructor)
   this->head = this->tail = NULL;
 
   // Deallocate Memory
-  if (destructor)
-    delete[] t, h;
-  else
-    delete t, h;
+  delete t, h;
 
   this->decreaseLength();
 
@@ -302,7 +295,7 @@ NodeType CircularSingleLinkedList<NodeType>::setNULL(bool destructor)
 
 // Method to Remove Head Node
 template <class NodeType>
-NodeType CircularSingleLinkedList<NodeType>::remove(bool destructor)
+NodeType CircularSingleLinkedList<NodeType>::remove()
 {
   SingleNodePtr<NodeType> p, m, n;
 
@@ -312,7 +305,7 @@ NodeType CircularSingleLinkedList<NodeType>::remove(bool destructor)
 
   // Circular Single Linked List Only have One Node which is Head
   if (this->getLength() == 1)
-    return this->setNULL(destructor);
+    return this->setNULL();
 
   // Get Head Node and Data
   m = this->head;
@@ -327,10 +320,7 @@ NodeType CircularSingleLinkedList<NodeType>::remove(bool destructor)
   this->head = n;
 
   // Deallocate Memory
-  if (destructor)
-    delete[] m;
-  else
-    delete m;
+  delete m;
 
   this->decreaseLength();
 
@@ -339,7 +329,7 @@ NodeType CircularSingleLinkedList<NodeType>::remove(bool destructor)
 
 // Method to Remove Node at Head Previous Node
 template <class NodeType>
-NodeType CircularSingleLinkedList<NodeType>::pop(bool destructor)
+NodeType CircularSingleLinkedList<NodeType>::pop()
 {
   SingleNodePtr<NodeType> p, t;
 
@@ -349,7 +339,7 @@ NodeType CircularSingleLinkedList<NodeType>::pop(bool destructor)
 
   // Circular Single Linked List Only have One Node which is Head
   if (this->getLength() == 1)
-    return this->setNULL(destructor);
+    return this->setNULL();
 
   // Move from Head Node to Next Node pos-2 Times. Get Previous Node to the One to be Removed
   p = this->move(this->length - 2);
@@ -365,10 +355,7 @@ NodeType CircularSingleLinkedList<NodeType>::pop(bool destructor)
   this->tail = p;
 
   // Deallocate Memory
-  if (destructor)
-    delete[] t;
-  else
-    delete t;
+  delete t;
 
   this->decreaseLength();
 
@@ -379,7 +366,7 @@ NodeType CircularSingleLinkedList<NodeType>::pop(bool destructor)
 template <class NodeType>
 NodeType CircularSingleLinkedList<NodeType>::removeAt(int pos)
 {
-  int posRemainder = pos % posRemainder;
+  int posRemainder = pos % this->length;
 
   // Check if It's Empty
   if (this->isEmpty())
@@ -436,7 +423,7 @@ NodeType CircularSingleLinkedList<NodeType>::change(NodeType data, int pos)
 template <class NodeType>
 NodeType CircularSingleLinkedList<NodeType>::get(int pos)
 {
-  int posRemainder = pos % posRemainder;
+  int posRemainder = pos % this->length;
 
   // Check if It's Empty
   if (this->isEmpty())

@@ -30,25 +30,37 @@ protected:
 
   SingleNodePtr<NodeType> move(SingleNodePtr<NodeType>, int);
   SingleNodePtr<NodeType> move(int n) { return move(this->head, n); }; // Set Head as p Node
-  NodeType remove(bool);
 
 public:
   // Constructors
   SingleLinkedList(NodeType);
   SingleLinkedList(NodeType, NodeType);
   SingleLinkedList(NodeType[], int, NodeType);
-  ~SingleLinkedList();
+
+  // Destructor
+  virtual ~SingleLinkedList()
+  {
+    // Remove Node Next to Head if It isn't Empty
+    while (!this->isEmpty())
+      this->remove();
+
+    // Remove Head Node
+    SingleNodePtr<NodeType> temp = this->head;
+    this->head = NULL;
+
+    delete temp;
+  }
 
   // Public Methods
   NodeType getError() { return this->error; };
   int getLength() { return this->length; };
-  bool isEmpty() { return this->head->next == NULL; };
+  bool isEmpty() { return this->length == 0; };
 
   void push(NodeType);
   void pushBack(NodeType);
   void insertAt(NodeType, int);
   NodeType pop();
-  NodeType remove() { return remove(false); };
+  NodeType remove();
   NodeType removeAt(int);
   NodeType change(NodeType, int);
   NodeType get(int);
@@ -123,21 +135,6 @@ SingleLinkedList<NodeType>::SingleLinkedList(NodeType data[], int length, NodeTy
 
   // Increase Length
   this->increaseLength(length);
-}
-
-// Destructor
-template <class NodeType>
-SingleLinkedList<NodeType>::~SingleLinkedList()
-{
-  // Remove Node Next to Head if It isn't Empty
-  while (!isEmpty())
-    this->remove(true);
-
-  // Remove Head Node
-  SingleNodePtr<NodeType> temp = this->head;
-  this->head = NULL;
-
-  delete[] temp;
 }
 
 // Method to Move to Next Node N Times
@@ -232,7 +229,7 @@ void SingleLinkedList<NodeType>::pushBack(NodeType data)
 
 // Method to Remove Node Next to Head
 template <class NodeType>
-NodeType SingleLinkedList<NodeType>::remove(bool destructor)
+NodeType SingleLinkedList<NodeType>::remove()
 {
   // Check if It's Empty
   if (this->isEmpty())
@@ -243,13 +240,10 @@ NodeType SingleLinkedList<NodeType>::remove(bool destructor)
   NodeType data = n->data;
 
   // Remove n Node from Single Linked List
-  head->next = n->next;
+  this->head->next = n->next;
 
   // Deallocate Memory
-  if (destructor)
-    delete[] n;
-  else
-    delete n;
+  delete n;
 
   this->decreaseLength();
 

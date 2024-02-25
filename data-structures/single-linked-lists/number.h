@@ -43,10 +43,10 @@ public:
   NumberSingleLinkedList() : SingleLinkedList<NodeType>(-1){};
 
   // Public Methods
-  void print() { return print(this->head->next); };                                                   // Set Head Next Node as p Node
-  void printReverse() { return printReverse(this->head->next); };                                     // ...
-  NodeType total() { return total(this->head->next); };                                               // ...
-  NodeType max() { return max(this->head->next); };                                                   // ...
+  void print() { return print(this->head->next); };                                // Set Head Next Node as p Node
+  void printReverse() { return printReverse(this->head->next); };                  // ...
+  NodeType total() { return total(this->head->next); };                            // ...
+  NodeType max() { return max(this->head->next); };                                // ...
   bool linearSearch(NodeType key) { return linearSearch(this->head->next, key); }; // ...
 
   void insertionSort(NodeType);
@@ -217,10 +217,10 @@ int NumberSingleLinkedList<NodeType>::compare(int index1, int index2)
   if (value1 == this->error || value2 == this->error)
     return this->error; // One or Both Indexes don't Exist
 
-  if (index1 == index2)
+  if (value1 == value2)
     return 0;
 
-  return index1 > index2 ? 1 : 2;
+  return value1 > value2 ? 1 : 2;
 }
 
 /*

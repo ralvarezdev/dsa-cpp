@@ -166,10 +166,10 @@ int NumberDoublyLinkedList<NodeType>::compare(int index1, int index2)
   if (value1 == this->error || value2 == this->error)
     return this->error; // One or Both Indexes don't Exist
 
-  if (index1 == index2)
+  if (value1 == value2)
     return 0;
 
-  return index1 > index2 ? 1 : 2;
+  return value1 > value2 ? 1 : 2;
 }
 
 // Method to Create Single Linked List

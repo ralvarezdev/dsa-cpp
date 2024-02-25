@@ -125,5 +125,5 @@ int main()
        << checkCompare(list->compare(pos1, pos2)) << '\n';
 
   // Deallocate Memory
-  delete[] list;
+  delete list;
 }

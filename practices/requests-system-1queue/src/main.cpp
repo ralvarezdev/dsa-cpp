@@ -246,7 +246,7 @@ int main(int argc, char **argv)
   }
 
   // Deallocate Memory
-  delete[] titleList, requestsQueue;
+  delete titleList, requestsQueue;
 }
 
 // --- Functions

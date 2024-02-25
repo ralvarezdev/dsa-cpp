@@ -154,7 +154,6 @@ void CharacterSingleLinkedList::printReverse(SingleNodePtr<string> p)
 
   // Prints from Tail to Head
   // NOTE: If the Print Statement is before the Recursive Function Call, Nodes will be Printed from Head to Tail
-
   if (p != NULL) // Same Expression as !p or p==0
   {
     this->printReverse(p->next);
@@ -165,6 +164,8 @@ void CharacterSingleLinkedList::printReverse(SingleNodePtr<string> p)
 
     return;
   }
+
+  // Prints Header
   cout << setw(characterSLL::nIndex) << left << setfill(' ') << "Index"
        << setw(characterSLL::maxLen + 1) << setfill(' ') << "Node"
        << "Length"

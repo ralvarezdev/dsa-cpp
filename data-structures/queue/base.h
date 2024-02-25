@@ -28,7 +28,7 @@ protected:
   void increaseLength() { this->increaseLength(1); };
   void decreaseLength() { this->increaseLength(-1); };
 
-  NodeType pop(bool);
+  NodeType setNULL();
 
 public:
   // Constructors
@@ -36,17 +36,23 @@ public:
   QueueLinkedList(NodeType, NodeType);
   QueueLinkedList(NodeType[], int, NodeType);
   QueueLinkedList(SingleLinkedList<NodeType>, NodeType);
-  ~QueueLinkedList();
+
+  // Destructor
+  virtual ~QueueLinkedList()
+  {
+    // Remove Top Node if It isn't Empty
+    while (!this->isEmpty())
+      this->pop();
+  }
 
   // Public Method
   NodeType getError() { return this->error; };
   int getLength() { return this->length; };
-  bool isEmpty() { return this->head == NULL; };
+  bool isEmpty() { return this->length == 0; };
 
-  NodeType setNULL(bool);
   void push(NodeType);
   void enqueue(NodeType data) { push(data); }; // Calls Push Method
-  NodeType pop() { return pop(false); };
+  NodeType pop();
   NodeType dequeue() { return pop(); }; // Calls Pop Method
   NodeType first();
   NodeType last();
@@ -136,24 +142,9 @@ QueueLinkedList<NodeType>::QueueLinkedList(SingleLinkedList<NodeType> list, Node
   this->increaseLength(length);
 }
 
-// Destructor
-template <class NodeType>
-QueueLinkedList<NodeType>::~QueueLinkedList()
-{
-  // Remove Node Next to Head if It isn't Empty
-  while (!isEmpty())
-    this->pop(true);
-
-  // Remove Head Node
-  SingleNodePtr<NodeType> temp = this->head;
-  this->head = NULL;
-
-  delete[] temp;
-}
-
 // Method to Safely Remove Node that is Both Head and Tail
 template <class NodeType>
-NodeType QueueLinkedList<NodeType>::setNULL(bool destructor)
+NodeType QueueLinkedList<NodeType>::setNULL()
 {
   SingleNodePtr<NodeType> t;
 
@@ -167,10 +158,7 @@ NodeType QueueLinkedList<NodeType>::setNULL(bool destructor)
   this->head = this->tail = NULL;
 
   // Deallocate Memory
-  if (destructor)
-    delete[] t;
-  else
-    delete t;
+  delete t;
 
   decreaseLength();
 
@@ -200,14 +188,14 @@ void QueueLinkedList<NodeType>::push(NodeType data)
 
 // Method to Remove Head Node
 template <class NodeType>
-NodeType QueueLinkedList<NodeType>::pop(bool destructor)
+NodeType QueueLinkedList<NodeType>::pop()
 {
   if (this->isEmpty())
     return this->error;
 
   // Head and Tail Node are the Same
   if (this->getLength() == 1)
-    return this->setNULL(destructor);
+    return this->setNULL();
 
   SingleNodePtr<NodeType> m, n;
 
@@ -222,10 +210,7 @@ NodeType QueueLinkedList<NodeType>::pop(bool destructor)
   this->head = n;
 
   // Deallocate Memory
-  if (destructor)
-    delete[] m;
-  else
-    delete m;
+  delete m;
 
   decreaseLength();
 

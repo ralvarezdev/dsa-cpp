@@ -27,23 +27,28 @@ protected:
   void increaseLength() { this->increaseLength(1); };
   void decreaseLength() { this->increaseLength(-1); };
 
-  NodeType pop(bool);
-
 public:
   // Constructors
   StackLinkedList(NodeType);
   StackLinkedList(NodeType, NodeType);
   StackLinkedList(NodeType[], int, NodeType);
   StackLinkedList(SingleLinkedList<NodeType>, NodeType);
-  ~StackLinkedList();
+
+  // Destructor
+  ~StackLinkedList()
+  {
+    // Remove Head Node if It isn't Empty
+    while (!this->isEmpty())
+      this->pop();
+  }
 
   // Public Methods
   NodeType getError() { return this->error; };
   int getLength() { return this->length; };
-  bool isEmpty() { return this->head == NULL; };
+  bool isEmpty() { return this->length == 0; };
 
   void push(NodeType);
-  NodeType pop() { return pop(false); };
+  NodeType pop();
   NodeType top();
 };
 
@@ -111,21 +116,6 @@ StackLinkedList<NodeType>::StackLinkedList(SingleLinkedList<NodeType> list, Node
   this->increaseLength(length);
 }
 
-// Destructor
-template <class NodeType>
-StackLinkedList<NodeType>::~StackLinkedList()
-{
-  // Remove Node Next to Head if It isn't Empty
-  while (!isEmpty())
-    this->pop(true);
-
-  // Remove Head Node
-  SingleNodePtr<NodeType> temp = this->head;
-  this->head = NULL;
-
-  delete[] temp;
-}
-
 // Method to Insert Node Before Head
 template <class NodeType>
 void StackLinkedList<NodeType>::push(NodeType data)
@@ -141,7 +131,7 @@ void StackLinkedList<NodeType>::push(NodeType data)
 
 // Method to Remove Head Node
 template <class NodeType>
-NodeType StackLinkedList<NodeType>::pop(bool destructor)
+NodeType StackLinkedList<NodeType>::pop()
 {
   SingleNodePtr<NodeType> m, n;
 
@@ -159,10 +149,7 @@ NodeType StackLinkedList<NodeType>::pop(bool destructor)
   this->head = n;
 
   // Deallocate Memory
-  if (destructor)
-    delete[] m;
-  else
-    delete m;
+  delete m;
 
   decreaseLength();
 

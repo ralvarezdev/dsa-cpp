@@ -58,7 +58,7 @@ int main()
     cout << queue->pop() << '\n';
 
   // Deallocate Memory
-  delete[] queue;
+  delete queue;
 }
 
 // Function to Change Current Working Directory to 'src/data'
