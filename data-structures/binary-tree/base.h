@@ -38,14 +38,14 @@ public:
   BinaryTree(NodeType, NodeType);
 
   // Public Methods
-  void preorder() { preorder(root); };
-  void inorder() { inorder(root); };
-  void postorder() { postorder(root); };
-  void levelOrder() { levelOrder(root); };
-  int countNodes() { return countNodes(root); };
-  int countLeafNodes() { return countTypeNodes(root, true); };
-  int countNonLeafNodes() { return countTypeNodes(root, false); };
-  int getHeight() { return getHeight(root); };
+  void preorder() { preorder(this->root); };
+  void inorder() { inorder(this->root); };
+  void postorder() { postorder(this->root); };
+  void levelOrder() { levelOrder(this->root); };
+  int countNodes() { return countNodes(this->root); };
+  int countLeafNodes() { return countTypeNodes(this->root, true); };
+  int countNonLeafNodes() { return countTypeNodes(this->root, false); };
+  int getHeight() { return getHeight(this->root); };
 };
 
 // Binary Tree Constructors

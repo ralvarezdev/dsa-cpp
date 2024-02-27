@@ -10,8 +10,10 @@ class BinarySearchTree : public BinaryTree<NodeType>
 {
 protected:
   // Protected Methods
-  void inorder(BinNodePtr<NodeType>);
   bool search(BinNodePtr<NodeType>, NodeType);
+  BinNodePtr<NodeType> remove(BinNodePtr<NodeType>, NodeType);
+  BinNodePtr<NodeType> getInorderPredecessor(BinNodePtr<NodeType>);
+  BinNodePtr<NodeType> getInorderSuccessor(BinNodePtr<NodeType>);
 
 public:
   // Constructors
@@ -20,9 +22,9 @@ public:
   // ~DoublyLinkedList();
 
   // Public Methods
-  void inorder() { inorder(root); };
-  bool search(NodeType key) { return search(root, key); };
+  bool search(NodeType key) { return search(this->root, key); };
   void insert(NodeType);
+  void remove(NodeType key){remove(this->root, key)};
 };
 
 // Binary Search Tree Constructors
@@ -68,25 +70,6 @@ BinarySearchTree<NodeType>::BinarySearchTree(QueueLinkedList<NodeType> queue, No
     // Insert Node to Binary Search Tree
     this->insert(data);
   }
-}
-
-// Method to Print Nodes through Inorder Traversal
-template <class NodeType>
-void BinarySearchTree<NodeType>::inorder(BinNodePtr<NodeType> p)
-{
-  static int iter = 0;
-
-  if (iter == 0)
-    cout << "\nInorder\n";
-
-  if (p == NULL)
-    return;
-
-  this->inorder(p->lChild);
-  cout << p->data << '\n';
-  this->inorder(p->rChild);
-
-  iter++;
 }
 
 // Method to Search Given Key in Binary Search Tree
@@ -144,6 +127,77 @@ void BinarySearchTree<NodeType>::insert(NodeType data)
     q->lChild = p;
   else
     q->rChild = p;
+}
+
+// Method to Get Inorder Predecessor of Given Node
+template <class NodeType>
+BinNodePtr<NodeType> BinarySearchTree<NodeType>::getInorderPredecessor(BinNodePtr<NodeType> p)
+{
+  while (p != NULL && p->rChild != NULL)
+    p = p->rChild;
+
+  return p;
+}
+
+// Method to Get Inorder Successor of Given Node
+template <class NodeType>
+BinNodePtr<NodeType> BinarySearchTree<NodeType>::getInorderSuccessor(BinNodePtr<NodeType> p)
+{
+  while (p != NULL && p->lChild != NULL)
+    p = p->lChild;
+
+  return p;
+}
+
+// Recursive Method to Remove Key from Binary Search Tree
+template <class NodeType>
+BinNodePtr<NodeType> BinarySearchTree<NodeType>::remove(BinNodePtr<NodeType> p, NodeType key)
+{
+  BinNodePtr<NodeType> q;
+
+  // Check if It's NULL
+  if (p == NULL)
+    return NULL;
+
+  if (p->lChild == NULL && p->rChild == NULL)
+  {
+    if (p == this->root)
+      this->root = NULL;
+
+    delete p;
+
+    return NULL;
+  }
+
+  // Check p's Left Child
+  if (key < p->data)
+    p->lChild = this->remove(p->lChild, key);
+
+  // Check p's Right Child
+  else if (key > p->data)
+    p->rChild = this->remove(p->rChild, key);
+
+  // Key is Equal to p's Data
+  else
+  {
+    // Move Inorder Predecessors Up
+    if (this->getHeight(p->lChild) > this->getHeight(p->rChild))
+    {
+      q = this->getInorderPredecessor(p->lChild);
+      p->data = q->data;
+      p->lChild = this->remove(p->lChild, q->data);
+    }
+
+    // Move Inorder Successors Up
+    else
+    {
+      q = this->getInorderSuccessor(p->rChild);
+      p->data = q->data;
+      p->rChild = this->remove(p->rChild, q->data);
+    }
+  }
+
+  return p;
 }
 
 #endif
