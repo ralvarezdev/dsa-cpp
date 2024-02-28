@@ -32,7 +32,7 @@ public:
   StackLinkedList(NodeType);
   StackLinkedList(NodeType, NodeType);
   StackLinkedList(NodeType[], int, NodeType);
-  StackLinkedList(SingleLinkedList<NodeType>, NodeType);
+  StackLinkedList(SingleLinkedList<NodeType> *, NodeType);
 
   // Destructor
   ~StackLinkedList()
@@ -97,20 +97,20 @@ StackLinkedList<NodeType>::StackLinkedList(NodeType data[], int length, NodeType
 
 // Add Head and Multiple Next Nodes through a Single Linked List
 template <class NodeType>
-StackLinkedList<NodeType>::StackLinkedList(SingleLinkedList<NodeType> list, NodeType error)
+StackLinkedList<NodeType>::StackLinkedList(SingleLinkedList<NodeType> *list, NodeType error)
 {
-  int length = list.getLength();
+  int length = list->getLength();
 
   // Default Error Value
   this->error = error;
 
   // Create First Node
-  this->head = new SingleNode<NodeType>(list.get(0));
+  this->head = new SingleNode<NodeType>(list->get(0));
 
   // Add Next Nodes
   for (int i = 1; i < length; i++)
     // Add Node
-    this->head = new SingleNode<NodeType>(list.get(i), this->head);
+    this->head = new SingleNode<NodeType>(list->get(i), this->head);
 
   // Increase Length
   this->increaseLength(length);

@@ -35,7 +35,7 @@ public:
   QueueLinkedList(NodeType);
   QueueLinkedList(NodeType, NodeType);
   QueueLinkedList(NodeType[], int, NodeType);
-  QueueLinkedList(SingleLinkedList<NodeType>, NodeType);
+  QueueLinkedList(SingleLinkedList<NodeType> *, NodeType);
 
   // Destructor
   virtual ~QueueLinkedList()
@@ -116,16 +116,16 @@ QueueLinkedList<NodeType>::QueueLinkedList(NodeType data[], int length, NodeType
 
 // Add Head and Multiple Next Nodes through a Single Linked List
 template <class NodeType>
-QueueLinkedList<NodeType>::QueueLinkedList(SingleLinkedList<NodeType> list, NodeType error)
+QueueLinkedList<NodeType>::QueueLinkedList(SingleLinkedList<NodeType> *list, NodeType error)
 {
   SingleNodePtr<NodeType> p;
-  int length = list.getLength();
+  int length = list->getLength();
 
   // Default Error Value
   this->error = error;
 
   // Create First Node
-  p = new SingleNode<NodeType>(list.get(0));
+  p = new SingleNode<NodeType>(list->get(0));
 
   // Set p Node as Head
   this->head = p;
@@ -133,7 +133,7 @@ QueueLinkedList<NodeType>::QueueLinkedList(SingleLinkedList<NodeType> list, Node
   // Add Next Nodes
   for (int i = 1; i < length; i++)
     // Add Node
-    p = new SingleNode<NodeType>(list.get(i), p);
+    p = new SingleNode<NodeType>(list->get(i), p);
 
   // Set p Node as Tail
   this->tail = p;

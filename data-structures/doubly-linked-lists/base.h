@@ -39,7 +39,7 @@ public:
   DoublyLinkedList(NodeType);
   DoublyLinkedList(NodeType, NodeType);
   DoublyLinkedList(NodeType[], int, NodeType);
-  DoublyLinkedList(SingleLinkedList<NodeType>, NodeType);
+  DoublyLinkedList(SingleLinkedList<NodeType> *, NodeType);
 
   // Destructor
   virtual ~DoublyLinkedList()
@@ -123,16 +123,16 @@ DoublyLinkedList<NodeType>::DoublyLinkedList(NodeType data[], int length, NodeTy
 
 // Add Head and Multiple Next Nodes through a Single Linked List
 template <class NodeType>
-DoublyLinkedList<NodeType>::DoublyLinkedList(SingleLinkedList<NodeType> list, NodeType error)
+DoublyLinkedList<NodeType>::DoublyLinkedList(SingleLinkedList<NodeType> *list, NodeType error)
 {
   DoublyNodePtr<NodeType> p;
-  int length = list.getLength();
+  int length = list->getLength();
 
   // Default Error Value
   this->error = error;
 
   // Create First Node
-  p = new DoublyNode<NodeType>(list.get(0));
+  p = new DoublyNode<NodeType>(list->get(0));
 
   // Set p Node as Head
   this->head = p;
@@ -140,7 +140,7 @@ DoublyLinkedList<NodeType>::DoublyLinkedList(SingleLinkedList<NodeType> list, No
   // Add Next Nodes
   for (int i = 1; i < length; i++)
     // Add Node
-    p = new DoublyNode<NodeType>(list.get(i), p);
+    p = new DoublyNode<NodeType>(list->get(i), p);
 
   // Set p Node as Tail
   this->tail = p;

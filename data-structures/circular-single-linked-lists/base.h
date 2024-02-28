@@ -35,7 +35,7 @@ public:
   CircularSingleLinkedList(NodeType);
   CircularSingleLinkedList(NodeType, NodeType);
   CircularSingleLinkedList(NodeType[], int, NodeType);
-  CircularSingleLinkedList(SingleLinkedList<NodeType>, NodeType);
+  CircularSingleLinkedList(SingleLinkedList<NodeType> *, NodeType);
 
   // Destructor
   virtual ~CircularSingleLinkedList()
@@ -130,16 +130,16 @@ CircularSingleLinkedList<NodeType>::CircularSingleLinkedList(NodeType data[], in
 
 // Add Head and Multiple Next Nodes through an Single Linked list
 template <class NodeType>
-CircularSingleLinkedList<NodeType>::CircularSingleLinkedList(SingleLinkedList<NodeType> list, NodeType error)
+CircularSingleLinkedList<NodeType>::CircularSingleLinkedList(SingleLinkedList<NodeType> *list, NodeType error)
 {
   SingleNodePtr<NodeType> p;
-  int length = list.getLength();
+  int length = list->getLength();
 
   // Default Error Value
   this->error = error;
 
   // Create First Node
-  p = new SingleNode<NodeType>(list.get(0));
+  p = new SingleNode<NodeType>(list->get(0));
 
   // Set p Node as Head
   this->head = p;
@@ -148,7 +148,7 @@ CircularSingleLinkedList<NodeType>::CircularSingleLinkedList(SingleLinkedList<No
   for (int i = 1; i < length; i++)
   {
     // Add Node
-    p->next = new SingleNode<NodeType>(list.get[i]);
+    p->next = new SingleNode<NodeType>(list->get[i]);
 
     // Move to Next Node
     p = p->next;
