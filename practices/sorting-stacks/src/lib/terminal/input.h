@@ -12,7 +12,6 @@ using namespace ascii;
 
 // --- Functions
 void pressEnterToCont(string message, bool warning = false);
-string getLower(string word);
 bool booleanQuestion(string message);
 int getInteger(string message, int low, int high);
 

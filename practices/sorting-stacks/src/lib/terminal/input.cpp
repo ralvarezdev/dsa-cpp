@@ -12,7 +12,6 @@ using std::string;
 
 // --- Function Prototypes
 void pressEnterToCont(string message, bool warning);
-string getLower(string word);
 bool booleanQuestion(string message);
 int getInteger(string message, int low, int high);
 
@@ -85,15 +84,4 @@ void pressEnterToCont(string message, bool warning = false)
 
   printTitle(message, warning);
   getline(cin, _);
-}
-
-// Function to Get a Lowercase String
-string getLower(string word)
-{
-  string wordToLower;
-
-  for (int i = 0; i < word.length(); i++)
-    wordToLower += tolower(word[i]); // Append Character in Lowercase
-
-  return wordToLower;
 }
