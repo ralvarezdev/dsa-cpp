@@ -18,6 +18,10 @@ public:
   SingleNode(NodeType, SingleNode *, SingleNode *);
 };
 
+// SingleNodePtr Definition
+template <class NodeType>
+using SingleNodePtr = SingleNode<NodeType> *;
+
 // Node Class Constructors
 template <class NodeType>
 SingleNode<NodeType>::SingleNode()

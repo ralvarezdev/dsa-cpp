@@ -5,10 +5,6 @@
 #ifndef SINGLE_LINKED_LISTS
 #define SINGLE_LINKED_LISTS
 
-// SingleNodePtr Definition
-template <class NodeType>
-using SingleNodePtr = SingleNode<NodeType> *;
-
 // SINGLE LINKED LIST CLASS
 
 template <class NodeType>

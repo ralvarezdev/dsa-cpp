@@ -12,6 +12,10 @@ protected:
   // Protected Methods
   BinNodePtr<NodeType> getInorderPredecessor(BinNodePtr<NodeType>);
   BinNodePtr<NodeType> getInorderSuccessor(BinNodePtr<NodeType>);
+
+public:
+  // Inherit Constructors
+  using BinaryTree<NodeType>::BinaryTree;
 };
 
 // Method to Get Inorder Predecessor of Given Node

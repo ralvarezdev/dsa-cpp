@@ -5,10 +5,6 @@
 #ifndef QUEUE_LINKED_LISTS
 #define QUEUE_LINKED_LISTS
 
-// SingleNodePtr Definition
-template <class NodeType>
-using SingleNodePtr = SingleNode<NodeType> *;
-
 // QUEUE LINKED LIST CLASS
 // FIFO
 // First-in, First-out

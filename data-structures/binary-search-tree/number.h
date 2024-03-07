@@ -13,14 +13,14 @@ protected:
   // Protected Methods
   bool search(BinNodePtr<NodeType>, NodeType);
   BinNodePtr<NodeType> remove(BinNodePtr<NodeType>, NodeType);
-  BinNodePtr<NodeType> getInorderPredecessor(BinNodePtr<NodeType>);
-  BinNodePtr<NodeType> getInorderSuccessor(BinNodePtr<NodeType>);
 
 public:
+  // Inherit Constructors
+  using BinarySearchTree<NodeType>::BinarySearchTree;
+
   // Constructors
   NumberBinarySearchTree(NodeType[], int, NodeType);
   NumberBinarySearchTree(QueueLinkedList<NodeType> *, NodeType);
-  // ~DoublyLinkedList();
 
   // Public Methods
   bool search(NodeType key) { return search(this->root, key); };
@@ -162,8 +162,15 @@ void NumberBinarySearchTree<NodeType>::insert(NodeType data)
   // Set p Node as NULL
   p = NULL;
 
+  // If Root Node is NULL, Assign Data to it
+  if (q == NULL)
+  {
+    this->root = new BinNode(data);
+    return;
+  }
+
   // Check q Node
-  while (q->NULL)
+  while (q != NULL)
   {
     p = q;
 

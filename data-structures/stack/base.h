@@ -5,10 +5,6 @@
 #ifndef STACK_LINKED_LISTS
 #define STACK_LINKED_LISTS
 
-// SingleNodePtr Definition
-template <class NodeType>
-using SingleNodePtr = SingleNode<NodeType> *;
-
 // STACK LINKED LIST CLASS
 // LIFO
 // Last-in, First-out

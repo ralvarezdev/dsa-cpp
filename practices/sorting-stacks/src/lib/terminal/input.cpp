@@ -47,7 +47,7 @@ bool booleanQuestion(string message)
   }
 }
 
-// Function to Ask for a Integer Input
+// Function to Ask for Integer Input
 int getInteger(string message, int low, int high)
 {
   string temp;

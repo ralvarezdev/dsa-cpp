@@ -9,10 +9,6 @@ using std::abs;
 #ifndef DOUBLY_LINKED_LISTS
 #define DOUBLY_LINKED_LISTS
 
-// DoublyNodePtr Definition
-template <class NodeType>
-using DoublyNodePtr = DoublyNode<NodeType> *;
-
 // DOUBLY LINKED LIST CLASS
 
 template <class NodeType>

@@ -19,6 +19,10 @@ public:
   DoublyNode(NodeType, DoublyNode *, DoublyNode *);
 };
 
+// DoublyNodePtr Definition
+template <class NodeType>
+using DoublyNodePtr = DoublyNode<NodeType> *;
+
 // Doubly Node Class Constructors
 template <class NodeType>
 DoublyNode<NodeType>::DoublyNode()
