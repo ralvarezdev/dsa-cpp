@@ -1,3 +1,9 @@
+#include <iostream>
+
+#include "../queue/base.h"
+
+using std::cout;
+
 #ifndef BIN_NODE
 #define BIN_NODE
 
@@ -31,9 +37,9 @@ public:
   void inorder() { this->inorder(this); };
   void postorder() { this->postorder(this); };
   void levelOrder() { this->levelOrder(this); };
-  int countNodes() { this->countNodes(this); };
-  int countTypeNodes(bool countLeafNodes) { this->countTypeNodes(this, countLeafNodes); };
-  int getHeight() { this->getHeight(this); };
+  int countNodes() { return this->countNodes(this); };
+  int countTypeNodes(bool countLeafNodes) { return this->countTypeNodes(this, countLeafNodes); };
+  int getHeight() { return this->getHeight(this); };
 };
 
 // BinNodePtr Definition
@@ -61,6 +67,7 @@ void BinNode<NodeType>::preorder(BinNodePtr<NodeType> p)
 
   if (iter == 0)
     cout << "\nPreorder\n";
+  iter++;
 
   if (p == NULL)
     return;
@@ -68,8 +75,6 @@ void BinNode<NodeType>::preorder(BinNodePtr<NodeType> p)
   cout << p->data << '\n';
   this->preorder(p->lChild);
   this->preorder(p->rChild);
-
-  iter++;
 }
 
 // Method to Print Nodes through Inorder Traversal
@@ -80,6 +85,7 @@ void BinNode<NodeType>::inorder(BinNodePtr<NodeType> p)
 
   if (iter == 0)
     cout << "\nInorder\n";
+  iter++;
 
   if (p == NULL)
     return;
@@ -87,8 +93,6 @@ void BinNode<NodeType>::inorder(BinNodePtr<NodeType> p)
   this->inorder(p->lChild);
   cout << p->data << '\n';
   this->inorder(p->rChild);
-
-  iter++;
 }
 
 // Method to Print Nodes thorugh Postorder Traversal
@@ -99,6 +103,7 @@ void BinNode<NodeType>::postorder(BinNodePtr<NodeType> p)
 
   if (iter == 0)
     cout << "\nPostorder\n";
+  iter++;
 
   if (p == NULL)
     return;
@@ -106,8 +111,6 @@ void BinNode<NodeType>::postorder(BinNodePtr<NodeType> p)
   this->postorder(p->lChild);
   this->postorder(p->rChild);
   cout << p->data << '\n';
-
-  iter++;
 }
 
 // Method to Print Nodes through Level Order Traversal

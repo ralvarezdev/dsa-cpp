@@ -4,8 +4,8 @@
 #include <iostream>
 #include <typeinfo>
 
-#include "base.h"
 #include "../queue/base.h"
+#include "../nodes/binNode.h"
 #include "../doubly-linked-lists/base.h"
 
 using std::cin;
@@ -31,10 +31,13 @@ using NodeInfoPtr = NodeInfo<NodeType> *;
 // NUMBER BINARY TREE CLASS
 
 template <class NodeType>
-class NumberBinaryTree : public BinaryTree<NodeType>
+class NumberBinaryTree
 {
 private:
-  int whitelist = {'l', 'r'};
+  BinNodePtr<NodeType> root = NULL;
+  NodeType error;
+
+  int whitelist[2] = {'l', 'r'};
   int length = 2;
 
   // Private Methods
@@ -42,14 +45,24 @@ private:
   NodeType getNodeType(string, bool);
 
   // Private Methods for Input Validation
-  int getInteger(string message, int low, int high);
   int getChar(string askMessage, int whitelist[], int length, string errMessage);
+  bool booleanQuestion(string);
+  void pressEnterToCont(string message);
 
 public:
   // Public Constructors
   NumberBinaryTree(NodeType);
+  NumberBinaryTree() : NumberBinaryTree<NodeType>(-1){};
 
   // Public Methods
+  void preorder() { this->root->preorder(); };
+  void inorder() { this->root->inorder(); };
+  void postorder() { this->root->postorder(); };
+  void levelOrder() { this->root->levelOrder(); };
+  int countNodes() { return this->root->countNodes(); };
+  int countTypeNodes(bool countLeafNodes) { return this->root->countTypeNodes(countLeafNodes); };
+  int getHeight() { return this->root->getHeight(); };
+
   void insert(NodeType data);
 };
 
@@ -80,7 +93,7 @@ NumberBinaryTree<NodeType>::NumberBinaryTree(NodeType error)
   data = getNodeType("Enter Root Node Data", false);
 
   // Create Root Node
-  this->root = new BinNodePtr<NodeType>(data);
+  this->root = new BinNode<NodeType>(data);
 
   // Push Root Node to Queue
   q->enqueue(this->root);
@@ -104,7 +117,7 @@ NumberBinaryTree<NodeType>::NumberBinaryTree(NodeType error)
     if (data != this->error)
     {
       // Create t Node
-      t = new BinNodePtr<NodeType>(data);
+      t = new BinNode<NodeType>(data);
 
       // Set t as Left Child of p
       p->lChild = t;
@@ -124,7 +137,7 @@ NumberBinaryTree<NodeType>::NumberBinaryTree(NodeType error)
     if (data != this->error)
     {
       // Create t Node
-      t = new BinNodePtr<NodeType>(data);
+      t = new BinNode<NodeType>(data);
 
       // Set t as Right Child of p
       p->rChild = t;
@@ -138,35 +151,44 @@ NumberBinaryTree<NodeType>::NumberBinaryTree(NodeType error)
   delete q;
 }
 
-// Method to Ask for Integer Input
+// Method to Ask a Boolean Question
 template <class NodeType>
-int NumberBinaryTree<NodeType>::getInteger(string message, int low, int high)
+bool NumberBinaryTree<NodeType>::booleanQuestion(string message)
 {
-  string temp;
-  int amount;
+  string input;
+  char c;
 
   while (true)
-    try // Get Integer
+  {
+    cout << "- " << message << " [y/N] ";
+    getline(cin, input);
+
+    c = tolower(input[0]);
+
+    if (c == 'y')
     {
-      cout << message << ": ";
-      getline(cin, temp);
-      amount = stoi(temp);
-
-      if (amount >= low && amount <= high)
-        return amount;
-      else
-        // Number Out of Range
-        throw(-1);
+      cout << '\n';
+      return true;
     }
-    catch (...)
+    else if (c == 'n')
     {
-      ostringstream stream;
-
-      stream << "The Number is Out of Range"
-             << " [" << low << '-' << high << "]";
-
-      this->pressEnterToCont(stream.str(), true);
+      cout << '\n';
+      return false;
     }
+
+    // Print Error Message
+    this->pressEnterToCont("ERROR: It's a Yes/No Question. You must type 'y', 'Y' or 'n', 'N'");
+  }
+}
+
+// Method to Stop the Program Flow while the User doesn't press the ENTER key
+template <class NodeType>
+void NumberBinaryTree<NodeType>::pressEnterToCont(string message)
+{
+  string _;
+
+  cout << message << '\n';
+  getline(cin, _);
 }
 
 // Method to Ask for Character Given a Whitelist
@@ -174,6 +196,7 @@ template <class NodeType>
 int NumberBinaryTree<NodeType>::getChar(string askMessage, int whitelist[], int length, string errMessage)
 {
   string input;
+  int c;
 
   // Ask for String Input
   while (true)
@@ -221,14 +244,14 @@ void NumberBinaryTree<NodeType>::insert(NodeType data)
 
   // Set Error Message
   errMessage << "NOTES:\n"
-             << "- Enter '" << l << "' or '" << toupper(l) << "' for Node's Left Child\n"
-             << "- Enter '" << r << "' or '" << toupper(r) << "' for Node's Right Child\n\n";
+             << "- Enter '" << char(l) << "' or '" << char(toupper(l)) << "' for Node's Left Child\n"
+             << "- Enter '" << char(r) << "' or '" << char(toupper(r)) << "' for Node's Right Child\n\n";
 
   // Create Node
-  newNode = new BinNodePtr<NodeType>(data);
+  newNode = new BinNode<NodeType>(data);
 
   // Chekc if Root is NULL
-  if (this->root != NULL)
+  if (this->root == NULL)
   {
     cout << "Inserting Node as Root\n";
     this->root = newNode;
@@ -241,7 +264,7 @@ void NumberBinaryTree<NodeType>::insert(NodeType data)
   p = this->root;
 
   // Push Back Node Data to List
-  info = new NodeInfoPtr<NodeType>{p->data, 'R'};
+  info = new NodeInfo<NodeType>{p->data, 'R'};
   list->push(info);
 
   while (true)
@@ -253,7 +276,7 @@ void NumberBinaryTree<NodeType>::insert(NodeType data)
     // Insert it as a New Child
     if (p == NULL)
     {
-      cout << "Inserting Leaf Node as a New Child [" << childPos << "]\n";
+      cout << "Inserting Leaf Node as a New Child [" << char(childPos) << "]\n";
 
       if (childPos == l)
         q->lChild = newNode;
@@ -264,14 +287,14 @@ void NumberBinaryTree<NodeType>::insert(NodeType data)
     }
 
     // Print Node Data
-    cout << "Level: " << level << '\n';
+    cout << "Level: " << iter << '\n';
 
     // Print Parents
     for (int i = 0; i < iter; i++)
     {
       // Get Parent Node Info
       t = list->get(i);
-      cout << "Parent " << i + 1 << '[' << t->desc << "]: " << t->data;
+      cout << "Parent " << i + 1 << '[' << char(t->desc) << "]: " << t->data << '\n';
     }
 
     // Asks to the User to Insert Node at p
@@ -294,7 +317,7 @@ void NumberBinaryTree<NodeType>::insert(NodeType data)
       cout << "INSERTING OLD NODE\n"
            << errMessage.str();
 
-      childPos = this->getChar("Where do you want to Insert Old Node", this->whitelist, errMessage.str());
+      childPos = this->getChar("Where do you want to Insert Old Node", this->whitelist, this->length, errMessage.str());
 
       if (childPos == l)
         newNode->lChild = p;
@@ -308,7 +331,7 @@ void NumberBinaryTree<NodeType>::insert(NodeType data)
     cout << "MOVING THROUGH TREE\n"
          << errMessage.str();
 
-    childPos = this->getChar("Which Child do you want to Move to", this->whitelist, errMessage.str());
+    childPos = this->getChar("Which Child do you want to Move to", this->whitelist, this->length, errMessage.str());
 
     // Move to Child
     q = p;
@@ -323,7 +346,7 @@ void NumberBinaryTree<NodeType>::insert(NodeType data)
   }
 
   // Deallocate Memory
-  delete l;
+  delete list;
 }
 
 // Method to Delete Node from Binary Tree, as the User Wants
@@ -339,7 +362,7 @@ NodeType NumberBinaryTree<NodeType>::getNodeType(string message, bool errorAllow
   {
     // Get Node Data
     cout << message << ": ";
-    cin >> input;
+    getline(cin, input);
 
     // Check input Data
     data = this->isNodeType(input);
