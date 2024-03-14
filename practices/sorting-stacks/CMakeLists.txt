@@ -20,6 +20,7 @@ add_library(stack SHARED
   ${CMAKE_CURRENT_SOURCE_DIR}/../../data-structures/stack/base.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/../../data-structures/stack/number.h
   ${CMAKE_CURRENT_SOURCE_DIR}/../../data-structures/stack/number.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/../../data-structures/nodes/singleNode.h
 )
 
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src/lib/terminal)
