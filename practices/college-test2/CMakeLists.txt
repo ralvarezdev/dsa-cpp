@@ -21,8 +21,11 @@ add_library(queue SHARED
   ${CMAKE_CURRENT_SOURCE_DIR}/../../data-structures/nodes/singleNode.h
 )
 
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src/lib/emergency)
+
 # Link Libraries
 target_link_libraries(${PROJECT_NAME}
   PRIVATE stack
   PRIVATE queue
+  PRIVATE emergency
 )

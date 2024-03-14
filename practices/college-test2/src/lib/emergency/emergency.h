@@ -9,6 +9,15 @@ using namespace std;
 #ifndef EMERGENCY_QUEUE
 #define EMERGENCY_QUEUE
 
+// Person Enum
+enum person
+{
+  girl,
+  boy,
+  woman,
+  man
+};
+
 class Emergency
 {
 public:
@@ -38,27 +47,39 @@ public:
   using QueueLinkedList<Emergency>::QueueLinkedList;
 
   // Public Methods
-  void push(Emergency); // Method that Overwrites the push Method Inherited by its Base Class
+  void insertionSort(Emergency); // Method that Overwrites the push Method Inherited by its Base Class
   void readFile();
+  void pushBack();
   void print();
 };
 
 // Method to Push Emergencies
-void EmergencyQueue::push(Emergency e)
+void EmergencyQueue::insertionSort(Emergency e)
 {
-  Emergency t;
-  int iter = 0;
+  int iter = 0, length = this->getLength();
+
+  // If it's Empty
+  if (this->isEmpty())
+  {
+    this->enqueue(e);
+    return;
+  }
 
   // First Emergency
   Emergency first = this->first();
 
   // Compare Emergency to Push with the First One
-  while (first.person <= e.person && first.type <= e.type)
+  while (first.type < e.type && iter < length)
   {
-    // Pop First Emergency and Push it Back
-    t = this->pop();
-    this->push(t);
+    this->pushBack();
+    first = this->first();
 
+    iter++;
+  }
+
+  while (first.type == e.type && first.person <= e.person && iter < length)
+  {
+    this->pushBack();
     first = this->first();
 
     iter++;
@@ -68,22 +89,25 @@ void EmergencyQueue::push(Emergency e)
   this->enqueue(e);
 
   // Get Queue Length
-  int length = this->getLength();
+  length = this->getLength();
 
   // Push Left Emergencies at the Original Order with the One that was Inserted
-  for (int i = 0; i < length - iter + 1; i++)
-  {
-    // Pop First Emergency and Push it Back
-    t = this->pop();
-    this->push(t);
-  }
+  for (int i = 0; i < length - iter - 1; i++)
+    this->pushBack();
+}
+
+// Method to Pop First Node and Pushed it Back
+void EmergencyQueue::pushBack()
+{
+  Emergency t = this->dequeue();
+  this->enqueue(t);
 }
 
 // Method to Insert Emergencies while Reading unknown.txt while
 void EmergencyQueue::readFile()
 {
   string line, word;
-  int type, person;
+  int type, person, c;
 
   ifstream emergencies("unknown.txt");
 
@@ -97,24 +121,33 @@ void EmergencyQueue::readFile()
   {
     stringstream file(line);
 
-    try
-    {
-      // Get Emergency Type
-      getline(file, word, ' ');
-      type = stoi(word);
+    // Get Emergency Type
+    getline(file, word, ' ');
+    type = word[0];
 
-      while (getline(file, word, ' '))
+    while (getline(file, word, ' '))
+    {
+      // Get Person
+      c = word[0];
+
+      switch (c)
       {
-        // Get Person
-        person = stoi(word);
-
-        // Pushed Emergency to Queue
-        this->push(Emergency(type, person));
+      case 'm':
+        person = person::boy;
+        break;
+      case 'f':
+        person = person::girl;
+        break;
+      case 'M':
+        person = person::man;
+        break;
+      case 'F':
+        person = person::woman;
+        break;
       }
-    }
-    catch (...)
-    {
-      // Ignore
+
+      // Pushed Emergency to Queue
+      this->insertionSort(Emergency(type, person));
     }
   }
 }
@@ -135,20 +168,20 @@ void EmergencyQueue::print()
     e = this->dequeue();
 
     // Add Emergency to output
-    output << '[' << e.type << "] ";
+    output << '[' << char(e.type) << "] ";
 
     switch (e.person)
     {
-    case 'f':
-      output << 'Girl';
+    case person::girl:
+      output << "Girl";
       break;
-    case 'm':
+    case person::boy:
       output << "Boy";
       break;
-    case 'F':
+    case person::woman:
       output << "Woman";
       break;
-    case 'M':
+    case person::man:
       output << "Man";
       break;
     }
