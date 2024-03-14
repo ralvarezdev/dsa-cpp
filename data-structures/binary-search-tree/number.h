@@ -1,10 +1,11 @@
 #include "base.h"
 #include "../stack/base.h"
+#include "../queue/base.h"
 
 #ifndef NUMBER_BIN_SEARCH_TREE
 #define NUMBER_BIN_SEARCH_TREE
 
-// BINARY SEARCH TREE CLASS
+// NUMBER BINARY SEARCH TREE CLASS
 
 template <class NodeType>
 class NumberBinarySearchTree : public BinarySearchTree<NodeType>
@@ -22,13 +23,17 @@ public:
   NumberBinarySearchTree(NodeType[], int, NodeType);
   NumberBinarySearchTree(QueueLinkedList<NodeType> *, NodeType);
 
+  NumberBinarySearchTree() : BinarySearchTree<NodeType>(-1){};
+
   // Public Methods
-  bool search(NodeType key) { return search(this->root, key); };
+  bool search(NodeType key) { return this->search(this->root, key); };
   void insert(NodeType);
-  void remove(NodeType key){remove(this->root, key)};
+  void insert(QueueLinkedList<NodeType> *);
+  void remove(NodeType key){this->remove(this->root, key)};
+  void remove(QueueLinkedList<NodeType> *);
 };
 
-// Binary Search Tree Constructors
+// Number Binary Search Tree Constructors
 
 // Add Nodes through its Preorder Array Representation
 template <class NodeType>
@@ -78,6 +83,9 @@ NumberBinarySearchTree<NodeType>::NumberBinarySearchTree(NodeType preArray[], in
     else
       p = stack->pop();
   }
+
+  // Deallocate Memory
+  delete stack;
 }
 
 // Add Nodes through its Preorder Queue Linked List Representation
@@ -131,6 +139,9 @@ NumberBinarySearchTree<NodeType>::NumberBinarySearchTree(QueueLinkedList<NodeTyp
     else
       p = stack->pop();
   }
+
+  // Deallocate Memory
+  delete stack;
 }
 
 // Method to Search Given Key in Binary Search Tree
@@ -197,6 +208,22 @@ void NumberBinarySearchTree<NodeType>::insert(NodeType data)
     q->rChild = p;
 }
 
+// Method to Insert Multiple Nodes from Queue
+template <class NodeType>
+void NumberBinarySearchTree<NodeType>::insert(QueueLinkedList<NodeType> *q)
+{
+  NodeType data;
+
+  while (!q->isEmpty())
+  {
+    // Get First Node's Data
+    data = q->dequeue();
+
+    // Insert Node's Data to Number Binary Search Tree
+    this->insert(data);
+  }
+}
+
 // Recursive Method to Remove Key from Binary Search Tree
 template <class NodeType>
 BinNodePtr<NodeType> NumberBinarySearchTree<NodeType>::remove(BinNodePtr<NodeType> p, NodeType key)
@@ -246,6 +273,22 @@ BinNodePtr<NodeType> NumberBinarySearchTree<NodeType>::remove(BinNodePtr<NodeTyp
   }
 
   return p;
+}
+
+// Method to Remove Multiple Nodes from Queue
+template <class NodeType>
+void NumberBinarySearchTree<NodeType>::remove(QueueLinkedList<NodeType> *q)
+{
+  NodeType data;
+
+  while (!q->isEmpty())
+  {
+    // Get First Node's Data
+    data = q->dequeue();
+
+    // Rmove Node's Data from Number Binary Search Tree
+    this->remove(data);
+  }
 }
 
 #endif

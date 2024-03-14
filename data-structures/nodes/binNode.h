@@ -22,6 +22,7 @@ protected:
   int countNodes(BinNode<NodeType> *);
   int countTypeNodes(BinNode<NodeType> *, bool);
   int getHeight(BinNode<NodeType> *);
+  QueueLinkedList<NodeType> *getLevelOrder(BinNode<NodeType> *);
 
 public:
   NodeType data;
@@ -40,6 +41,8 @@ public:
   int countNodes() { return this->countNodes(this); };
   int countTypeNodes(bool countLeafNodes) { return this->countTypeNodes(this, countLeafNodes); };
   int getHeight() { return this->getHeight(this); };
+
+  // void printTree();
 };
 
 // BinNodePtr Definition
@@ -64,17 +67,24 @@ template <class NodeType>
 void BinNode<NodeType>::preorder(BinNodePtr<NodeType> p)
 {
   static int iter = 0;
+  static int nNodes;
 
   if (iter == 0)
+  {
     cout << "\nPreorder\n";
-  iter++;
+    nNodes = p->countNodes();
+  }
 
   if (p == NULL)
     return;
+  iter++;
 
   cout << p->data << '\n';
   this->preorder(p->lChild);
   this->preorder(p->rChild);
+
+  if (iter == nNodes)
+    iter = 0;
 }
 
 // Method to Print Nodes through Inorder Traversal
@@ -82,17 +92,24 @@ template <class NodeType>
 void BinNode<NodeType>::inorder(BinNodePtr<NodeType> p)
 {
   static int iter = 0;
+  static int nNodes;
 
   if (iter == 0)
+  {
     cout << "\nInorder\n";
-  iter++;
+    nNodes = p->countNodes();
+  }
 
   if (p == NULL)
     return;
+  iter++;
 
   this->inorder(p->lChild);
   cout << p->data << '\n';
   this->inorder(p->rChild);
+
+  if (iter == nNodes)
+    iter = 0;
 }
 
 // Method to Print Nodes thorugh Postorder Traversal
@@ -100,24 +117,31 @@ template <class NodeType>
 void BinNode<NodeType>::postorder(BinNodePtr<NodeType> p)
 {
   static int iter = 0;
+  static int nNodes;
 
   if (iter == 0)
+  {
     cout << "\nPostorder\n";
-  iter++;
+    nNodes = p->countNodes();
+  }
 
   if (p == NULL)
     return;
+  iter++;
 
   this->postorder(p->lChild);
   this->postorder(p->rChild);
   cout << p->data << '\n';
+
+  if (iter == nNodes)
+    iter = 0;
 }
 
 // Method to Print Nodes through Level Order Traversal
 template <class NodeType>
 void BinNode<NodeType>::levelOrder(BinNodePtr<NodeType> p)
 {
-  QueueLinkedList<NodeType> q = QueueLinkedList<NodeType>(this->error);
+  QueueLinkedList<NodeType> *q = new QueueLinkedList<NodeType>(this->error);
 
   // Print Node Data
   cout << p->data << '\n';
@@ -128,7 +152,7 @@ void BinNode<NodeType>::levelOrder(BinNodePtr<NodeType> p)
   while (!q->isEmpty())
   {
     // Get First Node
-    p = q->enqueue();
+    p = q->dequeue();
 
     // Check p's Left Child
     if (p->lChild != NULL)
@@ -150,6 +174,9 @@ void BinNode<NodeType>::levelOrder(BinNodePtr<NodeType> p)
       q->enqueue(p->rChild);
     }
   }
+
+  // Deallocate Memory
+  delete q;
 }
 
 // Method to Count Nodes
@@ -210,5 +237,53 @@ int BinNode<NodeType>::getHeight(BinNodePtr<NodeType> p)
     return x + 1;
   return y + 1;
 }
+
+// Method to Get Nodes through Level Order Traversal
+template <class NodeType>
+QueueLinkedList<NodeType> *BinNode<NodeType>::getLevelOrder(BinNodePtr<NodeType> p)
+{
+  QueueLinkedList<NodeType> *q = new QueueLinkedList<NodeType>(this->error);
+  QueueLinkedList<NodeType> *t = new QueueLinkedList<NodeType>(this->error);
+
+  // Push Node to Queue
+  t->push(p);
+  q->push(p);
+
+  while (!t->isEmpty())
+  {
+    // Get First Node
+    p = t->dequeue();
+
+    // Check p's Left Child
+    if (p->lChild != NULL)
+    {
+      // Print Left Child Data
+      cout << p->lChild->data << '\n';
+
+      // Push p's Left Child
+      t->enqueue(p->lChild);
+      q->enqueue(p->lChild);
+    }
+
+    // Check p's Right Child
+    if (p->rChild != NULL)
+    {
+      // Print Right Child Data
+      cout << p->rChild->data << '\n';
+
+      // Push p's Right Child
+      t->enqueue(p->rChild);
+      q->enqueue(p->rChild);
+    }
+  }
+
+  // Deallocate Memory
+  delete t;
+
+  return q;
+}
+
+// Method to Print Nodes
+// void printTree();
 
 #endif
