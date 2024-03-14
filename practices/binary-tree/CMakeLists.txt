@@ -11,6 +11,21 @@ add_executable(${PROJECT_NAME} ./src/main.cpp)
 add_library(binary-tree SHARED
   ${CMAKE_CURRENT_SOURCE_DIR}/../../data-structures/binary-tree/number.h
   ${CMAKE_CURRENT_SOURCE_DIR}/../../data-structures/binary-tree/number.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/../../data-structures/queue/base.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../../data-structures/queue/base.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/../../data-structures/stack/base.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../../data-structures/stack/base.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/../../data-structures/single-linked-lists/base.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../../data-structures/single-linked-lists/base.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/../../data-structures/nodes/binNode.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../../data-structures/nodes/singleNode.h
+)
+
+add_library(binary-tree SHARED
+  ${CMAKE_CURRENT_SOURCE_DIR}/../../data-structures/binary-search-tree/base.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../../data-structures/binary-search-tree/base.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/../../data-structures/binary-search-tree/number.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../../data-structures/binary-search-tree/number.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/../../data-structures/doubly-linked-lists/base.h
   ${CMAKE_CURRENT_SOURCE_DIR}/../../data-structures/doubly-linked-lists/base.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/../../data-structures/doubly-linked-lists/number.h
@@ -27,5 +42,6 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src/lib/terminal)
 # Link Libraries
 target_link_libraries(${PROJECT_NAME}
   PRIVATE binary-tree
+  PRIVATE binary-search-tree
   PRIVATE terminal
 )
