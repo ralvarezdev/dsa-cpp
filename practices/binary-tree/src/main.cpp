@@ -17,8 +17,8 @@ using namespace terminal;
 
 // --- Function Prototypes
 void helpMessage();
-void clearQueue(QueueLinkedList<int> *, QueueLinkedList<int> *);
-void askNodesData(QueueLinkedList<int> *);
+void emptyQueue(QueueLinkedList<int> *);
+void getPreorderNodesData(QueueLinkedList<int> *);
 
 int main(int argc, char **argv)
 {
@@ -28,36 +28,26 @@ int main(int argc, char **argv)
   // Declare Binary Tree and Binary Search Tree
   NumberBinaryTree<int> *binTree = NULL;
   NumberBinarySearchTree<int> *binSearchTree = NULL;
-  QueueLinkedList<int> *q, *t = NULL;
+  QueueLinkedList<int> q(binaryTree::error);
 
   // - Program Status Variables
   bool exit, confirmation;
   string inputWord;
   int data, intCmd, timesExec = 0;
-  binaryTree::cmds cmd;
+  char cmd;
 
-  string binSearchNotInit = "Binary Search Tree hasn't been Initialized";
+  string binSearchNotInit = "\nBinary Search Tree hasn't been Initialized";
 
   while (!exit) // Main While Loop of the Program
   {
     // Check if Invoke Command Contains Program's Commands
     if (timesExec == 0 && argc > 1)
-    { // Checks if it's a Command
-      inputWord = argv[1];
-      try
-      {
-        // Try to Get Command
-        cmd = binaryTree::cmds(stoi(inputWord));
-      }
-      catch (...)
-      {
-        // Throw Error Message
-        pressEnterToCont("ERROR: Command not Found", true);
-        break;
-      }
-    }
+      cmd = argv[1][0];
     else
     {
+      // Clear Screen
+      cout << terminal::clear;
+
       // Print Help Message
       helpMessage();
 
@@ -65,8 +55,7 @@ int main(int argc, char **argv)
       cout << '\n';
 
       // Get Command
-      intCmd = getInteger("Enter Command", 1, binaryTree::cmdNull);
-      cmd = binaryTree::cmds(intCmd);
+      cmd = getChar("Enter Command: ");
     }
 
     // Increase Counter
@@ -74,10 +63,13 @@ int main(int argc, char **argv)
 
     switch (cmd)
     {
-    case binaryTree::binSearchInit:
+    case binaryTree::cmds::binSearchInit:
       // Clear Binary Search Tree
       if (binSearchTree != NULL)
         delete binSearchTree;
+
+      // Clear Screen
+      cout << terminal::clear;
 
       // Asks if the User wants to Add Some Nodes
       confirmation = booleanQuestion("Do you want to Insert Some Nodes?");
@@ -90,17 +82,14 @@ int main(int argc, char **argv)
       }
 
       // Ask for Nodes' Data
-      askNodesData(q);
+      getPreorderNodesData(&q);
 
       // Initialize Binary Search Tree
-      binSearchTree = new NumberBinarySearchTree<int>(q, binaryTree::error);
-
-      // Clear Queue
-      clearQueue(q, t);
+      binSearchTree = new NumberBinarySearchTree<int>(&q, binaryTree::error);
 
       break;
 
-    case binaryTree::binSearchInsert:
+    case binaryTree::cmds::binSearchInsert:
       // Check if Binary Search Tree has been Initialized
       if (binSearchTree == NULL)
       {
@@ -108,37 +97,37 @@ int main(int argc, char **argv)
         break;
       }
 
+      // Clear Screen
+      cout << terminal::clear;
+
       // Ask for Nodes' Data
-      askNodesData(q);
+      getPreorderNodesData(&q);
 
       // Insert Nodes
-      binSearchTree->insert(q);
-
-      // Clear Queue
-      clearQueue(q, t);
+      binSearchTree->insert(&q);
 
       break;
 
-    case binaryTree::binSearchRemove:
+    case binaryTree::cmds::binSearchRemove:
       // Check if Binary Search Tree has been Initialized
       if (binSearchTree == NULL)
       {
         pressEnterToCont(binSearchNotInit, true);
         break;
       }
+
+      // Clear Screen
+      cout << terminal::clear;
 
       // Ask for Nodes' Data
-      askNodesData(q);
+      getPreorderNodesData(&q);
 
       // Remove Nodes
-      binSearchTree->remove(q);
-
-      // Clear Queue
-      clearQueue(q, t);
+      binSearchTree->remove(&q);
 
       break;
 
-    case binaryTree::binSearchFind:
+    case binaryTree::cmds::binSearchFind:
       // Check if Binary Search Tree has been Initialized
       if (binSearchTree == NULL)
       {
@@ -146,8 +135,11 @@ int main(int argc, char **argv)
         break;
       }
 
+      // Clear Screen
+      cout << terminal::clear;
+
       // Ask for Node's Data
-      data = getInteger("Enter Node's Data", binaryTree::minData, binaryTree::maxData);
+      data = getInteger("Enter Node's Data", binaryTree::minData, binaryTree::maxData, binaryTree::error);
 
       // Check if Binary Search Tree Contains Node's Data
       if (binSearchTree->search(data))
@@ -159,13 +151,16 @@ int main(int argc, char **argv)
       pressEnterToCont("Data not Found in Binary Search Tree");
       break;
 
-    case binaryTree::binSearchPrint:
+    case binaryTree::cmds::binSearchPrint:
       // Check if Binary Search Tree has been Initialized
       if (binSearchTree == NULL)
       {
         pressEnterToCont(binSearchNotInit, true);
         break;
       }
+
+      // Clear Screen
+      cout << terminal::clear;
 
       // Print Preorder, Inorder and Postorder Traversals
       printTitle("Binary Search Tree Preorder");
@@ -179,17 +174,17 @@ int main(int argc, char **argv)
 
       pressEnterToCont("Press ENTER to Continue");
 
-    case binaryTree::help:
+    case binaryTree::cmds::help:
       break;
 
-    case binaryTree::exit:
+    case binaryTree::cmds::exit:
       // Confirmation Message
-      exit = booleanQuestion("Are you SURE to Exit");
+      exit = booleanQuestion("\nAre you SURE to Exit");
       break;
 
     default:
       // Command not Found
-      pressEnterToCont("ERROR: Command not Found", true);
+      pressEnterToCont("\nERROR: Command not Found", true);
       break;
     }
   }
@@ -206,50 +201,50 @@ void helpMessage()
   cout << clear;
   printTitle("WELCOME TO BINARY XTREE");
   cout << "Binary Tree Manipulation Commands\n"
-       << tab1 << addBrackets<int>(binaryTree::binInit) << " Initialize Tree\n"
-       << tab1 << addBrackets<int>(binaryTree::binInsert) << " Insert Node\n"
-       << tab1 << addBrackets<int>(binaryTree::binRemove) << " Remove Node\n"
-       << tab1 << addBrackets<int>(binaryTree::binPrint) << " Print Inorder, Preorder, Postorder\n"
+       << tab1 << addBrackets<int>(binaryTree::cmds::binInit) << " Initialize Tree\n"
+       << tab1 << addBrackets<int>(binaryTree::cmds::binInsert) << " Insert Node\n"
+       << tab1 << addBrackets<int>(binaryTree::cmds::binRemove) << " Remove Node\n"
+       << tab1 << addBrackets<int>(binaryTree::cmds::binPrint) << " Print Inorder, Preorder, Postorder\n"
        << "Binary Search Tree Manipulation Commands\n"
-       << tab1 << addBrackets<int>(binaryTree::binSearchInit) << " Initialize Tree\n"
-       << tab1 << addBrackets<int>(binaryTree::binSearchInsert) << " Insert Node\n"
-       << tab1 << addBrackets<int>(binaryTree::binSearchRemove) << " Remove Node\n"
-       << tab1 << addBrackets<int>(binaryTree::binSearchFind) << " Search Node\n"
-       << tab1 << addBrackets<int>(binaryTree::binSearchPrint) << " Print Inorder, Preorder, Postorder\n"
+       << tab1 << addBrackets<int>(binaryTree::cmds::binSearchInit) << " Initialize Tree\n"
+       << tab1 << addBrackets<int>(binaryTree::cmds::binSearchInsert) << " Insert Node\n"
+       << tab1 << addBrackets<int>(binaryTree::cmds::binSearchRemove) << " Remove Node\n"
+       << tab1 << addBrackets<int>(binaryTree::cmds::binSearchFind) << " Search Node\n"
+       << tab1 << addBrackets<int>(binaryTree::cmds::binSearchPrint) << " Print Inorder, Preorder, Postorder\n"
        << "Other Commands:\n"
-       << tab1 << addBrackets<int>(binaryTree::help) << " Help\n"
-       << tab1 << addBrackets<int>(binaryTree::exit) << " Exit\n";
+       << tab1 << addBrackets<int>(binaryTree::cmds::help) << " Help\n"
+       << tab1 << addBrackets<int>(binaryTree::cmds::exit) << " Exit\n";
 }
 
-// Function to Clear Queue
-void clearQueue(QueueLinkedList<int> *q, QueueLinkedList<int> *t)
+// Function to Empty Queue
+void emptyQueue(QueueLinkedList<int> *q)
 {
-  // Check q
-  if (q != NULL)
-  {
-    t = q;
-    q = NULL;
-    delete t;
-  }
+  // Empty Queue
+  while (!q->isEmpty())
+    q->dequeue();
 }
 
 // Function to Ask for Nodes' Data
-void askNodesData(QueueLinkedList<int> *q)
+void getPreorderNodesData(QueueLinkedList<int> *q)
 {
+  // Clear Queue
+  if (q != NULL)
+    emptyQueue(q);
+
   ostringstream msg;
   int data;
 
-  msg << "Enter Nodes' Data to Insert. Enter '"
+  msg << "Enter Nodes' Data to Insert in Preorder. Enter '"
       << binaryTree::error
       << "' to Stop Asking for Input";
 
   // Print Help Message
-  pressEnterToCont(msg.str());
+  printTitle(msg.str());
 
   while (true)
   {
     // Ask for Node's Data
-    data = getInteger("Enter Node's Data", binaryTree::minData, binaryTree::maxData);
+    data = getInteger("Enter Node's Data", binaryTree::minData, binaryTree::maxData, binaryTree::error);
 
     // Stop Asking for Input
     if (data == binaryTree::error)

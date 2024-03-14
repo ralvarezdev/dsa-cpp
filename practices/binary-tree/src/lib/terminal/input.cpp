@@ -14,7 +14,8 @@ using std::string;
 void pressEnterToCont(string message, bool warning);
 string getLower(string word);
 bool booleanQuestion(string message);
-int getInteger(string message, int low, int high);
+int getInteger(string message, int low, int high, int exception);
+int getChar(string message);
 
 // --- Functions
 
@@ -48,7 +49,7 @@ bool booleanQuestion(string message)
 }
 
 // Function to Ask for Integer Input
-int getInteger(string message, int low, int high)
+int getInteger(string message, int low, int high, int exception = -1)
 {
   string temp;
   int amount;
@@ -60,7 +61,7 @@ int getInteger(string message, int low, int high)
       getline(cin, temp);
       amount = stoi(temp);
 
-      if (amount >= low && amount <= high)
+      if ((amount >= low && amount <= high) || amount == exception)
         return amount;
       else
         // Number Out of Range
@@ -95,4 +96,15 @@ string getLower(string word)
     wordToLower += tolower(word[i]); // Append Character in Lowercase
 
   return wordToLower;
+}
+
+// Function to Get Character
+int getChar(string message)
+{
+  string input;
+
+  cout << "- " << message;
+  getline(cin, input);
+
+  return input[0];
 }

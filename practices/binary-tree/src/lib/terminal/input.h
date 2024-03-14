@@ -5,8 +5,6 @@
 
 using std::string;
 
-using namespace ascii;
-
 #ifndef INPUT_H
 #define INPUT_H
 
@@ -14,7 +12,8 @@ using namespace ascii;
 void pressEnterToCont(string message, bool warning = false);
 string getLower(string word);
 bool booleanQuestion(string message);
-int getInteger(string message, int low, int high);
+int getInteger(string message, int low, int high, int exception);
+int getChar(string message);
 
 // --- Templates
 
@@ -27,8 +26,8 @@ string addBrackets(T message)
   char cc = 4;
   int c = char(4);
 
-  if (typeid(T) == typeid(const int))          // Checks if it's an Integer
-    addedBrackets += message + ascii::intDiff; // Works fine if Message is an Integer
+  if (typeid(T) == typeid(const int)) // Checks if it's an Integer
+    addedBrackets += message;
   else
     addedBrackets = message; // Message is of type String
 

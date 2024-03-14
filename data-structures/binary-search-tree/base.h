@@ -16,8 +16,17 @@ protected:
   BinNodePtr<NodeType> getInorderPredecessor(BinNodePtr<NodeType>);
   BinNodePtr<NodeType> getInorderSuccessor(BinNodePtr<NodeType>);
 
+  void preorder(BinNodePtr<NodeType> p) { p->preorder(); };
+  void inorder(BinNodePtr<NodeType> p) { p->inorder(); };
+  void postorder(BinNodePtr<NodeType> p) { p->postorder(); };
+  void levelOrder(BinNodePtr<NodeType> p) { p->levelOrder(); };
+  int countNodes(BinNodePtr<NodeType> p) { return p->countNodes(); };
+  int countTypeNodes(BinNodePtr<NodeType> p, bool countLeafNodes) { return p->countTypeNodes(countLeafNodes); };
+  int getHeight(BinNodePtr<NodeType> p) { return p->getHeight(); };
+
 public:
   // Constructors
+  BinarySearchTree(){};
   BinarySearchTree(NodeType);
   BinarySearchTree(NodeType, NodeType);
 
@@ -51,7 +60,7 @@ BinarySearchTree<NodeType>::BinarySearchTree(NodeType data, NodeType error)
   this->error = error;
 
   // Create New Node and Assign It as Root Node
-  this->root = new BinNode(data)
+  this->root = new BinNode<NodeType>(data);
 }
 
 // Method to Get Inorder Predecessor of Given Node

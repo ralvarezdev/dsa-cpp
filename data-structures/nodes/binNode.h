@@ -189,8 +189,8 @@ int BinNode<NodeType>::countNodes(BinNodePtr<NodeType> p)
   if (p == NULL)
     return 0;
 
-  x = this->count(p->lChild);
-  y = this->count(p->rChild);
+  x = this->countNodes(p->lChild);
+  y = this->countNodes(p->rChild);
   return x + y + 1;
 }
 

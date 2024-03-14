@@ -29,7 +29,7 @@ public:
   bool search(NodeType key) { return this->search(this->root, key); };
   void insert(NodeType);
   void insert(QueueLinkedList<NodeType> *);
-  void remove(NodeType key){this->remove(this->root, key)};
+  void remove(NodeType key) { this->remove(this->root, key); };
   void remove(QueueLinkedList<NodeType> *);
 };
 
@@ -95,7 +95,7 @@ NumberBinarySearchTree<NodeType>::NumberBinarySearchTree(QueueLinkedList<NodeTyp
   BinNodePtr<NodeType> p, t;
 
   // Check Queue Length
-  if (preQueue->getLength() == 0)
+  if (!preQueue->isEmpty())
     return;
 
   // Initialize Stack Linked List
@@ -109,7 +109,7 @@ NumberBinarySearchTree<NodeType>::NumberBinarySearchTree(QueueLinkedList<NodeTyp
   p = this->root;
 
   // Insert Nodes
-  while (preQueue->getLength() != 0)
+  while (!preQueue->isEmpty())
   {
     // Insert New Node as p Left Child
     if (preQueue->first() < p->data)
@@ -176,7 +176,7 @@ void NumberBinarySearchTree<NodeType>::insert(NodeType data)
   // If Root Node is NULL, Assign Data to it
   if (q == NULL)
   {
-    this->root = new BinNode(data);
+    this->root = new BinNode<NodeType>(data);
     return;
   }
 
@@ -199,13 +199,13 @@ void NumberBinarySearchTree<NodeType>::insert(NodeType data)
   }
 
   // Create New Node
-  p = new BinNode<NodeType>(data);
+  q = new BinNode<NodeType>(data);
 
   // Assign p Node as Child to q Node
-  if (data < q->data)
-    q->lChild = p;
+  if (data < p->data)
+    p->lChild = q;
   else
-    q->rChild = p;
+    p->rChild = q;
 }
 
 // Method to Insert Multiple Nodes from Queue

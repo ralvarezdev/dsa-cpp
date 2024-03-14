@@ -5,11 +5,6 @@ using std::string;
 #ifndef NAMESPACES_H
 #define NAMESPACES_H
 
-namespace ascii
-{
-  const int intDiff = 48; // ASCII Code Difference between Chars and Integers
-}
-
 namespace files
 {
   const char sep = ','; // Separators
@@ -46,20 +41,19 @@ namespace binaryTree
 {
   // Enums Should be at the Beginning
   // - Binary Tree Commands
-  enum cmds
+  namespace cmds
   {
-    binInit = 1,
-    binInsert,
-    binRemove,
-    binPrint,
-    binSearchInit,
-    binSearchInsert,
-    binSearchRemove,
-    binSearchPrint,
-    binSearchFind,
-    help,
-    exit,
-    cmdNull
+    const int binInit = 'i';
+    const int binInsert = 'a';
+    const int binRemove = 'r';
+    const int binPrint = 'p';
+    const int binSearchInit = 'I';
+    const int binSearchInsert = 'A';
+    const int binSearchRemove = 'R';
+    const int binSearchFind = 'F';
+    const int binSearchPrint = 'P';
+    const int help = 'h';
+    const int exit = 'e';
   };
 
   // Range for Node's Data

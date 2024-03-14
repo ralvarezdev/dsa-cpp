@@ -3,12 +3,12 @@ cmake_minimum_required(VERSION 3.28)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 
-project(number LANGUAGES CXX)
+project(BinaryTree LANGUAGES CXX)
 
 add_executable(${PROJECT_NAME} ./src/main.cpp)
 
 
-add_library(binary-tree SHARED
+add_library(binary-search-tree SHARED
   ${CMAKE_CURRENT_SOURCE_DIR}/../../data-structures/binary-tree/number.h
   ${CMAKE_CURRENT_SOURCE_DIR}/../../data-structures/binary-tree/number.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/../../data-structures/queue/base.h
