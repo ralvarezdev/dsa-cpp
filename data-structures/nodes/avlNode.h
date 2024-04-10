@@ -16,7 +16,7 @@ public:
   using BinNode<NodeType>::BinNode();
 
   // Public Methods
-  int getNodeHeight();
+  int getNodeHeight(AVLNode<NodeType> *);
 };
 
 // AVLNodePtr Definition
@@ -25,7 +25,7 @@ using AVLNodePtr = AVLNode<NodeType> *;
 
 // Method to Get Node Height
 template <class NodeType>
-int AVLTree<NodeType>::getNodeHeight(AVLNodePtr<NodeType> p)
+int AVLNode<NodeType>::getNodeHeight(AVLNodePtr<NodeType> p)
 {
   int hl, hr;
 

@@ -38,7 +38,6 @@ public:
   int countNodes() { return this->root->countNodes(); };
   int countTypeNodes(bool countLeafNodes) { return this->root->countTypeNodes(countLeafNodes); };
   int getHeight() { return this->root->getHeight(); };
-
   NodeType getError() { return this->error; };
 };
 
