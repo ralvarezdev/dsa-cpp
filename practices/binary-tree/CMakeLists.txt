@@ -7,7 +7,6 @@ project(BinaryTree LANGUAGES CXX)
 
 add_executable(${PROJECT_NAME} ./src/main.cpp)
 
-
 add_library(binary-search-tree SHARED
   ${CMAKE_CURRENT_SOURCE_DIR}/../../data-structures/binary-tree/number.h
   ${CMAKE_CURRENT_SOURCE_DIR}/../../data-structures/binary-tree/number.cpp

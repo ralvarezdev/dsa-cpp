@@ -69,14 +69,14 @@ void BinNode<NodeType>::preorder(BinNodePtr<NodeType> p)
   static int iter = 0;
   static int nNodes;
 
+  if (p == NULL)
+    return;
+
   if (iter == 0)
   {
     cout << "\nPreorder\n";
     nNodes = p->countNodes();
   }
-
-  if (p == NULL)
-    return;
   iter++;
 
   cout << p->data << '\n';
@@ -94,14 +94,14 @@ void BinNode<NodeType>::inorder(BinNodePtr<NodeType> p)
   static int iter = 0;
   static int nNodes;
 
+  if (p == NULL)
+    return;
+
   if (iter == 0)
   {
     cout << "\nInorder\n";
     nNodes = p->countNodes();
   }
-
-  if (p == NULL)
-    return;
   iter++;
 
   this->inorder(p->lChild);
@@ -119,14 +119,14 @@ void BinNode<NodeType>::postorder(BinNodePtr<NodeType> p)
   static int iter = 0;
   static int nNodes;
 
+  if (p == NULL)
+    return;
+
   if (iter == 0)
   {
     cout << "\nPostorder\n";
     nNodes = p->countNodes();
   }
-
-  if (p == NULL)
-    return;
   iter++;
 
   this->postorder(p->lChild);

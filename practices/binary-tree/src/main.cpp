@@ -163,23 +163,19 @@ int main(int argc, char **argv)
       cout << terminal::clear;
 
       // Print Preorder, Inorder and Postorder Traversals
-      printTitle("Binary Search Tree Preorder");
+      printTitle("Binary Search Tree Traversals");
       binSearchTree->preorder();
-
-      printTitle("Binary Search Tree Inorder");
       binSearchTree->inorder();
-
-      printTitle("Binary Search Tree Postorder");
       binSearchTree->postorder();
 
-      pressEnterToCont("Press ENTER to Continue");
+      pressEnterToCont("\nPress ENTER to Continue");
 
     case binaryTree::cmds::help:
       break;
 
     case binaryTree::cmds::exit:
       // Confirmation Message
-      exit = booleanQuestion("\nAre you SURE to Exit");
+      exit = booleanQuestion("Are you SURE to Exit");
       break;
 
     default:
@@ -228,7 +224,7 @@ void emptyQueue(QueueLinkedList<int> *q)
 void getPreorderNodesData(QueueLinkedList<int> *q)
 {
   // Clear Queue
-  if (q != NULL)
+  if (!q->isEmpty())
     emptyQueue(q);
 
   ostringstream msg;

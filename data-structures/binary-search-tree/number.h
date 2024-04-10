@@ -2,6 +2,9 @@
 #include "../stack/base.h"
 #include "../queue/base.h"
 
+#include <iostream>
+using namespace std;
+
 #ifndef NUMBER_BIN_SEARCH_TREE
 #define NUMBER_BIN_SEARCH_TREE
 
@@ -95,7 +98,7 @@ NumberBinarySearchTree<NodeType>::NumberBinarySearchTree(QueueLinkedList<NodeTyp
   BinNodePtr<NodeType> p, t;
 
   // Check Queue Length
-  if (!preQueue->isEmpty())
+  if (preQueue->isEmpty())
     return;
 
   // Initialize Stack Linked List
@@ -117,15 +120,16 @@ NumberBinarySearchTree<NodeType>::NumberBinarySearchTree(QueueLinkedList<NodeTyp
       // Create New Node
       t = new BinNode<NodeType>(preQueue->pop());
 
-      // Set t as p's Left Child
-      p->lChild = t;
-
       // Push p Node to Stack
       stack->push(p);
+
+      // Set t as p's Left Child and Set It as p
+      p->lChild = t;
+      p = t;
     }
 
     // Insert New Node as p Right Child
-    else if (!stack->isEmpty() && preQueue->first() > p->data && preQueue->first() < stack->top()->data)
+    else if (preQueue->first() > p->data && (stack->isEmpty() || preQueue->first() < stack->top()->data))
     {
       // Create New Node
       t = new BinNode<NodeType>(preQueue->pop());
