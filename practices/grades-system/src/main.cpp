@@ -52,7 +52,8 @@ int main(int argc, char **argv)
   {
     // Check if Invoke Command Contains Program's Commands
     if (timesExec == 0 && argc > 1)
-    { // Checks if it's a Command
+    {
+      // Checks if it's a Command
       inputWord = argv[1];
       try
       {

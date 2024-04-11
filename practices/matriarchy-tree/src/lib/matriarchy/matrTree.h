@@ -99,9 +99,10 @@ void MatrTree::setInvalid()
 // Method to Read matriarchy.csv File
 void MatrTree::readFile()
 {
-  bool hasConsanguinity = false;
+  bool isMotherConsanguinity = false;
+  int nodePos, partnerNodeId;
   string name, partnerName, motherName;
-  MatrPerson partnerData, motherData, childData;
+  MatrPerson *rootPartnerData, *motherData, *childData;
   MatrNodePtr t, motherNode, grandMotherNode, childNode;
   matriarchy::genders gender;
 
@@ -136,7 +137,6 @@ void MatrTree::readFile()
       stringstream file(line);
 
       wordCounter = 0;
-      lineCounter++;
       while (getline(file, word, files::nodeSep))
       {
         if (word.length() == 0)
@@ -167,15 +167,15 @@ void MatrTree::readFile()
               // Get Stack's Top Node
               t = nodes->pop();
 
-              if (t->data.getName() == partnerName)
+              if (t->data->getName() == partnerName)
               {
-                hasConsanguinity = false;
+                isMotherConsanguinity = false;
                 break;
               }
 
-              else if (t->data.getName() == motherName)
+              else if (t->data->getName() == motherName)
               {
-                hasConsanguinity = true;
+                isMotherConsanguinity = true;
                 break;
               }
 
@@ -185,51 +185,86 @@ void MatrTree::readFile()
                 this->setInvalid();
             }
 
+            // If She has Consanguinity with the Grandmother, Add its Partner Relationship
+            if (isMotherConsanguinity)
+            {
+              motherNode = t;
+              MatrPerson *partnerData = motherNode->data;
+
+              // Set Partner's Data
+              MatrPerson *partnerDataPtr = new MatrPerson(partnerData->getNodeId(), partnerName, false, matriarchy::man, partnerData);
+              motherNode->data->setPartner(partnerDataPtr);
+            }
+
             // If She doesn't have Consanguinity with the Grandmother, Replace his Partner Node with her
-            if (!hasConsanguinity)
+            else
             {
               // Get Partner's Data and Partner's Mother Node
-              partnerData = t->data;
+              MatrPerson *partnerData = t->data;
+              partnerNodeId = t->data->getNodeId();
               grandMotherNode = t->mother;
+
+              // Get Node Position
+              if (grandMotherNode->lChild->data->getNodeId() == partnerNodeId)
+                nodePos = 0;
+
+              else if (grandMotherNode->mChild->data->getNodeId() == partnerNodeId)
+                nodePos = 1;
+
+              else if (grandMotherNode->rChild->data->getNodeId() == partnerNodeId)
+                nodePos = 2;
 
               // Remove the Partner Node Relationship with his Mother
               t->makeOrphan();
 
               // Create the Mother Object
-              motherData = MatrPerson(nodeCounter++, name, true, gender, &partnerData);
+              motherData = new MatrPerson(partnerData->getNodeId(), motherName, false, matriarchy::woman, partnerData);
 
               // Set the Relationship
-              partnerData.setPartner(&motherData);
+              partnerData->setPartner(motherData);
 
               // Create Mother Node
               motherNode = new MatrNode(motherData, grandMotherNode);
+
+              // Put the New Node Back to its Mother
+              if (nodePos == 0)
+                grandMotherNode->lChild = motherNode;
+
+              else if (nodePos == 1)
+                grandMotherNode->mChild = motherNode;
+
+              else if (nodePos == 2)
+                grandMotherNode->rChild = motherNode;
             }
           }
 
-          // Create the Next Generation Nodes
-          childData = MatrPerson(nodeCounter++, name, true, gender);
-
-          // Create Child Node
-          childNode = new MatrNode(childData, motherNode);
-
-          // Set the Mother-Child Relationship
-          if (wordCounter == 2)
-            motherNode->lChild = childNode;
-
-          else if (wordCounter == 3)
-            motherNode->mChild = childNode;
-
           else
-            motherNode->rChild = childNode;
+          {
+            // Create the Next Generation Nodes
+            childData = new MatrPerson(nodeCounter++, name, true, gender);
 
-          // Push to Stack
-          nodes->push(childNode);
+            // Create Child Node
+            childNode = new MatrNode(childData, motherNode);
+
+            // Set the Mother-Child Relationship
+            if (wordCounter == 2)
+              motherNode->lChild = childNode;
+
+            else if (wordCounter == 3)
+              motherNode->mChild = childNode;
+
+            else
+              motherNode->rChild = childNode;
+
+            // Push to Stack
+            nodes->push(childNode);
+          }
         }
 
         else if (lineCounter == 0 && wordCounter > 1)
         {
           // Create the First Generation Nodes Objects
-          childData = MatrPerson(nodeCounter++, name, true, gender);
+          childData = new MatrPerson(nodeCounter++, name, true, gender);
 
           // Create Child Node
           childNode = new MatrNode(childData, motherNode);
@@ -251,15 +286,15 @@ void MatrTree::readFile()
         else if (lineCounter == 0 && wordCounter < 2)
           if (wordCounter == 0)
             // Create the Root Partner Object
-            partnerData = MatrPerson(nodeCounter, name, false, gender);
+            rootPartnerData = new MatrPerson(nodeCounter, name, false, matriarchy::man);
 
           else
           {
             // Create the Root Mother Object
-            motherData = MatrPerson(nodeCounter++, name, true, gender, &partnerData);
+            motherData = new MatrPerson(nodeCounter++, name, true, matriarchy::woman, rootPartnerData);
 
             // Set the Relationship
-            partnerData.setPartner(&motherData);
+            rootPartnerData->setPartner(motherData);
 
             // Create the Root Mother Node
             motherNode = new MatrNode(motherData);
@@ -273,6 +308,7 @@ void MatrTree::readFile()
 
         wordCounter++;
       }
+      lineCounter++;
     }
     catch (...)
     {

@@ -71,7 +71,7 @@ int getInteger(string message, int low, int high, int exception = -1)
     {
       ostringstream stream;
 
-      stream << "The Number is Out of Range"
+      stream << "\nThe Number is Out of Range"
              << " [" << low << '-' << high << "]";
 
       pressEnterToCont(stream.str(), true);

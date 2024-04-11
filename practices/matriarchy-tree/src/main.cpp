@@ -13,6 +13,7 @@ using namespace std;
 using namespace terminal;
 
 // --- Function Prototypes
+void helpMessage();
 void changeCwdToData();
 
 int main(int argc, char **argv)
@@ -32,15 +33,15 @@ int main(int argc, char **argv)
   // Check if there was an Error while reading the 'matriarchy.csv' File
   if (!matrTree->isValid())
   {
-    pressEnterToCont("There was an Error while Reading the 'matriarchy.csv' File");
-    return;
+    pressEnterToCont("There was an Error while Reading the 'matriarchy.csv' File", true);
+    return -1;
   }
 
   // - Program Status Variables
   bool exit, confirmation;
   string inputWord;
-  int data, intCmd, timesExec = 0;
-  char cmd;
+  int intCmd, timesExec = 0;
+  matriarchy::cmds cmd;
 
   string pressEnterMsg = "Press ENTER to Continue";
 
@@ -48,7 +49,21 @@ int main(int argc, char **argv)
   {
     // Check if Invoke Command Contains Program's Commands
     if (timesExec == 0 && argc > 1)
-      cmd = argv[1][0];
+    {
+      // Checks if it's a Command
+      inputWord = argv[1];
+      try
+      {
+        // Try to Get Command
+        cmd = matriarchy::cmds(stoi(inputWord));
+      }
+      catch (...)
+      {
+        // Throw Error Message
+        pressEnterToCont("ERROR: Command not Found", true);
+        break;
+      }
+    }
     else
     {
       // Clear Screen
@@ -61,7 +76,8 @@ int main(int argc, char **argv)
       cout << '\n';
 
       // Get Command
-      cmd = getChar("Enter Command: ");
+      intCmd = getInteger("Enter Command", 1, matriarchy::cmdNull - 1);
+      cmd = matriarchy::cmds(intCmd);
     }
 
     // Increase Counter
@@ -124,7 +140,7 @@ int main(int argc, char **argv)
 void helpMessage()
 {
   cout << clear;
-  printTitle("WELCOME TO BINARY XTREE");
+  printTitle("WELCOME TO MATRIARCHY TREE");
   cout << "Matriarchy Tree Manipulation Commands\n"
        << tab1 << addBrackets<int>(matriarchy::cmds::parentsTraversal) << " Parents Traversal\n"
        << tab1 << addBrackets<int>(matriarchy::cmds::womenTraversal) << " Women Traversal\n"

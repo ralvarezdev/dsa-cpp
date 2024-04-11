@@ -12,7 +12,7 @@ using std::string;
 void pressEnterToCont(string message, bool warning = false);
 string getLower(string word);
 bool booleanQuestion(string message);
-int getInteger(string message, int low, int high, int exception);
+int getInteger(string message, int low, int high, int exception = -1);
 int getChar(string message);
 
 // --- Templates
@@ -23,11 +23,8 @@ string addBrackets(T message)
 {
   string addedBrackets;
 
-  char cc = 4;
-  int c = char(4);
-
   if (typeid(T) == typeid(const int)) // Checks if it's an Integer
-    addedBrackets += message;
+    addedBrackets += message + ascii::intDiff;
   else
     addedBrackets = message; // Message is of type String
 

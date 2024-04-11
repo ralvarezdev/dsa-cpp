@@ -5,6 +5,11 @@ using std::string;
 #ifndef NAMESPACES_H
 #define NAMESPACES_H
 
+namespace ascii
+{
+  const int intDiff = 48; // ASCII Code Difference between Chars and Integers
+}
+
 namespace files
 {
   // Separators
@@ -28,22 +33,24 @@ namespace terminal
   // --- Color Command Created Using ralvarezdev's Minigrep. URL: https://github.com/ralvarezdev/minigrep
 
   // - Normal State
-  const string sgrBg = "\x1b[48;2;153;204;255m"; // Command to Change Text Background Color
-  const string sgrFg = "\x1b[38;2;32;32;32m";    // Command to Change Text Foreground Color
+  const string sgrBg = "\x1b[48;2;201;42;42m";   // Command to Change Text Background Color
+  const string sgrFg = "\x1b[38;2;255;255;255m"; // Command to Change Text Foreground Color
 
   // - Warning (On Error)
-  const string sgrBgError = "\x1b[48;2;255;153;153m";
-  const string sgrFgError = "\x1b[38;2;32;32;32m";
+  const string sgrBgError = "\x1b[48;2;33;37;41m";
+  const string sgrFgError = "\x1b[38;2;255;255;255m";
 
   // - Number of Characters
-  const int nChar = 100; // Max Number of Characters being Printed on Each Line
   const int nLevel = 10;
-  const int nMotherId = 10;
+  const int nMotherId = 15;
   const int nNodeId = 10;
   const int nName = 20;
   const int nGender = 10;
   const int nStatus = 10;
   const int nConsanguinity = 15;
+
+  // Max Number of Characters being Printed on Each Line
+  const int nChar = nLevel + nMotherId + nNodeId + nName * 2 + nGender + nStatus + nConsanguinity;
 }
 
 namespace matriarchy
@@ -51,13 +58,14 @@ namespace matriarchy
   // - Commands
   enum cmds
   {
-    parentsTraversal,
+    parentsTraversal = 1,
     womenTraversal,
     menTraversal,
     singleTraversal,
     cousinsTraversal,
     help,
-    exit, cmdNull
+    exit,
+    cmdNull
   };
 
   // NOTE: Please, don't Judge me by the Genders. These are just Requirements that I received. I'm not Against the LGBTQ+ Community

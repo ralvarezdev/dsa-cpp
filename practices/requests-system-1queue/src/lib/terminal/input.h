@@ -24,9 +24,6 @@ string addBrackets(T message)
 {
   string addedBrackets;
 
-  char cc = 4;
-  int c = char(4);
-
   if (typeid(T) == typeid(const int))          // Checks if it's an Integer
     addedBrackets += message + ascii::intDiff; // Works fine if Message is an Integer
   else

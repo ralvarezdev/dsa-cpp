@@ -33,7 +33,7 @@ int main(int argc, char **argv)
   // - Program Status Variables
   bool exit, confirmation;
   string inputWord;
-  int data, intCmd, timesExec = 0;
+  int data, timesExec = 0;
   char cmd;
 
   string binSearchNotInit = "\nBinary Search Tree hasn't been Initialized";
