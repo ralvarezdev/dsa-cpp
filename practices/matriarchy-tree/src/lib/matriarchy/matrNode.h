@@ -6,7 +6,9 @@
 #include "../terminal/cols.h"
 #include "../namespaces.h"
 
+using std::cin;
 using std::cout;
+using std::getline;
 using std::ostringstream;
 using std::setfill;
 using std::setw;
@@ -30,6 +32,7 @@ private:
 
 public:
   // Constructors
+  MatrPerson();
   MatrPerson(int, string, bool, matrPerson::genders, MatrPerson *);
 
   // Public Methods
@@ -48,29 +51,35 @@ class MatrNode
 protected:
   // Protected Methods
   void MatrNode::addRootHeaderToStream(ostringstream *);
-  void MatrNode::addRootDataToStream(ostringstream *, int, MatrPerson *);
+  void MatrNode::addRootDataToStream(ostringstream *, int, MatrPerson);
   void MatrNode::addChildHeaderToStream(ostringstream *);
-  void MatrNode::addChildDataToStream(ostringstream *, int, int, MatrPerson *);
+  void MatrNode::addChildDataToStream(ostringstream *, int, int, MatrPerson);
 
   void levelOrder(MatrNodePtr, matrPerson::traversals);
   void levelOrderParents(int, QueueLinkedList<MatrNodePtr> *, ostringstream *);
   void levelOrderWomen(int, QueueLinkedList<MatrNodePtr> *, ostringstream *);
   void levelOrderMen(int, QueueLinkedList<MatrNodePtr> *, ostringstream *);
   void levelOrderSingle(int, QueueLinkedList<MatrNodePtr> *, ostringstream *);
+  void levelOrderCousins(int, string, QueueLinkedList<MatrNodePtr> *, ostringstream *);
 
 public:
-  MatrPerson *data;
+  MatrNode *mother;
+  MatrPerson data;
   MatrNode *lChild = NULL; // Left Child
   MatrNode *mChild = NULL; // Middle Child
   MatrNode *rChild = NULL; // Right Child
 
-  // Inherit Constructors
+  // Constructors
+  MatrNode();
+  MatrNode(MatrPerson);
+  MatrNode(MatrPerson, MatrNode *);
 
   // Public Methods
   void levelOrderParents() { this->levelOrder(this, matrPerson::parents); };
   void levelOrderWomen() { this->levelOrder(this, matrPerson::women); };
   void levelOrderMen() { this->levelOrder(this, matrPerson::men); };
   void levelOrderSingle() { this->levelOrder(this, matrPerson::single); };
+  void levelOrderCousins() { this->levelOrder(this, matrPerson::cousins); };
 };
 
 // MatrNodePtr Definition
@@ -79,6 +88,11 @@ using MatrNodePtr = MatrNode *;
 // MARTIARCHY PERSON CLASS
 
 // Matriarchy Person Class Constructor
+MatrPerson::MatrPerson()
+{
+  return;
+}
+
 MatrPerson::MatrPerson(int nodeId, string name, bool consanguinity, matrPerson::genders gender, MatrPerson *partner = NULL)
 {
   // Assign Data
@@ -123,6 +137,23 @@ MatrPerson *MatrPerson::getPartner()
 
 // MATRIARCHY NODE CLASS
 
+// Constructors
+MatrNode::MatrNode()
+{
+  return;
+}
+
+MatrNode::MatrNode(MatrPerson data)
+{
+  this->data = data;
+}
+
+MatrNode::MatrNode(MatrPerson data, MatrNode *mother)
+{
+  this->data = data;
+  this->mother = mother;
+}
+
 // Method to Add Root Node Header to a Given Stringstream
 void MatrNode::addRootHeaderToStream(ostringstream *msg)
 {
@@ -142,15 +173,15 @@ void MatrNode::addRootHeaderToStream(ostringstream *msg)
 }
 
 // Method to Add Root Node Data to a Given Stringstream
-void MatrNode::addRootDataToStream(ostringstream *msg, int level, MatrPerson *root)
+void MatrNode::addRootDataToStream(ostringstream *msg, int level, MatrPerson root)
 {
   // Get Root Node Partner
-  MatrPerson *partner = root->getPartner();
+  MatrPerson *partner = root.getPartner();
 
   // Add Root Node Data
   *msg << setw(terminal::nLevel) << setfill(' ') << level
-       << setw(terminal::nNodeId) << setfill(' ') << root->getNodeId()
-       << setw(terminal::nName) << setfill(' ') << root->getName();
+       << setw(terminal::nNodeId) << setfill(' ') << root.getNodeId()
+       << setw(terminal::nName) << setfill(' ') << root.getName();
 
   if (partner != NULL)
     *msg << setw(terminal::nName) << setfill(' ') << partner->getName();
@@ -181,14 +212,14 @@ void MatrNode::addChildHeaderToStream(ostringstream *msg)
 }
 
 // Method to Add Child Node Data to a Given Stringstream
-void MatrNode::addChildDataToStream(ostringstream *msg, int motherId, int level, MatrPerson *person)
+void MatrNode::addChildDataToStream(ostringstream *msg, int motherId, int level, MatrPerson person)
 {
   int status, consanguinity;
   string partnerName;
   matrPerson::genders gender;
 
   // Get Genders
-  gender = person->getGender();
+  gender = person.getGender();
 
   // Get Status
   if (gender == matrPerson::man)
@@ -200,18 +231,18 @@ void MatrNode::addChildDataToStream(ostringstream *msg, int motherId, int level,
 
   else
   {
-    MatrPerson *partner = person->getPartner();
+    MatrPerson *partner = person.getPartner();
     status = (partner != NULL) ? matrPerson::marriedAbbr : matrPerson::singleAbbr;
-    consanguinity = (person->getConsanguinity()) ? matrPerson::consanguinityAbbr : matrPerson::affinityAbbr;
+    consanguinity = (person.getConsanguinity()) ? matrPerson::consanguinityAbbr : matrPerson::affinityAbbr;
     partnerName = (partner != NULL) ? partner->getName() : "";
   }
 
   // Add Child Node Data
   *msg << setw(terminal::nLevel) << setfill(' ') << level
        << setw(terminal::nMotherId) << setfill(' ') << motherId
-       << setw(terminal::nNodeId) << setfill(' ') << person->getNodeId()
+       << setw(terminal::nNodeId) << setfill(' ') << person.getNodeId()
        << setw(terminal::nGender) << setfill(' ') << gender
-       << setw(terminal::nName) << setfill(' ') << person->getName()
+       << setw(terminal::nName) << setfill(' ') << person.getName()
        << setw(terminal::nStatus) << setfill(' ') << status
        << setw(terminal::nConsanguinity) << setfill(' ') << consanguinity
        << setw(terminal::nName) << setfill(' ') << partnerName << '\n';
@@ -221,6 +252,7 @@ void MatrNode::addChildDataToStream(ostringstream *msg, int motherId, int level,
 void MatrNode::levelOrder(MatrNodePtr n, matrPerson::traversals traversal)
 {
   int level;
+  string name;
   MatrPerson *child;
   ostringstream msg;
 
@@ -231,6 +263,7 @@ void MatrNode::levelOrder(MatrNodePtr n, matrPerson::traversals traversal)
   level = 0;
 
   // Add Root Header to Stream
+  msg << terminal::clear;
   this->addRootHeaderToStream(&msg);
 
   // Add Root Node Data to Stream
@@ -246,6 +279,26 @@ void MatrNode::levelOrder(MatrNodePtr n, matrPerson::traversals traversal)
   case matrPerson::parents:
     this->levelOrderParents(level, nodes, &msg);
     break;
+
+  case matrPerson::women:
+    this->levelOrderWomen(level, nodes, &msg);
+    break;
+
+  case matrPerson::men:
+    this->levelOrderMen(level, nodes, &msg);
+    break;
+
+  case matrPerson::single:
+    this->levelOrderSingle(level, nodes, &msg);
+    break;
+
+  case matrPerson::cousins:
+    // Get Node Name to be Searched
+    cout << "Name to Search: ";
+    getline(cin, name);
+
+    this->levelOrderCousins(level, name, nodes, &msg);
+    break;
   }
 
   // Print Level Order Traversal
@@ -260,7 +313,7 @@ void MatrNode::levelOrderParents(int level, QueueLinkedList<MatrNodePtr> *nodes,
 {
   int nextNodesLevel, currNodesLevel, nId;
   MatrNodePtr n, children[3];
-  MatrPerson *child;
+  MatrPerson child;
 
   nextNodesLevel = 1;
   level = currNodesLevel = 0;
@@ -277,7 +330,7 @@ void MatrNode::levelOrderParents(int level, QueueLinkedList<MatrNodePtr> *nodes,
 
     // Get First Node
     n = nodes->dequeue();
-    nId = n->data->getNodeId();
+    nId = n->data.getNodeId();
 
     // Get n's Children
     children[0] = n->lChild;
@@ -286,8 +339,12 @@ void MatrNode::levelOrderParents(int level, QueueLinkedList<MatrNodePtr> *nodes,
 
     for (int i = 0; i < 3; i++)
     {
+      // Check if the Child Exists
+      if (children[i] == NULL)
+        continue;
+
       // Get Child Data
-      child = children[1]->data;
+      child = children[i]->data;
 
       // Add Child Data to Stream
       this->addChildDataToStream(msg, nId, level, child);
@@ -309,7 +366,7 @@ void MatrNode::levelOrderWomen(int level, QueueLinkedList<MatrNodePtr> *nodes, o
 {
   int nextNodesLevel, currNodesLevel, nId;
   MatrNodePtr n, children[3];
-  MatrPerson *child;
+  MatrPerson child;
 
   nextNodesLevel = 1;
   level = currNodesLevel = 0;
@@ -326,7 +383,7 @@ void MatrNode::levelOrderWomen(int level, QueueLinkedList<MatrNodePtr> *nodes, o
 
     // Get First Node
     n = nodes->dequeue();
-    nId = n->data->getNodeId();
+    nId = n->data.getNodeId();
 
     // Get n's Children
     children[0] = n->lChild;
@@ -335,11 +392,15 @@ void MatrNode::levelOrderWomen(int level, QueueLinkedList<MatrNodePtr> *nodes, o
 
     for (int i = 0; i < 3; i++)
     {
+      // Check if the Child Exists
+      if (children[i] == NULL)
+        continue;
+
       // Get Child Data
       child = children[i]->data;
 
       // Check if It's a Woman
-      if (child->getGender() == matrPerson::woman)
+      if (child.getGender() == matrPerson::woman)
         // Add Child Data to Stream
         this->addChildDataToStream(msg, nId, level, child);
 
@@ -360,7 +421,7 @@ void MatrNode::levelOrderMen(int level, QueueLinkedList<MatrNodePtr> *nodes, ost
 {
   int nextNodesLevel, currNodesLevel, nId;
   MatrNodePtr n, children[3];
-  MatrPerson *child, *partner;
+  MatrPerson child, *partner;
 
   nextNodesLevel = 1;
   level = currNodesLevel = 0;
@@ -377,7 +438,7 @@ void MatrNode::levelOrderMen(int level, QueueLinkedList<MatrNodePtr> *nodes, ost
 
     // Get First Node
     n = nodes->dequeue();
-    nId = n->data->getNodeId();
+    nId = n->data.getNodeId();
 
     // Get n's Children
     children[0] = n->lChild;
@@ -386,19 +447,23 @@ void MatrNode::levelOrderMen(int level, QueueLinkedList<MatrNodePtr> *nodes, ost
 
     for (int i = 0; i < 3; i++)
     {
+      // Check if the Child Exists
+      if (children[i] == NULL)
+        continue;
+
       // Get Child Data
       child = children[i]->data;
-      partner = child->getPartner();
+      partner = child.getPartner();
 
       // Check if It's a Man
-      if (child->getGender() == matrPerson::man)
+      if (child.getGender() == matrPerson::man)
         // Add Child Data to Stream
         this->addChildDataToStream(msg, nId, level, child);
 
       // Check if It's a Woman and if She's Married
-      else if (child->getGender() == matrPerson::woman && partner != NULL)
+      else if (child.getGender() == matrPerson::woman && partner != NULL)
         // Add Woman's Partner Data to Stream
-        this->addChildDataToStream(msg, nId, level, partner);
+        this->addChildDataToStream(msg, nId, level, *partner);
 
       // Push n's Child
       nodes->enqueue(children[i]);
@@ -417,7 +482,7 @@ void MatrNode::levelOrderSingle(int level, QueueLinkedList<MatrNodePtr> *nodes, 
 {
   int nextNodesLevel, currNodesLevel, nId;
   MatrNodePtr n, children[3];
-  MatrPerson *child, *partner;
+  MatrPerson child, *partner;
 
   nextNodesLevel = 1;
   level = currNodesLevel = 0;
@@ -434,7 +499,7 @@ void MatrNode::levelOrderSingle(int level, QueueLinkedList<MatrNodePtr> *nodes, 
 
     // Get First Node
     n = nodes->dequeue();
-    nId = n->data->getNodeId();
+    nId = n->data.getNodeId();
 
     // Get n's Children
     children[0] = n->lChild;
@@ -443,19 +508,26 @@ void MatrNode::levelOrderSingle(int level, QueueLinkedList<MatrNodePtr> *nodes, 
 
     for (int i = 0; i < 3; i++)
     {
+      // Check if the Child Exists
+      if (children[i] == NULL)
+        continue;
+
       // Get Child Data
       child = children[i]->data;
 
       // Check if It's a Man
-      if (child->getGender() == matrPerson::man)
+      if (child.getGender() == matrPerson::man)
         // Add Child Data to Stream
         this->addChildDataToStream(msg, nId, level, child);
 
       // Check if It's a Woman and have no kids
-      else if (child->getGender() == matrPerson::woman)
+      else if (child.getGender() == matrPerson::woman)
         if (children[i]->lChild == NULL && children[i]->mChild == NULL && children[i]->rChild == NULL)
+        {
           // Add Woman's Partner Data to Stream
-          this->addChildDataToStream(msg, nId, level, partner);
+          partner = child.getPartner();
+          this->addChildDataToStream(msg, nId, level, *partner);
+        }
 
       // Push n's Child
       nodes->enqueue(children[i]);
@@ -466,6 +538,91 @@ void MatrNode::levelOrderSingle(int level, QueueLinkedList<MatrNodePtr> *nodes, 
 
     // Decrease the Number of Nodes on the Current Level
     currNodesLevel--;
+  }
+}
+
+// Method to Print the Cousins for a Given Node through Level Order Traversal
+void MatrNode::levelOrderCousins(int level, string name, QueueLinkedList<MatrNodePtr> *nodes, ostringstream *msg)
+{
+  bool found = false;
+  int nextNodesLevel, currNodesLevel, nId;
+  MatrNodePtr n, child, children[2], motherBrothers[2], cousins[6];
+
+  nextNodesLevel = 1;
+  level = currNodesLevel = 0;
+
+  while (!nodes->isEmpty())
+  {
+    // Get the Number of Nodes in the Current Tree Level. Increase the Level Counter
+    if (currNodesLevel == 0)
+    {
+      currNodesLevel = nextNodesLevel;
+      nextNodesLevel = 0;
+      level++;
+    }
+
+    // Get First Node
+    n = nodes->dequeue();
+    nId = n->data.getNodeId();
+
+    // Get n's Children
+    children[0] = n->lChild;
+    children[1] = n->mChild;
+    children[2] = n->rChild;
+
+    for (int i = 0; i < 3; i++)
+    {
+      // Check if the Child Exists
+      if (children[i] == NULL)
+        continue;
+
+      // Get Child
+      child = children[i];
+
+      // Check if It's the Node that's being Searched
+      found = child->data.getName() == name;
+      if (found)
+        break;
+
+      // Push n's Child
+      nodes->enqueue(child);
+
+      // Increase the Next Level Nodes Counter
+      nextNodesLevel++;
+    }
+
+    if (found)
+      break;
+
+    // Decrease the Number of Nodes on the Current Level
+    currNodesLevel--;
+  }
+
+  // Get Child's Mother
+  n = child->mother;
+  if (n == NULL)
+    return;
+
+  // Get Child's Grandmother
+  n = n->mother;
+
+  // Get Child's Aunts/Uncles
+  if (n != NULL)
+  {
+    motherBrothers[0] = (n->lChild != child->mother) ? n->lChild : n->rChild;
+    motherBrothers[1] = (n->mChild != child->mother) ? n->mChild : n->rChild;
+
+    // Get Child's Cousins
+    for (int i = 0; i < 2; i++)
+    {
+      cousins[i * 3] = motherBrothers[i]->lChild;
+      cousins[i * 3 + 1] = motherBrothers[i]->mChild;
+      cousins[i * 3 + 2] = motherBrothers[i]->rChild;
+    }
+
+    for (int i = 0; i < 6; i++)
+      // Add Child's Cousin Data to the Given Stream
+      this->addChildDataToStream(msg, nId, level, cousins[i]->data);
   }
 }
 

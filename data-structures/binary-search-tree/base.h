@@ -1,3 +1,4 @@
+#include "../queue/base.h"
 #include "../nodes/binNode.h"
 
 #ifndef BIN_SEARCH_TREE
@@ -29,6 +30,46 @@ public:
   BinarySearchTree(){};
   BinarySearchTree(NodeType);
   BinarySearchTree(NodeType, NodeType);
+
+  // Destructor
+  virtual ~BinarySearchTree()
+  {
+    BinNodePtr<NodeType> n, children[2];
+
+    // Initialize Queue that will Store All the Nodes whose Memory will be Deallocated
+    QueueLinkedList<BinNodePtr<NodeType>> *nodes = new QueueLinkedList<BinNodePtr<NodeType>>(NULL);
+
+    // Get Root Node
+    n = this->root;
+    this->root = NULL;
+    nodes->push(n);
+
+    while (!nodes->isEmpty())
+    {
+      // Get First Node
+      n = nodes->dequeue();
+
+      // Get n's Children
+      children[0] = n->lChild;
+      children[1] = n->rChild;
+
+      for (int i = 0; i < 2; i++)
+      {
+        // Check if the Child Exists
+        if (children[i] == NULL)
+          continue;
+
+        // Push n's Child
+        nodes->enqueue(children[i]);
+      }
+
+      // Deallocate Parent Node Data
+      delete n;
+    }
+
+    // Deallocate Memory
+    delete queue;
+  }
 
   // Public Methods
   void preorder() { this->root->preorder(); };

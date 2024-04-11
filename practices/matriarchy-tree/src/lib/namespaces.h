@@ -61,7 +61,8 @@ namespace matrPerson
     parents,
     women,
     men,
-    single
+    single,
+    cousins
   };
 
   // - Married Statuses Abbreviations
