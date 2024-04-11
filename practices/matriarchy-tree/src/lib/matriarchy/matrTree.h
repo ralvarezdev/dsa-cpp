@@ -77,7 +77,9 @@ public:
   void levelOrderWomen() { root->levelOrderWomen(); };
   void levelOrderMen() { root->levelOrderMen(); };
   void levelOrderSingle() { root->levelOrderSingle(); };
+  void levelOrderNoKids() { root->levelOrderNoKids(); };
   void levelOrderCousins() { root->levelOrderCousins(); };
+  void levelOrderDivorce() { root->levelOrderDivorce(); };
 };
 
 // Getters

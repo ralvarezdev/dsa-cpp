@@ -104,14 +104,26 @@ int main(int argc, char **argv)
       break;
 
     case matriarchy::cmds::singleTraversal:
-      // Print Single Nodes and Couples Level Order Traversal
+      // Print Single Nodes Level Order Traversal
       matrTree->levelOrderSingle();
+      pressEnterToCont(pressEnterMsg);
+      break;
+
+    case matriarchy::cmds::noKidsTraversal:
+      // Print Couples with No Kids Level Order Traversal
+      matrTree->levelOrderNoKids();
       pressEnterToCont(pressEnterMsg);
       break;
 
     case matriarchy::cmds::cousinsTraversal:
       // Print Cousins Level Order Traversal
       matrTree->levelOrderCousins();
+      pressEnterToCont(pressEnterMsg);
+      break;
+
+    case matriarchy::cmds::divorceTraversal:
+      // Divorce a Given Node
+      matrTree->levelOrderDivorce();
       pressEnterToCont(pressEnterMsg);
       break;
 
@@ -146,7 +158,9 @@ void helpMessage()
        << tab1 << addBrackets<int>(matriarchy::cmds::womenTraversal) << " Women Traversal\n"
        << tab1 << addBrackets<int>(matriarchy::cmds::menTraversal) << " Men Traversal\n"
        << tab1 << addBrackets<int>(matriarchy::cmds::singleTraversal) << " Single Traversal\n"
+       << tab1 << addBrackets<int>(matriarchy::cmds::noKidsTraversal) << " Couples with No Kids Traversal\n"
        << tab1 << addBrackets<int>(matriarchy::cmds::cousinsTraversal) << " Cousins Traversal\n"
+       << tab1 << addBrackets<int>(matriarchy::cmds::divorceTraversal) << " Divorce\n"
        << "Other Commands:\n"
        << tab1 << addBrackets<int>(matriarchy::cmds::help) << " Help\n"
        << tab1 << addBrackets<int>(matriarchy::cmds::exit) << " Exit\n";

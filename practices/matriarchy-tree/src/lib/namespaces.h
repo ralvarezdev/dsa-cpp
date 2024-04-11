@@ -62,7 +62,9 @@ namespace matriarchy
     womenTraversal,
     menTraversal,
     singleTraversal,
+    noKidsTraversal,
     cousinsTraversal,
+    divorceTraversal,
     help,
     exit,
     cmdNull
@@ -84,7 +86,9 @@ namespace matriarchy
     women,
     men,
     single,
-    cousins
+    noKids,
+    cousins,
+    divorce
   };
 
   // - Married Statuses Abbreviations
