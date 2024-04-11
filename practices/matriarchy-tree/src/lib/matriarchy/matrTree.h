@@ -22,11 +22,6 @@ protected:
 
   // Protected Methods
   void setInvalid();
-  void levelOrderParents() { root->levelOrderParents(); };
-  void levelOrderWomen() { root->levelOrderWomen(); };
-  void levelOrderMen() { root->levelOrderMen(); };
-  void levelOrderSingle() { root->levelOrderSingle(); };
-  void levelOrderCousins() { root->levelOrderCousins(); };
 
 public:
   // Constructors
@@ -78,6 +73,11 @@ public:
   // Public Methods
   bool isValid();
   void readFile();
+  void levelOrderParents() { root->levelOrderParents(); };
+  void levelOrderWomen() { root->levelOrderWomen(); };
+  void levelOrderMen() { root->levelOrderMen(); };
+  void levelOrderSingle() { root->levelOrderSingle(); };
+  void levelOrderCousins() { root->levelOrderCousins(); };
 };
 
 // Getters
@@ -117,7 +117,10 @@ void MatrTree::readFile()
   {
     matriarchyCSV.close();
     pressEnterToCont("Error: File Not Found. Press ENTER to go Back to Main Menu", true);
-    return; // End this Function
+
+    // Set the Tree as Invalid. There was an error with the 'matriarchy.csv' File
+    this->setInvalid();
+    return;
   }
 
   // Ignore Header
@@ -159,7 +162,7 @@ void MatrTree::readFile()
             motherName = name;
 
             // Check if the Mother has Consanguinity with the Grandmother
-            for (int i = 0; i < 3; i++)
+            while (!nodes->isEmpty())
             {
               // Get Stack's Top Node
               t = nodes->pop();
@@ -175,6 +178,11 @@ void MatrTree::readFile()
                 hasConsanguinity = true;
                 break;
               }
+
+              // Check if the Stack is Empty
+              if (nodes->isEmpty())
+                // Set the Tree as Invalid. There was an error with the 'matriarchy.csv' File
+                this->setInvalid();
             }
 
             // If She doesn't have Consanguinity with the Grandmother, Replace his Partner Node with her

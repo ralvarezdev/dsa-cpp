@@ -48,6 +48,18 @@ namespace terminal
 
 namespace matriarchy
 {
+  // - Commands
+  enum cmds
+  {
+    parentsTraversal,
+    womenTraversal,
+    menTraversal,
+    singleTraversal,
+    cousinsTraversal,
+    help,
+    exit, cmdNull
+  };
+
   // NOTE: Please, don't Judge me by the Genders. These are just Requirements that I received. I'm not Against the LGBTQ+ Community
   // - Genders
   enum genders
