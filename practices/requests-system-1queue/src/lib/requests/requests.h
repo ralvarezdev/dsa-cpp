@@ -329,7 +329,7 @@ void RequestQueueLinkedList::readFile()
     }
     catch (...)
     {
-      // It will Ignore the Line that was Read from movies.csv
+      // It will Ignore the Line that was Read from requests.csv
     }
 
   requestsCSV.close();

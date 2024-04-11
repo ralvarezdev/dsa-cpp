@@ -14,7 +14,7 @@ using std::setfill;
 using std::setw;
 
 using namespace terminal;
-using namespace matrPerson;
+using namespace matriarchy;
 
 #ifndef MATR_NODE
 #define MATR_NODE
@@ -27,20 +27,21 @@ private:
   int nodeId;
   string name;
   bool consanguinity;
-  matrPerson::genders gender = matrPerson::genders::genderNull;
+  matriarchy::genders gender = matriarchy::genders::genderNull;
   MatrPerson *partner = NULL;
 
 public:
   // Constructors
   MatrPerson();
-  MatrPerson(int, string, bool, matrPerson::genders, MatrPerson *);
+  MatrPerson(int, string, bool, matriarchy::genders, MatrPerson *);
 
   // Public Methods
   int getNodeId();
   string getName();
   bool getConsanguinity();
-  matrPerson::genders getGender();
+  matriarchy::genders getGender();
   MatrPerson *getPartner();
+  void setPartner(MatrPerson *);
 };
 
 // MATRIARCHY NODE CLASS
@@ -55,7 +56,7 @@ protected:
   void MatrNode::addChildHeaderToStream(ostringstream *);
   void MatrNode::addChildDataToStream(ostringstream *, int, int, MatrPerson);
 
-  void levelOrder(MatrNodePtr, matrPerson::traversals);
+  void levelOrder(MatrNodePtr, matriarchy::traversals);
   void levelOrderParents(int, QueueLinkedList<MatrNodePtr> *, ostringstream *);
   void levelOrderWomen(int, QueueLinkedList<MatrNodePtr> *, ostringstream *);
   void levelOrderMen(int, QueueLinkedList<MatrNodePtr> *, ostringstream *);
@@ -75,11 +76,12 @@ public:
   MatrNode(MatrPerson, MatrNode *);
 
   // Public Methods
-  void levelOrderParents() { this->levelOrder(this, matrPerson::parents); };
-  void levelOrderWomen() { this->levelOrder(this, matrPerson::women); };
-  void levelOrderMen() { this->levelOrder(this, matrPerson::men); };
-  void levelOrderSingle() { this->levelOrder(this, matrPerson::single); };
-  void levelOrderCousins() { this->levelOrder(this, matrPerson::cousins); };
+  void makeOrphan();
+  void levelOrderParents() { this->levelOrder(this, matriarchy::parents); };
+  void levelOrderWomen() { this->levelOrder(this, matriarchy::women); };
+  void levelOrderMen() { this->levelOrder(this, matriarchy::men); };
+  void levelOrderSingle() { this->levelOrder(this, matriarchy::single); };
+  void levelOrderCousins() { this->levelOrder(this, matriarchy::cousins); };
 };
 
 // MatrNodePtr Definition
@@ -93,7 +95,7 @@ MatrPerson::MatrPerson()
   return;
 }
 
-MatrPerson::MatrPerson(int nodeId, string name, bool consanguinity, matrPerson::genders gender, MatrPerson *partner = NULL)
+MatrPerson::MatrPerson(int nodeId, string name, bool consanguinity, matriarchy::genders gender, MatrPerson *partner = NULL)
 {
   // Assign Data
   this->nodeId = nodeId;
@@ -124,7 +126,7 @@ bool MatrPerson::getConsanguinity()
 }
 
 // Method to Get Gender
-matrPerson::genders MatrPerson::getGender()
+matriarchy::genders MatrPerson::getGender()
 {
   return this->gender;
 }
@@ -133,6 +135,14 @@ matrPerson::genders MatrPerson::getGender()
 MatrPerson *MatrPerson::getPartner()
 {
   return this->partner;
+}
+
+// Setters
+
+// Method to Set the Node's Partner
+void MatrPerson::setPartner(MatrPerson *partner)
+{
+  this->partner = partner;
 }
 
 // MATRIARCHY NODE CLASS
@@ -216,24 +226,24 @@ void MatrNode::addChildDataToStream(ostringstream *msg, int motherId, int level,
 {
   int status, consanguinity;
   string partnerName;
-  matrPerson::genders gender;
+  matriarchy::genders gender;
 
   // Get Genders
   gender = person.getGender();
 
   // Get Status
-  if (gender == matrPerson::man)
+  if (gender == matriarchy::man)
   {
-    status = matrPerson::single;
-    consanguinity = matrPerson::consanguinityAbbr;
+    status = matriarchy::single;
+    consanguinity = matriarchy::consanguinityAbbr;
     partnerName = "";
   }
 
   else
   {
     MatrPerson *partner = person.getPartner();
-    status = (partner != NULL) ? matrPerson::marriedAbbr : matrPerson::singleAbbr;
-    consanguinity = (person.getConsanguinity()) ? matrPerson::consanguinityAbbr : matrPerson::affinityAbbr;
+    status = (partner != NULL) ? matriarchy::marriedAbbr : matriarchy::singleAbbr;
+    consanguinity = (person.getConsanguinity()) ? matriarchy::consanguinityAbbr : matriarchy::affinityAbbr;
     partnerName = (partner != NULL) ? partner->getName() : "";
   }
 
@@ -248,8 +258,27 @@ void MatrNode::addChildDataToStream(ostringstream *msg, int motherId, int level,
        << setw(terminal::nName) << setfill(' ') << partnerName << '\n';
 }
 
+// Method to Make the Node Orphan
+void MatrNode::makeOrphan()
+{
+  MatrNodePtr children[3];
+
+  // Get Node's Mother
+  MatrNodePtr mother = this->mother;
+
+  // Remove the Mother-Child Realtionship
+  if (mother->lChild->data.getName() == this->data.getName())
+    mother->lChild = NULL;
+
+  else if (mother->mChild->data.getName() == this->data.getName())
+    mother->mChild = NULL;
+
+  else if (mother->rChild->data.getName() == this->data.getName())
+    mother->rChild = NULL;
+}
+
 // Method to Print the Nodes through Different Types of Level Order Traversal
-void MatrNode::levelOrder(MatrNodePtr n, matrPerson::traversals traversal)
+void MatrNode::levelOrder(MatrNodePtr n, matriarchy::traversals traversal)
 {
   int level;
   string name;
@@ -276,23 +305,23 @@ void MatrNode::levelOrder(MatrNodePtr n, matrPerson::traversals traversal)
   // Traverse the Matriarchy Tree
   switch (traversal)
   {
-  case matrPerson::parents:
+  case matriarchy::parents:
     this->levelOrderParents(level, nodes, &msg);
     break;
 
-  case matrPerson::women:
+  case matriarchy::women:
     this->levelOrderWomen(level, nodes, &msg);
     break;
 
-  case matrPerson::men:
+  case matriarchy::men:
     this->levelOrderMen(level, nodes, &msg);
     break;
 
-  case matrPerson::single:
+  case matriarchy::single:
     this->levelOrderSingle(level, nodes, &msg);
     break;
 
-  case matrPerson::cousins:
+  case matriarchy::cousins:
     // Get Node Name to be Searched
     cout << "Name to Search: ";
     getline(cin, name);
@@ -400,7 +429,7 @@ void MatrNode::levelOrderWomen(int level, QueueLinkedList<MatrNodePtr> *nodes, o
       child = children[i]->data;
 
       // Check if It's a Woman
-      if (child.getGender() == matrPerson::woman)
+      if (child.getGender() == matriarchy::woman)
         // Add Child Data to Stream
         this->addChildDataToStream(msg, nId, level, child);
 
@@ -456,12 +485,12 @@ void MatrNode::levelOrderMen(int level, QueueLinkedList<MatrNodePtr> *nodes, ost
       partner = child.getPartner();
 
       // Check if It's a Man
-      if (child.getGender() == matrPerson::man)
+      if (child.getGender() == matriarchy::man)
         // Add Child Data to Stream
         this->addChildDataToStream(msg, nId, level, child);
 
       // Check if It's a Woman and if She's Married
-      else if (child.getGender() == matrPerson::woman && partner != NULL)
+      else if (child.getGender() == matriarchy::woman && partner != NULL)
         // Add Woman's Partner Data to Stream
         this->addChildDataToStream(msg, nId, level, *partner);
 
@@ -516,12 +545,12 @@ void MatrNode::levelOrderSingle(int level, QueueLinkedList<MatrNodePtr> *nodes, 
       child = children[i]->data;
 
       // Check if It's a Man
-      if (child.getGender() == matrPerson::man)
+      if (child.getGender() == matriarchy::man)
         // Add Child Data to Stream
         this->addChildDataToStream(msg, nId, level, child);
 
       // Check if It's a Woman and have no kids
-      else if (child.getGender() == matrPerson::woman)
+      else if (child.getGender() == matriarchy::woman)
         if (children[i]->lChild == NULL && children[i]->mChild == NULL && children[i]->rChild == NULL)
         {
           // Add Woman's Partner Data to Stream

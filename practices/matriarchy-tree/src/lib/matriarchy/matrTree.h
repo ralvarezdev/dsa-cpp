@@ -1,5 +1,13 @@
-#include "../../../../../data-structures/queue/base.h"
+#include <sstream>
+#include <fstream>
+
+#include "../../../../../data-structures/stack/base.h"
 #include "matrNode.h"
+#include "../terminal/input.h"
+
+using std::getline;
+using std::ifstream;
+using std::stringstream;
 
 #ifndef MATR_TREE
 #define MATR_TREE
@@ -10,6 +18,15 @@ class MatrTree
 {
 protected:
   MatrNodePtr root = NULL;
+  bool valid = true;
+
+  // Protected Methods
+  void setInvalid();
+  void levelOrderParents() { root->levelOrderParents(); };
+  void levelOrderWomen() { root->levelOrderWomen(); };
+  void levelOrderMen() { root->levelOrderMen(); };
+  void levelOrderSingle() { root->levelOrderSingle(); };
+  void levelOrderCousins() { root->levelOrderCousins(); };
 
 public:
   // Constructors
@@ -59,7 +76,202 @@ public:
   }
 
   // Public Methods
-  // void readFile()
+  bool isValid();
+  void readFile();
 };
+
+// Getters
+
+// Method to Check if the Tree is Valid or not
+bool MatrTree::isValid()
+{
+  return this->valid;
+}
+
+// Setters
+
+// Method to Set the Tree as Invalid
+void MatrTree::setInvalid()
+{
+  this->valid = false;
+}
+
+// Method to Read matriarchy.csv File
+void MatrTree::readFile()
+{
+  bool hasConsanguinity = false;
+  string name, partnerName, motherName;
+  MatrPerson partnerData, motherData, childData;
+  MatrNodePtr t, motherNode, grandMotherNode, childNode;
+  matriarchy::genders gender;
+
+  string line, word, genderStr;
+  int nodeCounter, wordCounter, lineCounter, genderSepIndex;
+
+  // Stack that Contains the Nodes to Insert
+  StackLinkedList<MatrNodePtr> *nodes = new StackLinkedList<MatrNodePtr>(NULL);
+
+  ifstream matriarchyCSV(matriarchy::matriarchyFilename);
+
+  if (!matriarchyCSV.is_open()) // Couldn't Access to matriarchyCSV
+  {
+    matriarchyCSV.close();
+    pressEnterToCont("Error: File Not Found. Press ENTER to go Back to Main Menu", true);
+    return; // End this Function
+  }
+
+  // Ignore Header
+  getline(matriarchyCSV, line);
+
+  lineCounter = 0;
+  while (getline(matriarchyCSV, line)) // Get Nodes
+    try
+    {
+      if (line.length() == 0)
+        continue;
+
+      stringstream file(line);
+
+      wordCounter = 0;
+      lineCounter++;
+      while (getline(file, word, files::nodeSep))
+      {
+        if (word.length() == 0)
+          continue;
+
+        // Get Name
+        genderSepIndex = word.find(files::genderSep);
+        name = word.substr(0, genderSepIndex);
+
+        // Get Gender
+        genderStr = word.substr(genderSepIndex + 1, 1);
+        gender = (genderStr == "W") ? matriarchy::woman : matriarchy::man;
+
+        if (lineCounter > 0)
+        {
+          if (wordCounter == 0)
+            // Get the Mother's Partner Name
+            partnerName = name;
+
+          else if (wordCounter == 1)
+          {
+            // Get the Mother Name
+            motherName = name;
+
+            // Check if the Mother has Consanguinity with the Grandmother
+            for (int i = 0; i < 3; i++)
+            {
+              // Get Stack's Top Node
+              t = nodes->pop();
+
+              if (t->data.getName() == partnerName)
+              {
+                hasConsanguinity = false;
+                break;
+              }
+
+              else if (t->data.getName() == motherName)
+              {
+                hasConsanguinity = true;
+                break;
+              }
+            }
+
+            // If She doesn't have Consanguinity with the Grandmother, Replace his Partner Node with her
+            if (!hasConsanguinity)
+            {
+              // Get Partner's Data and Partner's Mother Node
+              partnerData = t->data;
+              grandMotherNode = t->mother;
+
+              // Remove the Partner Node Relationship with his Mother
+              t->makeOrphan();
+
+              // Create the Mother Object
+              motherData = MatrPerson(nodeCounter++, name, true, gender, &partnerData);
+
+              // Set the Relationship
+              partnerData.setPartner(&motherData);
+
+              // Create Mother Node
+              motherNode = new MatrNode(motherData, grandMotherNode);
+            }
+          }
+
+          // Create the Next Generation Nodes
+          childData = MatrPerson(nodeCounter++, name, true, gender);
+
+          // Create Child Node
+          childNode = new MatrNode(childData, motherNode);
+
+          // Set the Mother-Child Relationship
+          if (wordCounter == 2)
+            motherNode->lChild = childNode;
+
+          else if (wordCounter == 3)
+            motherNode->mChild = childNode;
+
+          else
+            motherNode->rChild = childNode;
+
+          // Push to Stack
+          nodes->push(childNode);
+        }
+
+        else if (lineCounter == 0 && wordCounter > 1)
+        {
+          // Create the First Generation Nodes Objects
+          childData = MatrPerson(nodeCounter++, name, true, gender);
+
+          // Create Child Node
+          childNode = new MatrNode(childData, motherNode);
+
+          // Set the Mother-Child Relationship
+          if (wordCounter == 2)
+            motherNode->lChild = childNode;
+
+          else if (wordCounter == 3)
+            motherNode->mChild = childNode;
+
+          else
+            motherNode->rChild = childNode;
+
+          // Push to Stack
+          nodes->push(childNode);
+        }
+
+        else if (lineCounter == 0 && wordCounter < 2)
+          if (wordCounter == 0)
+            // Create the Root Partner Object
+            partnerData = MatrPerson(nodeCounter, name, false, gender);
+
+          else
+          {
+            // Create the Root Mother Object
+            motherData = MatrPerson(nodeCounter++, name, true, gender, &partnerData);
+
+            // Set the Relationship
+            partnerData.setPartner(&motherData);
+
+            // Create the Root Mother Node
+            motherNode = new MatrNode(motherData);
+
+            // Set the Root Mother Node
+            this->root = motherNode;
+
+            // Push to Stack
+            nodes->push(motherNode);
+          }
+
+        wordCounter++;
+      }
+    }
+    catch (...)
+    {
+      // It will Ignore the Line that was Read from matriarchy.csv
+    }
+
+  matriarchyCSV.close();
+}
 
 #endif

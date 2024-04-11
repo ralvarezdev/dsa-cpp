@@ -7,7 +7,9 @@ using std::string;
 
 namespace files
 {
-  const char sep = ','; // Separators
+  // Separators
+  const char nodeSep = ' ';
+  const char genderSep = ':';
   const int newLine = '\n';
 }
 
@@ -44,7 +46,7 @@ namespace terminal
   const int nConsanguinity = 15;
 }
 
-namespace matrPerson
+namespace matriarchy
 {
   // NOTE: Please, don't Judge me by the Genders. These are just Requirements that I received. I'm not Against the LGBTQ+ Community
   // - Genders
@@ -76,6 +78,9 @@ namespace matrPerson
   // - Consanguinity Abbreviations
   const int consanguinityAbbr = 'Y';
   const int affinityAbbr = 'N';
+
+  // - Filename
+  const string matriarchyFilename = "matriarchy.csv";
 }
 
 #endif
