@@ -141,7 +141,7 @@ void BinNode<NodeType>::postorder(BinNodePtr<NodeType> p)
 template <class NodeType>
 void BinNode<NodeType>::levelOrder(BinNodePtr<NodeType> p)
 {
-  QueueLinkedList<NodeTypePtr<NodeType>> *q = new QueueLinkedList<NodeTypePtr>(NULL);
+  QueueLinkedList<BinNodePtr<NodeType>> *q = new QueueLinkedList<BinNodePtr<NodeType>>(NULL);
 
   // Print Node Data
   cout << p->data << '\n';
@@ -242,8 +242,8 @@ int BinNode<NodeType>::getHeight(BinNodePtr<NodeType> p)
 template <class NodeType>
 QueueLinkedList<NodeType> *BinNode<NodeType>::getLevelOrder(BinNodePtr<NodeType> p)
 {
-  QueueLinkedList<NodeTypePtr<NodeType>> *q = new QueueLinkedList<NodeTypePtr<NodeType>>(NULL);
-  QueueLinkedList<NodeTypePtr<NodeType>> *t = new QueueLinkedList<NodeTypePtr<NodeType>>(NULL);
+  QueueLinkedList<BinNodePtr<NodeType>> *q = new QueueLinkedList<BinNodePtr<NodeType>>(NULL);
+  QueueLinkedList<BinNodePtr<NodeType>> *t = new QueueLinkedList<BinNodePtr<NodeType>>(NULL);
 
   // Push Node to Queue
   t->push(p);

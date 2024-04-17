@@ -66,8 +66,8 @@ protected:
   void levelOrderNoKids(int, QueueLinkedList<MatrNode *> *, ostringstream *);
 
 public:
-  MatrNode *mother;
-  MatrPerson *data;
+  MatrNode *mother = NULL;
+  MatrPerson *data = NULL;
   MatrNode *lChild = NULL; // Left Child
   MatrNode *mChild = NULL; // Middle Child
   MatrNode *rChild = NULL; // Right Child
@@ -294,9 +294,11 @@ void MatrNode::makeOrphan()
 // Method to Print the Nodes through Different Types of Level Order Traversal
 void MatrNode::levelOrder(MatrNodePtr n, matriarchy::traversals traversal)
 {
+  bool printMsg;
   int level;
-  string name;
+  string name, partnerName;
   MatrNodePtr searchNode, child, children[2], motherBrothers[2], cousins[6];
+  MatrPerson *t;
   ostringstream msg;
 
   QueueLinkedList<MatrNodePtr> *nodes = new QueueLinkedList<MatrNodePtr>(NULL);
@@ -320,96 +322,125 @@ void MatrNode::levelOrder(MatrNodePtr n, matriarchy::traversals traversal)
   switch (traversal)
   {
   case matriarchy::parents:
+    printMsg = true;
     this->levelOrderParents(level, nodes, &msg);
     break;
 
   case matriarchy::women:
+    printMsg = true;
     this->levelOrderWomen(level, nodes, &msg);
     break;
 
   case matriarchy::men:
+    printMsg = true;
     this->levelOrderMen(level, nodes, &msg);
     break;
 
   case matriarchy::single:
+    printMsg = true;
     this->levelOrderSingle(level, nodes, &msg);
     break;
 
   case matriarchy::noKids:
+    printMsg = true;
     this->levelOrderNoKids(level, nodes, &msg);
     break;
 
   case matriarchy::cousins:
+    printMsg = false;
+
     // Get Node Name to be Searched
-    cout << "Name to Search: ";
+    cout << "\nName to Search: ";
     getline(cin, name);
 
     // Search for the Given Node Name
     searchNode = this->searchNode(&level, nodes, name);
 
     // Check if the Node was Found
-    if (searchNode != NULL)
-      // Check if the Node has Cousins
-      if (searchNode->mother->mother == NULL)
-        pressEnterToCont("Node doesn't have Cousins", true);
+    if (searchNode == NULL)
+      pressEnterToCont("\nNode not Found", true);
 
-      else
-      {
-        // Get Child's Mother
-        n = searchNode->mother;
+    // Check if the Node can have Aunts/Uncles
+    else if (searchNode->mother == NULL)
+      pressEnterToCont("\nNode doesn't have Aunts/Uncles", true);
 
-        // Get Child's Grandmother
-        n = n->mother;
-
-        // Get Child's Aunts/Uncles
-        if (n != NULL)
-        {
-          motherBrothers[0] = (n->lChild->data != searchNode->mother->data) ? n->lChild : n->rChild;
-          motherBrothers[1] = (n->mChild->data != searchNode->mother->data) ? n->mChild : n->rChild;
-
-          // Get Child's Cousins
-          for (int i = 0; i < 2; i++)
-          {
-            cousins[i * 3] = motherBrothers[i]->lChild;
-            cousins[i * 3 + 1] = motherBrothers[i]->mChild;
-            cousins[i * 3 + 2] = motherBrothers[i]->rChild;
-          }
-
-          for (int i = 0; i < 6; i++)
-            // Add Child's Cousin Data to the Given Stream
-            if (cousins[i] != NULL)
-              this->addChildDataToStream(&msg, searchNode->data->getNodeId(), level, cousins[i]->data);
-        }
-      }
+    // Check if the Node can have Cousins
+    else if (searchNode->mother->mother == NULL)
+      pressEnterToCont("\nNode doesn't have Cousins", true);
 
     else
-      pressEnterToCont("Node not Found", true);
+    {
+      printMsg = true;
 
+      // Get Child's Mother
+      n = searchNode->mother;
+
+      // Get Child's Grandmother
+      n = n->mother;
+
+      // Get Child's Aunts/Uncles
+      if (n != NULL)
+      {
+        motherBrothers[0] = (n->lChild->data != searchNode->mother->data) ? n->lChild : n->rChild;
+        motherBrothers[1] = (n->mChild->data != searchNode->mother->data) ? n->mChild : n->rChild;
+
+        // Get Child's Cousins
+        for (int i = 0; i < 2; i++)
+        {
+          cousins[i * 3] = motherBrothers[i]->lChild;
+          cousins[i * 3 + 1] = motherBrothers[i]->mChild;
+          cousins[i * 3 + 2] = motherBrothers[i]->rChild;
+        }
+
+        for (int i = 0; i < 6; i++)
+          // Add Child's Cousin Data to the Given Stream
+          if (cousins[i] != NULL)
+            this->addChildDataToStream(&msg, searchNode->data->getNodeId(), level, cousins[i]->data);
+      }
+    }
     break;
 
   case matriarchy::divorce:
+    printMsg = false;
+
     // Get Node Name to be Searched
-    cout << "Name to Search: ";
+    cout << "\nName to Search: ";
     getline(cin, name);
 
     // Search for the Given Node Name
     searchNode = this->searchNode(&level, nodes, name);
 
     if (searchNode == NULL)
-      pressEnterToCont("Node not Found", true);
+      pressEnterToCont("\nNode not Found", true);
 
     else if (searchNode->data->getPartner() == NULL)
-      pressEnterToCont("Partner doesn't have a Partner", true);
+      pressEnterToCont("\nPartner doesn't have a Partner", true);
 
     else
+    {
+      name = searchNode->data->getName();
+      partnerName = searchNode->data->getPartner()->getName();
 
+      // Check if the Bond can be Broken. Just an Easter Egg
+      if (getLower(name).find("ivana") != string::npos && getLower(partnerName).find("ramon") != string::npos)
+      {
+        pressEnterToCont("\nThe Bond can't be Broken", true);
+        break;
+      }
+
+      // Get the Old Partner Data, and Divorce the Nodes
+      t = searchNode->data->getPartner();
       searchNode->data->setPartner(NULL);
+
+      // Deallocate Memory Occupied by the Old Partner
+      delete t;
+    }
 
     break;
   }
 
   // Print Level Order Traversal
-  if (traversal != matriarchy::divorce)
+  if (printMsg)
     cout << msg.str();
 
   // Deallocate Memory

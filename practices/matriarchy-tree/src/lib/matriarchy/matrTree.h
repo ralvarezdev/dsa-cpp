@@ -31,6 +31,7 @@ public:
   virtual ~MatrTree()
   {
     MatrNodePtr n, children[3];
+    MatrPerson *t;
 
     // Initialize Queue that will Store All the Nodes whose Memory will be Deallocated
     QueueLinkedList<MatrNodePtr> *nodes = new QueueLinkedList<MatrNodePtr>(NULL);
@@ -62,7 +63,10 @@ public:
         nodes->enqueue(children[i]);
       }
 
-      // Deallocate Parent Node
+      // Deallocate Parent Data and Node
+      t = n->data;
+      n->data = NULL;
+      delete t;
       delete n;
     }
 
