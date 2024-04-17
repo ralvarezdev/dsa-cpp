@@ -73,13 +73,11 @@ public:
 template <class NodeType>
 SingleLinkedList<NodeType>::SingleLinkedList(NodeType error)
 {
-  SingleNodePtr<NodeType> p;
-
   // Default Error Value
   this->error = error;
 
   // Add Node as Head and Tail
-  this->head = this->tail = p = new SingleNode<NodeType>();
+  this->head = this->tail = new SingleNode<NodeType>();
 }
 
 // Add Head with Only One Next Node
@@ -216,6 +214,10 @@ template <class NodeType>
 void SingleLinkedList<NodeType>::pushBack(NodeType data)
 {
   SingleNodePtr<NodeType> n = new SingleNode<NodeType>(data, this->tail, NULL);
+
+  // Set Tail as Node Next to Head if It's Empty
+  if (this->isEmpty())
+    this->head->next = n;
 
   // Set Tail
   this->tail = n;

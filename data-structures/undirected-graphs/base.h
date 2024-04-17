@@ -1,6 +1,9 @@
 #include "../nodes/undirNode.h"
 #include "../edges/weightedEdges.h"
 
+#include <iostream>
+using std::cout;
+
 #ifndef UNDIR_GRAPHS
 #define UNDIR_GRAPHS
 
@@ -9,7 +12,7 @@
 template <class NodeType>
 class UndirGraph
 {
-private:
+protected:
   SingleLinkedList<UndirNodePtr<NodeType>> *nodes = new SingleLinkedList<UndirNodePtr<NodeType>>(NULL);
 
   // DON'T MODIFY. THIS WILL BE USED AS INDEXES FOR THE SINGLE LINKED LIST
@@ -19,10 +22,28 @@ public:
   // Constructors
   UndirGraph();
 
+  // Destructor
+  virtual ~UndirGraph()
+  {
+    UndirNodePtr<NodeType> node;
+
+    // Get First Node
+    while (!this->nodes->isEmpty())
+    {
+      node = this->nodes->remove();
+      delete node;
+    }
+  }
+
   // Public Methods
   SingleLinkedList<int> *addNodes(QueueLinkedList<NodeType> *);
   void addEdges(QueueLinkedList<WeightedEdgePtr> *);
+  SingleLinkedList<UndirNodePtr<NodeType>> *getNodesEdges();
 };
+
+// UndirGraphPtr Definition
+template <class NodeType>
+using UndirGraphPtr = UndirGraph<NodeType> *;
 
 // Undirected Graph Constructors
 template <class NodeType>
@@ -45,11 +66,11 @@ SingleLinkedList<int> *UndirGraph<NodeType>::addNodes(QueueLinkedList<NodeType> 
     NodeType nodeData = nodesData->dequeue();
 
     // Store Node ID
-    nodesId->pushBack(this->nodeIndex);
+    nodesIndexes->pushBack(this->nodeIndex);
 
     // Allocate Memory for the New Node and Insert It to the Graph
     node = new UndirNode<NodeType>(this->nodeIndex++, nodeData);
-    this->nodes.push(node);
+    this->nodes->push(node);
   }
 
   // Deallocate Memory
@@ -85,6 +106,31 @@ void UndirGraph<NodeType>::addEdges(QueueLinkedList<WeightedEdgePtr> *edges)
 
   // Deallocate Memory
   delete edges;
+}
+
+// Method to Get Nodes Edges
+template <class NodeType>
+SingleLinkedList<UndirNodePtr<NodeType>> *UndirGraph<NodeType>::getNodesEdges()
+{
+  UndirNodePtr<NodeType> node;
+  int length = this->nodes->getLength();
+
+  // Initialize Single Linked List Copy of Nodes Edges
+  SingleLinkedList<UndirNodePtr<NodeType>> *copyNodes = new SingleLinkedList<UndirNodePtr<NodeType>>(NULL);
+
+  // Create Single Linked List Copy
+  while (length > 0)
+  {
+    node = this->nodes->remove();
+
+    // Push Back Node Edge to the Deep Copy Single Linked List
+    copyNodes->pushBack(node);
+
+    // Push Data Back
+    this->nodes->pushBack(node);
+  }
+
+  return copyNodes;
 }
 
 #endif

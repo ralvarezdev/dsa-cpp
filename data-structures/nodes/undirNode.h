@@ -11,19 +11,18 @@ template <class NodeType>
 class UndirNode
 {
 public:
-  NodeType *data;
+  NodeType data;
   int nodeId = -1;
   SingleLinkedList<int> *edges = new SingleLinkedList<int>(-1);
 
   // Constructors
   UndirNode();
-  UndirNode(int, NodeType *);
+  UndirNode(int, NodeType);
 
   // Destructor
   virtual ~UndirNode()
   {
     // Deallocate Node's Data and Single Linked List that Contains Node's Edges Information
-    delete this->data;
     delete this->edges;
   }
 
@@ -43,7 +42,7 @@ UndirNode<NodeType>::UndirNode()
 }
 
 template <class NodeType>
-UndirNode<NodeType>::UndirNode(int nodeId, NodeType *data)
+UndirNode<NodeType>::UndirNode(int nodeId, NodeType data)
 {
   // Set Node Data
   this->nodeId = nodeId;

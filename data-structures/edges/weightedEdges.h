@@ -60,9 +60,10 @@ QueueLinkedList<int> *WeightedEdge::getDstsId()
   int dstId;
   int length = this->dstsId->getLength();
 
-  // Create Queue Copy
+  // Initialize Queue Copy of Destinations Nodes ID
   QueueLinkedList<int> *copyDstsId = new QueueLinkedList<int>(-1);
 
+  // Create Queue Copy
   while (length > 0)
   {
     dstId = this->dstsId->dequeue();
