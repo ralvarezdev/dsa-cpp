@@ -170,21 +170,25 @@ NodeType NumberSingleLinkedList<NodeType>::max(SingleNodePtr<NodeType> p)
 template <class NodeType>
 bool NumberSingleLinkedList<NodeType>::linearSearch(SingleNodePtr<NodeType> p, NodeType key)
 {
-  SingleNodePtr<NodeType> q;
+  SingleNodePtr<NodeType> q = NULL;
 
   while (p != NULL)
   {
     if (key == p->data)
     {
-      // Set p Node as Tail
+      // Set q as Node Tail
       if (p->next == NULL)
         this->tail = q;
 
       // Move Node whose Key Matched Next to Head in Order to Improve Performance
-      q->next = p->next;
-      p->next = this->head->next;
-      this->head->next = p;
+      if (q != NULL)
+        q->next = p->next;
 
+      if (p != this->head->next)
+      {
+        p->next = this->head->next;
+        this->head->next = p;
+      }
       return true;
     }
 

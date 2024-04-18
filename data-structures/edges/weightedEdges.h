@@ -43,22 +43,28 @@ WeightedNodeEdges::WeightedNodeEdges(int weight, int srcId, QueueLinkedList<int>
 
   while (!dstsId->isEmpty())
     this->dstsId->enqueue(dstsId->dequeue());
-
-  // Deallocate Memory
-  delete dstsId;
 }
 
 WeightedNodeEdges::WeightedNodeEdges(int weight, int srcId, NumberSingleLinkedList<int> *dstsId)
 {
+  int dstId, dstIdLength = dstsId->getLength();
+
   // Set Edge Weight and Edge's Source Node ID and Destinations Nodes ID
   this->weight = weight;
   this->srcId = srcId;
 
-  while (!dstsId->isEmpty())
-    this->dstsId->enqueue(dstsId->pop());
+  while (dstIdLength > 0)
+  {
+    // Get Destination Node ID
+    dstId = dstsId->remove();
 
-  // Deallocate Memory
-  delete dstsId;
+    // Insert Destination Node ID Connection
+    this->dstsId->enqueue(dstId);
+
+    // Push Destination Node ID Back
+    dstsId->pushBack(dstId);
+    dstIdLength--;
+  }
 }
 
 // Getters
@@ -88,6 +94,8 @@ QueueLinkedList<int> *WeightedNodeEdges::getDstsId()
 
     // Push Data Back
     this->dstsId->enqueue(dstId);
+
+    length--;
   }
 
   return copyDstsId;

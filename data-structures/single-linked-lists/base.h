@@ -215,7 +215,7 @@ void SingleLinkedList<NodeType>::pushBack(NodeType data)
 {
   SingleNodePtr<NodeType> n = new SingleNode<NodeType>(data, this->tail, NULL);
 
-  // Set Tail as Node Next to Head if It's Empty
+  // Set Head Next Node if It's NULL
   if (this->isEmpty())
     this->head->next = n;
 
