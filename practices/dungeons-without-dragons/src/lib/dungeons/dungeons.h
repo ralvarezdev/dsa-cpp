@@ -79,6 +79,7 @@ private:
   DungeonsGraphPtr level1 = new DungeonsGraph(dungeons::firstNodeId);
   DungeonsGraphPtr level2 = new DungeonsGraph(dungeons::firstNodeId);
   DungeonsGraphPtr level3 = new DungeonsGraph(dungeons::firstNodeId);
+  ostringstream *dungeonsInfo = new ostringstream;
 
   // Private Methods
   int *getSpecialRooms(int);
@@ -93,8 +94,11 @@ public:
   // Destructor
   virtual ~Dungeons()
   {
-    delete level1, level2, level3;
+    delete level1, level2, level3, dungeonsInfo;
   }
+
+  // Public Methods
+  void printDungeonsInfo() { cout << this->dungeonsInfo->str(); };
 };
 
 // Dungeon Room Class Constructors
@@ -115,7 +119,6 @@ Dungeons::Dungeons()
   NumberSingleLinkedList<int> *dungeonsNodesIds[3];
   int *t, **distsResults;
   int numberRooms[3] = {dungeons::level1Rooms, dungeons::level2Rooms, dungeons::level3Rooms};
-  ostringstream msg;
 
   distsResults = new int *[3];
 
@@ -148,7 +151,9 @@ Dungeons::Dungeons()
     int key, entrance, exit, nRooms, roomLength, dstsIdsLength, edge;
     WeightedNodeEdgesPtr nodeEdges;
     QueueLinkedList<int> *dstsIds;
+    ostringstream *dungeonsInfo = this->dungeonsInfo;
 
+    // Save Dungeons Info
     for (int j = 0; j < 3; j++)
     {
       // Get Dungeon Data
@@ -158,13 +163,13 @@ Dungeons::Dungeons()
       nRooms = dungeonsRooms[j]->getLength();
 
       // Add Dungeon Level General Data to Stream
-      msg << "Level [" << j + 1 << "]\n"
-          << "Key Room: " << key << '\n'
-          << "Entrance Room: " << entrance << '\n'
-          << "Exit Room: " << exit << '\n'
-          << "Total Rooms: " << nRooms << '\n'
-          << "Non-special Rooms: " << nRooms - 3 << '\n'
-          << "Rooms Connections: ";
+      *dungeonsInfo << "Level [" << j + 1 << "]\n"
+                    << "Key Room: " << key << '\n'
+                    << "Entrance Room: " << entrance << '\n'
+                    << "Exit Room: " << exit << '\n'
+                    << "Total Rooms: " << nRooms << '\n'
+                    << "Non-special Rooms: " << nRooms - 3 << '\n'
+                    << "Rooms Connections: ";
 
       // Add Dungeon Level Rooms Connections Data to Stream
       roomLength = dungeonsRoomsConns[j]->getLength();
@@ -184,10 +189,10 @@ Dungeons::Dungeons()
           edge = dstsIds->dequeue();
 
           // Add Node Edge Data to Stream
-          msg << nodeEdges->getSrcId() << " -> " << edge;
+          *dungeonsInfo << nodeEdges->getSrcId() << " -> " << edge;
 
           if (!(dstsIdsLength == 1 && roomLength == 1))
-            msg << ", ";
+            *dungeonsInfo << ", ";
 
           // Push Data Back
           dstsIds->enqueue(edge);
@@ -199,9 +204,8 @@ Dungeons::Dungeons()
         roomLength--;
       }
 
-      msg << "\n\n";
+      *dungeonsInfo << "\n\n";
     }
-    cout << msg.str();
   }
 
   // Deallocate Memory
