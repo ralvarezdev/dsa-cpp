@@ -1,12 +1,13 @@
 #include "../single-linked-lists/base.h"
+#include "../single-linked-lists/number.h"
 #include "../queue/base.h"
 
-#ifndef WEIGHTED_EDGES
-#define WEIGHTED_EDGES
+#ifndef WEIGHTED_NODE_EDGES
+#define WEIGHTED_NODE_EDGES
 
 // WEIGHTED EDGE CLASS
 
-class WeightedEdge
+class WeightedNodeEdges
 {
 private:
   int srcId;
@@ -15,10 +16,11 @@ private:
 
 public:
   // Constructors
-  WeightedEdge(int, int, QueueLinkedList<int> *);
+  WeightedNodeEdges(int, int, QueueLinkedList<int> *);
+  WeightedNodeEdges(int, int, NumberSingleLinkedList<int> *);
 
   // Destructor
-  virtual ~WeightedEdge()
+  virtual ~WeightedNodeEdges()
   {
     // Deallocate Destinations Nodes ID
     delete dstsId;
@@ -29,11 +31,11 @@ public:
   QueueLinkedList<int> *getDstsId();
 };
 
-// WeightedEdgePtr Definition
-using WeightedEdgePtr = WeightedEdge *;
+// WeightedNodeEdgesPtr Definition
+using WeightedNodeEdgesPtr = WeightedNodeEdges *;
 
 // Weighted Edge Class Constructors
-WeightedEdge::WeightedEdge(int weight, int srcId, QueueLinkedList<int> *dstsId)
+WeightedNodeEdges::WeightedNodeEdges(int weight, int srcId, QueueLinkedList<int> *dstsId)
 {
   // Set Edge Weight and Edge's Source Node ID and Destinations Nodes ID
   this->weight = weight;
@@ -46,16 +48,29 @@ WeightedEdge::WeightedEdge(int weight, int srcId, QueueLinkedList<int> *dstsId)
   delete dstsId;
 }
 
+WeightedNodeEdges::WeightedNodeEdges(int weight, int srcId, NumberSingleLinkedList<int> *dstsId)
+{
+  // Set Edge Weight and Edge's Source Node ID and Destinations Nodes ID
+  this->weight = weight;
+  this->srcId = srcId;
+
+  while (!dstsId->isEmpty())
+    this->dstsId->enqueue(dstsId->pop());
+
+  // Deallocate Memory
+  delete dstsId;
+}
+
 // Getters
 
 // Method to Get Edge's Source Node ID
-int WeightedEdge::getSrcId()
+int WeightedNodeEdges::getSrcId()
 {
   return this->srcId;
 }
 
 // Method to Get Destinations Nodes ID from the Given Node Source ID
-QueueLinkedList<int> *WeightedEdge::getDstsId()
+QueueLinkedList<int> *WeightedNodeEdges::getDstsId()
 {
   int dstId;
   int length = this->dstsId->getLength();

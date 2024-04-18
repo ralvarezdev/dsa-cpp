@@ -13,6 +13,12 @@ add_library(single-linked-lists SHARED
   ${CMAKE_CURRENT_SOURCE_DIR}/../../data-structures/nodes/singleNode.h
 )
 
+add_library(number-single-linked-lists SHARED
+  ${CMAKE_CURRENT_SOURCE_DIR}/../../data-structures/single-linked-lists/number.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../../data-structures/single-linked-lists/number.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/../../data-structures/nodes/singleNode.h
+)
+
 add_library(queue SHARED
   ${CMAKE_CURRENT_SOURCE_DIR}/../../data-structures/queue/base.h
   ${CMAKE_CURRENT_SOURCE_DIR}/../../data-structures/queue/base.cpp
@@ -31,6 +37,7 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src/lib/dungeons)
 # Link Libraries
 target_link_libraries(${PROJECT_NAME}
   PRIVATE single-linked-lists
+  PRIVATE number-single-linked-lists
   PRIVATE queue
   PRIVATE undirected-graphs
   PRIVATE dungeons

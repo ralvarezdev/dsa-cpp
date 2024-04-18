@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include "../../../../../data-structures/undirected-graphs/base.h"
+#include "../../../../../data-structures/single-linked-lists/number.h"
 #include "../namespaces.h"
 
 using std::cout;
@@ -75,14 +76,15 @@ using DungeonsGraphPtr = DungeonsGraph *;
 class Dungeons
 {
 private:
-  DungeonsGraphPtr level1 = new DungeonsGraph();
-  DungeonsGraphPtr level2 = new DungeonsGraph();
-  DungeonsGraphPtr level3 = new DungeonsGraph();
+  DungeonsGraphPtr level1 = new DungeonsGraph(dungeons::firstNodeId);
+  DungeonsGraphPtr level2 = new DungeonsGraph(dungeons::firstNodeId);
+  DungeonsGraphPtr level3 = new DungeonsGraph(dungeons::firstNodeId);
 
   // Private Methods
   int *getSpecialRooms(int);
   QueueLinkedList<int> *getDungeonRoomsId(int);
   QueueLinkedList<DungeonRoomPtr> *getDungeonRooms(QueueLinkedList<int> *, int *);
+  QueueLinkedList<WeightedNodeEdgesPtr> *getDungeonRoomsConns(SingleLinkedList<int> *, int *, int);
 
 public:
   // Constructors
@@ -109,6 +111,8 @@ Dungeons::Dungeons()
   UndirGraphPtr<DungeonRoomPtr> dungeonLevels[3] = {this->level1, this->level2, this->level3};
   QueueLinkedList<int> *dungeonsRoomsId[3];
   QueueLinkedList<DungeonRoomPtr> *dungeonsRooms[3];
+  QueueLinkedList<WeightedNodeEdgesPtr> *dungeonsRoomsConns[3];
+  SingleLinkedList<int> *dungeonsNodesIds[3];
   int *t, **distsResults;
   int numberRooms[3] = {dungeons::level1Rooms, dungeons::level2Rooms, dungeons::level3Rooms};
   ostringstream msg;
@@ -150,9 +154,17 @@ Dungeons::Dungeons()
     cout << msg.str();
   }
 
-  // Add Dungeon Rooms to its Given Graph
   for (int i = 0; i < 3; i++)
-    dungeonLevels[i]->addNodes(dungeonsRooms[i]);
+  {
+    // Add Dungeon Rooms to its Given Graph
+    dungeonsNodesIds[i] = dungeonLevels[i]->addNodes(dungeonsRooms[i]);
+
+    // Get Random Dungeon Rooms Connections
+    dungeonsRoomsConns[i] = this->getDungeonRoomsConns(dungeonsNodesIds[i], distsResults[i], numberRooms[i]);
+
+    // Add Dungeon Rooms Connections to its Given Graph
+    dungeonLevels[i]->addEdges(dungeonsRoomsConns[i]);
+  }
 
   // Deallocate Memory
   for (int i = 0; i < 3; i++)
@@ -175,14 +187,14 @@ int *Dungeons::getSpecialRooms(int numberRooms)
   fill(levelRange, levelRange + numberRooms, false);
 
   // Create Distributions
-  uniform_int_distribution<int> distLevel(0, numberRooms - 1);
+  uniform_int_distribution<int> distLevel(dungeons::firstNodeId, dungeons::firstNodeId + numberRooms - 1);
 
   // Get Key, Entrance and Exit Room ID
   for (int i = 0; i < 3; i++)
     do
     {
       // Get Random Number
-      index = distLevel(rd);
+      index = distLevel(rd) - dungeons::firstNodeId;
 
       // Store Random Index
       occupied = levelRange[index];
@@ -213,10 +225,10 @@ QueueLinkedList<int> *Dungeons::getDungeonRoomsId(int numberRooms)
   for (int i = 0; i < numberRooms; i++)
   {
     n = numberRooms - i - 1;
-    uniform_int_distribution<int> distLevel(0, n);
+    uniform_int_distribution<int> distLevel(dungeons::firstNodeId, dungeons::firstNodeId + n);
 
     // Get Random Number
-    index = distLevel(rd);
+    index = distLevel(rd) - dungeons::firstNodeId;
 
     // Store Random Index
     dungeonRoomsId->enqueue(levelRoomsId[index]);
@@ -250,7 +262,7 @@ QueueLinkedList<DungeonRoomPtr> *Dungeons::getDungeonRooms(QueueLinkedList<int> 
 
     // Check if the Given Dungeon Room is Special
     for (int i = 0; i < 3; i++)
-      if (distResults[i])
+      if (distResults[i] == dungeonRoomId)
       {
         // Check which Type of Special Room is
         switch (i)
@@ -282,6 +294,83 @@ QueueLinkedList<DungeonRoomPtr> *Dungeons::getDungeonRooms(QueueLinkedList<int> 
   delete dungeonRoomsIds;
 
   return dungeonRooms;
+}
+
+// Method to Get Random Dungeon Rooms Connections
+QueueLinkedList<WeightedNodeEdgesPtr> *Dungeons::getDungeonRoomsConns(SingleLinkedList<int> *dungeonNodesIds, int *distResults, int numberRooms)
+{
+  NumberSingleLinkedList<int> *nodesEdges[numberRooms];
+  WeightedNodeEdgesPtr dungeonEdges;
+  int srcNodeId, dstNodeId, numberEdges, srcIndex, dstIndex, entranceId, exitId;
+  bool isEntrance, isExit;
+
+  // Get Entrance and Exit Node ID
+  entranceId = distResults[dungeons::entranceIndex];
+  exitId = distResults[dungeons::exitIndex];
+
+  // Initialize Dungeon Rooms Connections Queue
+  QueueLinkedList<WeightedNodeEdgesPtr> *dungeonRoomsConns = new QueueLinkedList<WeightedNodeEdgesPtr>(NULL);
+
+  // Initialize Nodes Edges Queues
+  for (int i = 0; i < numberRooms; i++)
+    nodesEdges[i] = new NumberSingleLinkedList<int>(-1);
+
+  // Get 1-3 Connections for Each Dungeon Room
+  while (!dungeonNodesIds->isEmpty())
+  {
+    isEntrance = isExit = false;
+
+    // Get Dungeon Node ID
+    srcNodeId = dungeonNodesIds->pop();
+    srcIndex = srcNodeId - dungeons::firstNodeId;
+
+    // Get the Number of Nodes Edges to Set
+    uniform_int_distribution<int> distNumberEdges(dungeons::minRoomEdge, dungeons::maxRoomEdge);
+    numberEdges = distNumberEdges(rd);
+
+    // Distribution of Nodes IDs
+    uniform_int_distribution<int> distNodesIds(dungeons::firstNodeId, dungeons::firstNodeId + numberRooms - 1);
+
+    // Check if the Node Already have Enough Edges
+    while (nodesEdges[srcIndex]->getLength() < numberEdges)
+    {
+      // Get a Random Node ID
+      dstNodeId = distNodesIds(rd);
+      dstIndex = dstNodeId - dungeons::firstNodeId;
+
+      // Check if It's the Same Node
+      if (srcNodeId == dstNodeId)
+        continue;
+
+      // Check if the Given Node ID has Already been Connected with the Source Node ID
+      if (nodesEdges[srcIndex]->linearSearch(dstNodeId))
+        continue;
+
+      // Check if the Source Dungeon Room is the Entrance and the Destination Dungeon Room is the Exit
+      isEntrance = entranceId == srcNodeId || entranceId == dstNodeId;
+      isExit = exitId == srcNodeId || exitId == dstNodeId;
+
+      if (isEntrance && isExit)
+        continue;
+
+      // Insert Node Edge to its Corresponding Queues
+      nodesEdges[srcIndex]->pushBack(dstNodeId);
+      nodesEdges[dstIndex]->pushBack(srcNodeId);
+    }
+
+    // Create Dungeon Edges
+    dungeonEdges = new WeightedNodeEdges(dungeons::edgeWeight, srcNodeId, nodesEdges[srcIndex]);
+
+    // Add Dungeon Room Connections
+    dungeonRoomsConns->enqueue(dungeonEdges);
+  }
+
+  // Deallocate Memory
+  for (int i = 0; i < numberRooms; i++)
+    delete nodesEdges[i];
+  delete dungeonNodesIds;
+
+  return dungeonRoomsConns;
 }
 
 #endif

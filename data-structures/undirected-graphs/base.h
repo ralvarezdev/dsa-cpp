@@ -16,11 +16,11 @@ protected:
   SingleLinkedList<UndirNodePtr<NodeType>> *nodes = new SingleLinkedList<UndirNodePtr<NodeType>>(NULL);
 
   // DON'T MODIFY. THIS WILL BE USED AS INDEXES FOR THE SINGLE LINKED LIST
-  int nodeIndex = 0;
+  int currNodeId;
 
 public:
   // Constructors
-  UndirGraph();
+  UndirGraph(int);
 
   // Destructor
   virtual ~UndirGraph()
@@ -37,7 +37,7 @@ public:
 
   // Public Methods
   SingleLinkedList<int> *addNodes(QueueLinkedList<NodeType> *);
-  void addEdges(QueueLinkedList<WeightedEdgePtr> *);
+  void addEdges(QueueLinkedList<WeightedNodeEdgesPtr> *);
   SingleLinkedList<UndirNodePtr<NodeType>> *getNodesEdges();
 };
 
@@ -47,9 +47,12 @@ using UndirGraphPtr = UndirGraph<NodeType> *;
 
 // Undirected Graph Constructors
 template <class NodeType>
-UndirGraph<NodeType>::UndirGraph()
+UndirGraph<NodeType>::UndirGraph(int firstNodeId)
 {
-  return;
+  // Set First Node ID
+  this->currNodeId = firstNodeId
+
+      return;
 }
 
 // Method to Add Nodes to the Given Graph
@@ -66,10 +69,10 @@ SingleLinkedList<int> *UndirGraph<NodeType>::addNodes(QueueLinkedList<NodeType> 
     NodeType nodeData = nodesData->dequeue();
 
     // Store Node ID
-    nodesIndexes->pushBack(this->nodeIndex);
+    nodesIndexes->pushBack(this->currNodeId);
 
     // Allocate Memory for the New Node and Insert It to the Graph
-    node = new UndirNode<NodeType>(this->nodeIndex++, nodeData);
+    node = new UndirNode<NodeType>(this->currNodeId++, nodeData);
     this->nodes->push(node);
   }
 
@@ -81,10 +84,10 @@ SingleLinkedList<int> *UndirGraph<NodeType>::addNodes(QueueLinkedList<NodeType> 
 
 // Method to Add Edges to a Given Node
 template <class NodeType>
-void UndirGraph<NodeType>::addEdges(QueueLinkedList<WeightedEdgePtr> *edges)
+void UndirGraph<NodeType>::addEdges(QueueLinkedList<WeightedNodeEdgesPtr> *edges)
 {
   UndirNodePtr<NodeType> node;
-  WeightedEdgePtr nodeEdges;
+  WeightedNodeEdgesPtr nodeEdges;
   int srcId;
 
   // Add Undirected Edges

@@ -14,6 +14,9 @@ namespace dungeons
   const int level2Rooms = 8;
   const int level3Rooms = 15;
 
+  // Dungeon First Node ID
+  const int firstNodeId = 0;
+
   // Dungeon Room Edges
   const int minRoomEdge = 1;
   const int maxRoomEdge = 3;
@@ -22,6 +25,9 @@ namespace dungeons
   const int keyIndex = 0;
   const int entranceIndex = 1;
   const int exitIndex = 2;
+
+  // Undirected Graph Edge Weight
+  const int edgeWeight = 1;
 }
 
 #endif
