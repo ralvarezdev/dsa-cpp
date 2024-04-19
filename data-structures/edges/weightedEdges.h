@@ -55,14 +55,12 @@ WeightedNodeEdges::WeightedNodeEdges(int weight, int srcId, NumberSingleLinkedLi
 
   while (dstIdLength > 0)
   {
-    // Get Destination Node ID
-    dstId = dstsId->remove();
+    // Get Destination Node ID and Push it Back
+    dstId = dstsId->removeBack();
 
     // Insert Destination Node ID Connection
     this->dstsId->enqueue(dstId);
 
-    // Push Destination Node ID Back
-    dstsId->pushBack(dstId);
     dstIdLength--;
   }
 }
@@ -87,13 +85,11 @@ QueueLinkedList<int> *WeightedNodeEdges::getDstsId()
   // Create Queue Copy
   while (length > 0)
   {
-    dstId = this->dstsId->dequeue();
+    // Get Destination Node ID and Push it Back
+    dstId = this->dstsId->removeBack();
 
     // Insert Edge to the Deep Copy Queue
     copyDstsId->enqueue(dstId);
-
-    // Push Data Back
-    this->dstsId->enqueue(dstId);
 
     length--;
   }

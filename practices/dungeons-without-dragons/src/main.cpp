@@ -46,6 +46,11 @@ int main(int argc, char **argv)
 
     switch (cmd)
     {
+    case dungeons::cmds::startGame:
+      // Start the Game
+      dungeons->playGame();
+      break;
+
     case dungeons::cmds::debugMode:
       // Clear Screen
       cout << terminal::clear;

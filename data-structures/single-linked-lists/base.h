@@ -61,6 +61,7 @@ public:
   NodeType change(NodeType, int);
   NodeType get(int);
   void concat(SingleLinkedList *);
+  NodeType removeBack();
 
   // void setCurrent(SingleNodePtr<NodeType>);
   // void setCurrent();
@@ -425,6 +426,21 @@ void SingleLinkedList<NodeType>::concat(SingleLinkedList<NodeType> *l)
 
   // Set l Length to 0
   l->empty();
+}
+
+// Method to Get First Node Data and Push it Back
+template <class NodeType>
+NodeType SingleLinkedList<NodeType>::removeBack()
+{
+  NodeType data;
+
+  // Get First Node Data
+  data = this->remove();
+
+  // Push Back Node Data
+  this->pushBack(data);
+
+  return data;
 }
 
 /*

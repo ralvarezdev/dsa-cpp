@@ -14,8 +14,6 @@ class UndirGraph
 {
 protected:
   SingleLinkedList<UndirNodePtr<NodeType>> *nodes = new SingleLinkedList<UndirNodePtr<NodeType>>(NULL);
-
-  // DON'T MODIFY. THIS WILL BE USED AS INDEXES FOR THE SINGLE LINKED LIST
   int currNodeId;
 
   // Protected Methods
@@ -69,8 +67,8 @@ NumberSingleLinkedList<int> *UndirGraph<NodeType>::addNodes(QueueLinkedList<Node
   // Add Nodes
   while (nodesDataLength > 0)
   {
-    // Get Node's Data
-    NodeType nodeData = nodesData->dequeue();
+    // Get Node's Data and Push it Back
+    NodeType nodeData = nodesData->removeBack();
 
     // Store Node ID
     nodesIndexes->pushBack(this->currNodeId);
@@ -79,8 +77,6 @@ NumberSingleLinkedList<int> *UndirGraph<NodeType>::addNodes(QueueLinkedList<Node
     node = new UndirNode<NodeType>(this->currNodeId++, nodeData);
     this->nodes->push(node);
 
-    // Push Node's Data Back
-    nodesData->enqueue(nodeData);
     nodesDataLength--;
   }
 
@@ -100,7 +96,7 @@ void UndirGraph<NodeType>::addEdges(SingleLinkedList<WeightedNodeEdgesPtr> *edge
   while (edgesLength > 0)
   {
     // Get Node Edges and Source Node ID
-    nodeEdges = edges->pop();
+    nodeEdges = edges->removeBack();
     srcId = nodeEdges->getSrcId();
 
     // Get Node at the Given Index
@@ -109,8 +105,6 @@ void UndirGraph<NodeType>::addEdges(SingleLinkedList<WeightedNodeEdgesPtr> *edge
     // Insert Edges to the Node
     node->addEdges(nodeEdges->getDstsId());
 
-    // Push Node Edges Back
-    edges->pushBack(nodeEdges);
     edgesLength--;
   }
 }
@@ -123,11 +117,8 @@ SingleLinkedList<int> *UndirGraph<NodeType>::getNodeEdges(int srcNodeId)
 
   do
   {
-    // Get First Node
-    node = this->nodes->remove();
-
-    // Push Data Back
-    this->nodes->pushBack(node);
+    // Get First Node and Push it Back
+    node = this->nodes->removeBack();
   } while (node->nodeId != srcNodeId);
 
   return node->edges;

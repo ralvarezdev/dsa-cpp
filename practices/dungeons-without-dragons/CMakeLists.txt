@@ -33,6 +33,7 @@ add_library(undirected-graphs SHARED
 )
 
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src/lib/dungeons)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src/lib/terminal)
 
 # Link Libraries
 target_link_libraries(${PROJECT_NAME}
@@ -40,5 +41,5 @@ target_link_libraries(${PROJECT_NAME}
   PRIVATE number-single-linked-lists
   PRIVATE queue
   PRIVATE undirected-graphs
-  PRIVATE dungeons
+  PRIVATE terminal
 )

@@ -52,6 +52,7 @@ public:
   NodeType dequeue() { return pop(); }; // Calls Pop Method
   NodeType first();
   NodeType last();
+  NodeType removeBack();
 };
 
 // Queue Constructors
@@ -233,6 +234,21 @@ NodeType QueueLinkedList<NodeType>::last()
     return this->error;
 
   return this->tail->data;
+}
+
+// Method to Get First Node Data and Push it Back
+template <class NodeType>
+NodeType QueueLinkedList<NodeType>::removeBack()
+{
+  NodeType data;
+
+  // Get First Node Data
+  data = this->dequeue();
+
+  // Push Back Node Data
+  this->enqueue(data);
+
+  return data;
 }
 
 #endif
