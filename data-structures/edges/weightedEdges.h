@@ -1,67 +1,118 @@
 #include "../single-linked-lists/base.h"
-#include "../single-linked-lists/number.h"
 #include "../queue/base.h"
 
 #ifndef WEIGHTED_NODE_EDGES
 #define WEIGHTED_NODE_EDGES
 
-// WEIGHTED EDGE CLASS
+// WEIGHTED NODE CLASS
+class WeightedNodeEdge
+{
+protected:
+  int dstId;
+  int weight;
+
+public:
+  // Constructors
+  WeightedNodeEdge(int, int);
+
+  // Public Methods
+  int getWeight() { return this->weight; };
+  int getDstId() { return this->dstId; };
+};
+
+// WeightedNodeEdgePtr Definition
+using WeightedNodeEdgePtr = WeightedNodeEdge *;
+using Edge = WeightedNodeEdgePtr;
+
+// WEIGHTED NODE EDGES CLASS
 
 class WeightedNodeEdges
 {
 private:
   int srcId;
-  QueueLinkedList<int> *dstsId = new QueueLinkedList<int>(-1);
-  int weight;
+  QueueLinkedList<Edge> *edges = new QueueLinkedList<Edge>(NULL);
 
 public:
   // Constructors
-  WeightedNodeEdges(int, int, QueueLinkedList<int> *);
-  WeightedNodeEdges(int, int, NumberSingleLinkedList<int> *);
+  WeightedNodeEdges(int, QueueLinkedList<Edge> *);
+  WeightedNodeEdges(int, SingleLinkedList<Edge> *);
 
   // Destructor
   virtual ~WeightedNodeEdges()
   {
+    Edge edge;
+    int edgesLength = edges->getLength();
+
     // Deallocate Destinations Nodes ID
-    delete dstsId;
+    while (edgesLength > 0)
+    {
+      edge = edges->dequeue();
+
+      edgesLength--;
+      delete edge;
+    }
+
+    delete edges;
   }
 
   // Public Methods
   int getSrcId();
-  QueueLinkedList<int> *getDstsId();
+  QueueLinkedList<Edge> *getEdges();
 };
 
 // WeightedNodeEdgesPtr Definition
 using WeightedNodeEdgesPtr = WeightedNodeEdges *;
+using Edges = WeightedNodeEdgesPtr;
 
-// Weighted Edge Class Constructors
-WeightedNodeEdges::WeightedNodeEdges(int weight, int srcId, QueueLinkedList<int> *dstsId)
+// WEIGHTED NODE EDGE CLASS
+
+// Wedighted Node Edge Class Constructor
+WeightedNodeEdge::WeightedNodeEdge(int dstId, int weight)
 {
-  // Set Edge Weight and Edge's Source Node ID and Destinations Nodes ID
+  this->dstId = dstId;
   this->weight = weight;
-  this->srcId = srcId;
-
-  while (!dstsId->isEmpty())
-    this->dstsId->enqueue(dstsId->dequeue());
 }
 
-WeightedNodeEdges::WeightedNodeEdges(int weight, int srcId, NumberSingleLinkedList<int> *dstsId)
-{
-  int dstId, dstIdLength = dstsId->getLength();
+// WEIGHTED NODE EDGES CLASS
 
-  // Set Edge Weight and Edge's Source Node ID and Destinations Nodes ID
-  this->weight = weight;
+// Weighted Node Edges Class Constructors
+WeightedNodeEdges::WeightedNodeEdges(int srcId, QueueLinkedList<Edge> *edges)
+{
+  Edge edge;
+  int edgesLength = edges->getLength();
+
+  // Set Edge's Source Node ID and Destinations Nodes ID, with its Corresponding Weights
   this->srcId = srcId;
 
-  while (dstIdLength > 0)
+  while (edgesLength > 0)
   {
-    // Get Destination Node ID and Push it Back
-    dstId = dstsId->removeBack();
+    // Get Edge and Push it Back
+    edge = edges->removeBack();
 
-    // Insert Destination Node ID Connection
-    this->dstsId->enqueue(dstId);
+    // Add Edge
+    this->edges->enqueue(new WeightedNodeEdge(edge->getDstId(), edge->getWeight()));
 
-    dstIdLength--;
+    edgesLength--;
+  }
+}
+
+WeightedNodeEdges::WeightedNodeEdges(int srcId, SingleLinkedList<Edge> *edges)
+{
+  Edge edge;
+  int edgesLength = edges->getLength();
+
+  // Set Edge's Source Node ID and Destinations Nodes ID, with its Corresponding Weights
+  this->srcId = srcId;
+
+  while (edgesLength > 0)
+  {
+    // Get Edge and Push it Back
+    edge = edges->removeBack();
+
+    // Add Edge
+    this->edges->enqueue(new WeightedNodeEdge(edge->getDstId(), edge->getWeight()));
+
+    edgesLength--;
   }
 }
 
@@ -73,28 +124,28 @@ int WeightedNodeEdges::getSrcId()
   return this->srcId;
 }
 
-// Method to Get Destinations Nodes ID from the Given Node Source ID
-QueueLinkedList<int> *WeightedNodeEdges::getDstsId()
+// Method to Get Destinations Nodes ID and its Corresponding Weights from the Given Node Source ID
+QueueLinkedList<Edge> *WeightedNodeEdges::getEdges()
 {
-  int dstId;
-  int length = this->dstsId->getLength();
+  Edge edge;
+  int edgeLength = this->edges->getLength();
 
-  // Initialize Queue Copy of Destinations Nodes ID
-  QueueLinkedList<int> *copyDstsId = new QueueLinkedList<int>(-1);
+  // Initialize Queue Copy of Edges
+  QueueLinkedList<Edge> *copyEdges = new QueueLinkedList<Edge>(NULL);
 
   // Create Queue Copy
-  while (length > 0)
+  while (edgeLength > 0)
   {
-    // Get Destination Node ID and Push it Back
-    dstId = this->dstsId->removeBack();
+    // Get Edge and Push it Back
+    edge = this->edges->removeBack();
 
     // Insert Edge to the Deep Copy Queue
-    copyDstsId->enqueue(dstId);
+    copyEdges->enqueue(new WeightedNodeEdge(edge->getDstId(), edge->getWeight()));
 
-    length--;
+    edgeLength--;
   }
 
-  return copyDstsId;
+  return copyEdges;
 }
 
 #endif

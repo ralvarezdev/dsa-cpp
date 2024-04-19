@@ -1,3 +1,4 @@
+#include "../single-linked-lists/number.h"
 #include "../nodes/undirNode.h"
 #include "../edges/weightedEdges.h"
 
@@ -18,7 +19,6 @@ protected:
 
   // Protected Methods
   SingleLinkedList<UndirNodePtr<NodeType>> *getNodes() { return this->nodes; };
-  SingleLinkedList<int> *getNodeEdges(int);
 
 public:
   // Constructors
@@ -39,7 +39,7 @@ public:
 
   // Public Methods
   NumberSingleLinkedList<int> *addNodes(QueueLinkedList<NodeType> *);
-  void addEdges(SingleLinkedList<WeightedNodeEdgesPtr> *);
+  void addEdges(SingleLinkedList<Edges> *);
 };
 
 // UndirGraphPtr Definition
@@ -85,11 +85,11 @@ NumberSingleLinkedList<int> *UndirGraph<NodeType>::addNodes(QueueLinkedList<Node
 
 // Method to Add Edges to a Given Node
 template <class NodeType>
-void UndirGraph<NodeType>::addEdges(SingleLinkedList<WeightedNodeEdgesPtr> *edges)
+void UndirGraph<NodeType>::addEdges(SingleLinkedList<Edges> *edges)
 {
   int edgesLength = edges->getLength();
   UndirNodePtr<NodeType> node;
-  WeightedNodeEdgesPtr nodeEdges;
+  Edges nodeEdges;
   int srcId;
 
   // Add Undirected Edges
@@ -103,25 +103,10 @@ void UndirGraph<NodeType>::addEdges(SingleLinkedList<WeightedNodeEdgesPtr> *edge
     node = this->nodes->get(srcId);
 
     // Insert Edges to the Node
-    node->addEdges(nodeEdges->getDstsId());
+    node->addEdges(nodeEdges->getEdges());
 
     edgesLength--;
   }
-}
-
-// Method to Get Node Edges
-template <class NodeType>
-SingleLinkedList<int> *UndirGraph<NodeType>::getNodeEdges(int srcNodeId)
-{
-  UndirNodePtr<NodeType> node;
-
-  do
-  {
-    // Get First Node and Push it Back
-    node = this->nodes->removeBack();
-  } while (node->nodeId != srcNodeId);
-
-  return node->edges;
 }
 
 #endif
