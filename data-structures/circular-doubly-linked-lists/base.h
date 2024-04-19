@@ -5,9 +5,6 @@
 
 using std::abs;
 
-#include <iostream>
-using std::cout;
-
 #ifndef CIRCULAR_DOUBLY_LINKED_LISTS
 #define CIRCULAR_DOUBLY_LINKED_LISTS
 

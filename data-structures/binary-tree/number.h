@@ -252,7 +252,7 @@ void NumberBinaryTree<NodeType>::insert(NodeType data)
   // Create Node
   newNode = new BinNode<NodeType>(data);
 
-  // Chekc if Root is NULL
+  // Check if Root is NULL
   if (this->root == NULL)
   {
     cout << "Inserting Node as Root\n";
@@ -312,6 +312,7 @@ void NumberBinaryTree<NodeType>::insert(NodeType data)
       // Assign as Child from q Node
       else if (childPos == l)
         q->lChild = newNode;
+
       else
         q->rChild = newNode;
 
@@ -340,6 +341,7 @@ void NumberBinaryTree<NodeType>::insert(NodeType data)
 
     if (childPos == l)
       p = p->lChild;
+
     else
       p = p->rChild;
 
@@ -369,7 +371,7 @@ NodeType NumberBinaryTree<NodeType>::getNodeType(string message, bool errorAllow
     // Check input Data
     data = this->isNodeType(input);
 
-    // Errors are Allowed, so Return Data, even if it's an Error
+    // Errors are Allowed. So, Return Data, even if it's an Error
     if (errorAllowed)
       return data;
 

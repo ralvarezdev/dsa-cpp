@@ -48,7 +48,7 @@ int main(int argc, char **argv)
     {
     case dungeons::cmds::startGame:
       // Start the Game
-      dungeons->playGame();
+      // dungeons->playGame();
       break;
 
     case dungeons::cmds::debugMode:

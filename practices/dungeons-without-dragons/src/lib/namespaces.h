@@ -68,6 +68,9 @@ namespace dungeons
 
   // Undirected Graph Edge Weight
   const int edgeWeight = 1;
+
+  // Not Assigned
+  const int notAssigned = -1;
 }
 
 #endif

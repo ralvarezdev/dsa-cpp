@@ -36,6 +36,7 @@ int main(int argc, char **argv)
   int data, timesExec = 0;
   char cmd;
 
+  string binNotInit = "\nBinary Tree hasn't been Initialized";
   string binSearchNotInit = "\nBinary Search Tree hasn't been Initialized";
 
   while (!exit) // Main While Loop of the Program
@@ -63,6 +64,63 @@ int main(int argc, char **argv)
 
     switch (cmd)
     {
+    case binaryTree::cmds::binInit:
+      // Clear Binary Tree
+      if (binTree != NULL)
+        delete binTree;
+
+      // Clear Screen
+      cout << terminal::clear;
+
+      // Initialize Binary Tree
+      binTree = new NumberBinaryTree<int>(binaryTree::error);
+      break;
+
+    case binaryTree::cmds::binInsert:
+      // Check if Binary Tree has been Initialized
+      if (binTree == NULL)
+      {
+        pressEnterToCont(binNotInit, true);
+        break;
+      }
+
+      // Clear Screen
+      cout << terminal::clear;
+
+      // Ask for Node's Data
+      data = getInteger("Enter Node's Data", binaryTree::minData, binaryTree::maxData, binaryTree::error);
+
+      // Check if the Data is Valid
+      if (data == binaryTree::error)
+        break;
+
+      // Insert Nodes
+      binTree->insert(data);
+      break;
+
+    case binaryTree::cmds::binRemove:
+      break;
+
+    case binaryTree::cmds::binPrint:
+      // Check if Binary Tree has been Initialized
+      if (binTree == NULL)
+      {
+        pressEnterToCont(binNotInit, true);
+        break;
+      }
+
+      // Clear Screen
+      cout << terminal::clear;
+
+      // Print Preorder, Inorder and Postorder Traversals
+      printTitle("Binary Tree Traversals");
+      binTree->preorder();
+      binTree->inorder();
+      binTree->postorder();
+
+      pressEnterToCont("\nPress ENTER to Continue");
+      break;
+
     case binaryTree::cmds::binSearchInit:
       // Clear Binary Search Tree
       if (binSearchTree != NULL)
@@ -86,7 +144,6 @@ int main(int argc, char **argv)
 
       // Initialize Binary Search Tree
       binSearchTree = new NumberBinarySearchTree<int>(&q, binaryTree::error);
-
       break;
 
     case binaryTree::cmds::binSearchInsert:
@@ -105,7 +162,6 @@ int main(int argc, char **argv)
 
       // Insert Nodes
       binSearchTree->insert(&q);
-
       break;
 
     case binaryTree::cmds::binSearchRemove:
@@ -124,7 +180,6 @@ int main(int argc, char **argv)
 
       // Remove Nodes
       binSearchTree->remove(&q);
-
       break;
 
     case binaryTree::cmds::binSearchFind:
@@ -169,6 +224,7 @@ int main(int argc, char **argv)
       binSearchTree->postorder();
 
       pressEnterToCont("\nPress ENTER to Continue");
+      break;
 
     case binaryTree::cmds::help:
       break;
