@@ -53,24 +53,29 @@ namespace dungeons
   const int level1Rooms = 5;
   const int level2Rooms = 8;
   const int level3Rooms = 15;
+  const int nLevels = 3;
+  const int nSpecialRooms = 3;
 
   // Dungeon First Node ID
   const int firstNodeId = 0;
 
-  // Dungeon Room Edges
-  const int minRoomEdge = 1;
+  // Dungeon Room Edges (for Non-Special Rooms)
+  const int minRoomEdge = 2;
   const int maxRoomEdge = 3;
 
+  // ... (for Special Rooms)
+  const int nSpecialRoomEdge = 1;
+
   // Dungeon Level Special Rooms Indexes
-  const int keyIndex = 0;
-  const int entranceIndex = 1;
+  const int entranceIndex = 0;
+  const int keyIndex = 1;
   const int exitIndex = 2;
 
   // Undirected Graph Edge Weight
   const int edgeWeight = 1;
 
-  // Not Assigned
-  const int notAssigned = -1;
+  // Unasigned Flag
+  const int unasigned = -1;
 }
 
 #endif

@@ -218,7 +218,10 @@ void SingleLinkedList<NodeType>::pushBack(NodeType data)
 
   // Set Head Next Node if It's NULL
   if (this->isEmpty())
+  {
+    n->next = NULL;
     this->head->next = n;
+  }
 
   // Set Tail
   this->tail = n;

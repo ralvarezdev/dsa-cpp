@@ -68,7 +68,7 @@ public:
     }
 
     // Deallocate Memory
-    delete queue;
+    delete nodes;
   }
 
   // Public Methods
