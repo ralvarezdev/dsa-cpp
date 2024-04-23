@@ -254,20 +254,23 @@ Dungeons::Dungeons()
 
       shortestKeyLength = shortestKey->getLength();
       shortestExitLength = shortestExit->getLength();
-
       totalPathLength = shortestKeyLength + shortestExitLength;
 
       // Add Dungeon Level Shortest Paths Data to Stream
+      bool firstData = true;
       for (; totalPathLength > 0; totalPathLength--)
       {
-        currPath = (totalPathLength >= shortestKeyLength) ? shortestKey : shortestExit;
+        currPath = (totalPathLength > shortestExitLength) ? shortestKey : shortestExit;
 
         // Get First Node ID
         nodeId = currPath->remove();
 
         // Add Node ID to Stream
-        if (nodeId != entrance && nodeId != dungeons::unasigned)
+        if (!firstData)
           *dungeonsInfo << " -> ";
+
+        else
+          firstData = false;
 
         *dungeonsInfo << nodeId;
       }
@@ -691,8 +694,10 @@ SingleLinkedList<int> *Dungeons::getShortestPath(int levelIndex, int startNodeId
   {
     nodeId = this->nodesIds[levelIndex]->removeBack();
 
-    if (nodeId != startNodeId)
-      unvisitedNodes->push(nodeId);
+    if (nodeId == startNodeId)
+      continue;
+
+    unvisitedNodes->push(nodeId);
   }
 
   currNodeId = startNodeId;
@@ -715,7 +720,7 @@ SingleLinkedList<int> *Dungeons::getShortestPath(int levelIndex, int startNodeId
     currEdges = currNodeEdges->getEdges();
     currEdgesLength = currEdges->getLength();
 
-    // Check All Nodes as Unvisited
+    // Check if the Nodes are Unvisited
     currVisitedNodes = new bool[currEdgesLength];
     fill(currVisitedNodes, currVisitedNodes + currEdgesLength, false);
     visitedCounter = 0;
@@ -762,6 +767,8 @@ SingleLinkedList<int> *Dungeons::getShortestPath(int levelIndex, int startNodeId
       // Check if the Path has been Completed
       if (currDstId == endNodeId)
       {
+        prevNodeId = currNodeId;
+        currNodeId = endNodeId;
         found = true;
         break;
       }
@@ -769,10 +776,7 @@ SingleLinkedList<int> *Dungeons::getShortestPath(int levelIndex, int startNodeId
 
     // Shortcut
     if (found)
-    {
-      currNodeId = endNodeId;
       break;
-    }
 
     // Removed Unvisited Nodes
     for (int unvisitedNodesLength = unvisitedNodes->getLength(); unvisitedNodesLength > 0; unvisitedNodesLength--)
@@ -806,7 +810,7 @@ SingleLinkedList<int> *Dungeons::getShortestPath(int levelIndex, int startNodeId
     // Add Nodes that are Part of the Shortest Path
     nodeId = visitedNodes->pop();
 
-    if (nodeId != prevNodeId || nodeId == dungeons::unasigned)
+    if (nodeId != prevNodeId)
       prevNodeIds->pop();
 
     else
