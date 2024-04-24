@@ -4,6 +4,7 @@
 #include <iostream>
 #include <typeinfo>
 
+#include "namespaces.h"
 #include "../queue/base.h"
 #include "../nodes/binNode.h"
 #include "../doubly-linked-lists/base.h"
@@ -34,6 +35,9 @@ template <class NodeType>
 class NumberBinaryTree
 {
 private:
+  const int NULL_CHILD = -1;
+  const int LOCK_TREE = -2;
+
   BinNodePtr<NodeType> root = NULL;
   NodeType error;
 
@@ -43,11 +47,6 @@ private:
   // Private Methods
   NodeType isNodeType(string);
   NodeType getNodeType(string, bool);
-
-  // Private Methods for Input Validation
-  int getChar(string askMessage, int whitelist[], int length, string errMessage);
-  bool booleanQuestion(string);
-  void pressEnterToCont(string message);
 
 public:
   // Public Constructors
@@ -62,7 +61,6 @@ public:
   int countNodes() { return this->root->countNodes(); };
   int countTypeNodes(bool countLeafNodes) { return this->root->countTypeNodes(countLeafNodes); };
   int getHeight() { return this->root->getHeight(); };
-
   NodeType getError() { return this->error; };
 
   void insert(NodeType data);
@@ -71,13 +69,14 @@ public:
 // Binary Tree Constructors
 
 // Creates a Binary Tree with the Help of Queues
-// NOTE: This will only work with Int, Float and Double Data Types with Structures or Classes as NodeType. If you're working with any of them, you must
-// create a Child Class from Binary Tree and overwrite the Constructor
+// NOTE: This will only work with Int, Float and Double Data Types with Structures or Classes as NodeType. If you're not Working with any of them, you must
+// Create a Child Class from Binary Tree and overwrite the Constructor
 template <class NodeType>
 NumberBinaryTree<NodeType>::NumberBinaryTree(NodeType error)
 {
   BinNodePtr<NodeType> p, t;
   NodeType data;
+  bool lockTree = false;
   string input;
   ostringstream message;
 
@@ -89,7 +88,9 @@ NumberBinaryTree<NodeType>::NumberBinaryTree(NodeType error)
 
   // Message
   cout << "CREATING BINARY TREE\n"
-       << "NOTE: Enter '" << error << "' to Set Node as NULL\n\n";
+       << "NOTES:\n"
+       << "1. Enter '" << this->NULL_CHILD << "' to Set Node as NULL\n"
+       << "2. Enter '" << this->LOCK_TREE << "' to Stop Asking for New Nodes\n\n";
 
   // Get Root Data
   data = getNodeType("Enter Root Node Data", false);
@@ -100,52 +101,43 @@ NumberBinaryTree<NodeType>::NumberBinaryTree(NodeType error)
   // Push Root Node to Queue
   q->enqueue(this->root);
 
-  while (!q->isEmpty())
+  while (!q->isEmpty() && !lockTree)
   {
     p = q->dequeue();
 
-    // Check if there was an Error
-    if (p == NULL)
-      continue;
-
-    // Set Message
-    message.str("");
-    message.clear();
-    message << "Enter Left Child Node Data of " << p->data;
-
-    // Get Left Child Data
-    data = getNodeType(message.str(), true);
-
-    if (data != this->error)
+    for (int i = 0; i < 2; i++)
     {
-      // Create t Node
-      t = new BinNode<NodeType>(data);
+      // Set Message
+      message.str("");
+      message.clear();
+      message << "Enter " << ((i == 0) ? "Left" : "Right") << " Child Node Data of " << p->data;
 
-      // Set t as Left Child of p
-      p->lChild = t;
+      // Get Child Data
+      data = getNodeType(message.str(), true);
 
-      // Push t to Queue
-      q->enqueue(t);
-    }
+      // Check if the Tree is Completed
+      lockTree = data == this->LOCK_TREE;
 
-    // Set Message
-    message.str("");
-    message.clear();
-    message << "Enter Right Child Node Data of " << p->data;
+      if (lockTree)
+        break;
 
-    // Get Right Child Data
-    data = getNodeType(message.str(), true);
+      if (data != this->error)
+      {
+        // Create t Node
+        t = new BinNode<NodeType>(data);
 
-    if (data != this->error)
-    {
-      // Create t Node
-      t = new BinNode<NodeType>(data);
+        // Check which Child is being Set
+        if (i == 0)
+          // Set t as Left Child of p
+          p->lChild = t;
 
-      // Set t as Right Child of p
-      p->rChild = t;
+        else
+          // Set t as Right Child of p
+          p->rChild = t;
 
-      // Push t to Queue
-      q->enqueue(t);
+        // Push t to Queue
+        q->enqueue(t);
+      }
     }
   }
 
@@ -153,84 +145,12 @@ NumberBinaryTree<NodeType>::NumberBinaryTree(NodeType error)
   delete q;
 }
 
-// Method to Ask a Boolean Question
-template <class NodeType>
-bool NumberBinaryTree<NodeType>::booleanQuestion(string message)
-{
-  string input;
-  char c;
-
-  while (true)
-  {
-    cout << "- " << message << " [y/N] ";
-    getline(cin, input);
-
-    c = tolower(input[0]);
-
-    if (c == 'y')
-    {
-      cout << '\n';
-      return true;
-    }
-    else if (c == 'n')
-    {
-      cout << '\n';
-      return false;
-    }
-
-    // Print Error Message
-    this->pressEnterToCont("ERROR: It's a Yes/No Question. You must type 'y', 'Y' or 'n', 'N'");
-  }
-}
-
-// Method to Stop the Program Flow while the User doesn't press the ENTER key
-template <class NodeType>
-void NumberBinaryTree<NodeType>::pressEnterToCont(string message)
-{
-  string _;
-
-  cout << message << '\n';
-  getline(cin, _);
-}
-
-// Method to Ask for Character Given a Whitelist
-template <class NodeType>
-int NumberBinaryTree<NodeType>::getChar(string askMessage, int whitelist[], int length, string errMessage)
-{
-  string input;
-  int c;
-
-  // Ask for String Input
-  while (true)
-    try
-    {
-      cout << askMessage << ": ";
-      getline(cin, input);
-
-      // Get First Character as Lowercase
-      c = tolower(input[0]);
-
-      // Input Should be Found in Characters Whitelist
-      for (int i = 0; i < length; i++)
-        if (whitelist[i] == c)
-          return c;
-
-      throw(-1);
-    }
-    catch (...)
-    {
-      this->pressEnterToCont(errMessage); // Ignore First Character if it's not in Whitelist
-      cout << '\n';
-    }
-}
-
 // Method to Insert Node to Binary Tree, as the User Wants
 template <class NodeType>
 void NumberBinaryTree<NodeType>::insert(NodeType data)
 {
-  BinNodePtr<NodeType> q = NULL, p, newNode;
+  BinNodePtr<NodeType> q, p, newNode;
   NodeInfoPtr<NodeType> info, t;
-
   ostringstream message, errMessage;
   int iter = 0, childPos, l, r;
 
@@ -241,13 +161,10 @@ void NumberBinaryTree<NodeType>::insert(NodeType data)
   // Initialize Doubly Linked List
   DoublyLinkedList<NodeInfoPtr<NodeType>> *list = new DoublyLinkedList<NodeInfoPtr<NodeType>>(NULL);
 
-  // Header Message
-  cout << "INSERTING NODE TO BINARY TREE\n\n";
-
   // Set Error Message
-  errMessage << "NOTES:\n"
+  errMessage << "\nNOTES:\n"
              << "- Enter '" << char(l) << "' or '" << char(toupper(l)) << "' for Node's Left Child\n"
-             << "- Enter '" << char(r) << "' or '" << char(toupper(r)) << "' for Node's Right Child\n\n";
+             << "- Enter '" << char(r) << "' or '" << char(toupper(r)) << "' for Node's Right Child\n";
 
   // Create Node
   newNode = new BinNode<NodeType>(data);
@@ -258,49 +175,32 @@ void NumberBinaryTree<NodeType>::insert(NodeType data)
     cout << "Inserting Node as Root\n";
     this->root = newNode;
 
+    // Deallocate Memory
     delete list;
+
     return;
   }
 
   // Set Root as p
   p = this->root;
 
-  // Push Back Node Data to List
-  info = new NodeInfo<NodeType>{p->data, 'R'};
-  list->push(info);
-
-  while (true)
+  while (p != NULL)
   {
-    // Set Message
-    message.str("");
-    message.clear();
+    // Push Back Node Data to List
+    info = new NodeInfo<NodeType>{p->data, iter};
+    list->pushBack(info);
 
-    // Insert it as a New Child
-    if (p == NULL)
-    {
-      cout << "Inserting Leaf Node as a New Child [" << char(childPos) << "]\n";
-
-      if (childPos == l)
-        q->lChild = newNode;
-      else
-        q->rChild = newNode;
-
-      break;
-    }
+    // Get Parent Node Info
+    t = list->get(iter);
+    message << "Parent [" << t->desc << "]: " << t->data << '\n';
 
     // Print Node Data
-    cout << "Level: " << iter << '\n';
-
-    // Print Parents
-    for (int i = 0; i < iter; i++)
-    {
-      // Get Parent Node Info
-      t = list->get(i);
-      cout << "Parent " << i + 1 << '[' << char(t->desc) << "]: " << t->data << '\n';
-    }
+    cout << binaryTree::clear
+         << "Level: " << iter << '\n'
+         << message.str();
 
     // Asks to the User to Insert Node at p
-    if (this->booleanQuestion("Do you want to Insert the Node there?"))
+    if (binaryTree::booleanQuestion("Do you want to Insert the Node here?"))
     {
       // Get Node's Data
       data = p->data;
@@ -317,24 +217,23 @@ void NumberBinaryTree<NodeType>::insert(NodeType data)
         q->rChild = newNode;
 
       // Asks wether to Insert p Node as Either Left or Right Child of New Node
-      cout << "INSERTING OLD NODE\n"
-           << errMessage.str();
+      cout << "INSERTING OLD NODE\n";
 
-      childPos = this->getChar("Where do you want to Insert Old Node", this->whitelist, this->length, errMessage.str());
+      childPos = binaryTree::getChar("Where do you want to Insert Old Node", this->whitelist, this->length, errMessage.str());
 
       if (childPos == l)
         newNode->lChild = p;
+
       else
         newNode->rChild = p;
 
-      break;
+      return;
     }
 
     // Get to Which Child to Move
-    cout << "MOVING THROUGH TREE\n"
-         << errMessage.str();
+    cout << "MOVING THROUGH TREE\n";
 
-    childPos = this->getChar("Which Child do you want to Move to", this->whitelist, this->length, errMessage.str());
+    childPos = binaryTree::getChar("Which Child do you want to Move to", this->whitelist, this->length, errMessage.str());
 
     // Move to Child
     q = p;
@@ -347,6 +246,18 @@ void NumberBinaryTree<NodeType>::insert(NodeType data)
 
     // Increase Tree Level and Path Counter
     iter++;
+  }
+
+  // Insert it as a New Child
+  if (p == NULL)
+  {
+    cout << "Inserting Leaf Node as a New Child [" << char(childPos) << "]\n";
+
+    if (childPos == l)
+      q->lChild = newNode;
+
+    else
+      q->rChild = newNode;
   }
 
   // Deallocate Memory
@@ -403,7 +314,7 @@ NodeType NumberBinaryTree<NodeType>::isNodeType(string input)
 
     // NodeType isn't Supported
     else
-      throw(-1);
+      throw(this->error);
 
     return conversion;
   }

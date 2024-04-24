@@ -37,7 +37,7 @@ namespace terminal
   const int nChar = 100; // Max Number of Characters being Printed on Each Line
 }
 
-namespace binaryTree
+namespace binaryTrees
 {
   // Enums Should be at the Beginning
   // - Binary Tree Commands

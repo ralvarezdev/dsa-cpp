@@ -159,10 +159,11 @@ bool NumberBinarySearchTree<NodeType>::search(BinNodePtr<NodeType> p, NodeType k
   // Compare p Node's Data
   if (key == p->data)
     return true;
-  else if (key < p->data)
+
+  if (key < p->data)
     return this->search(p->lChild, key);
-  else
-    return this->search(p->rChild, key);
+
+  return this->search(p->rChild, key);
 }
 
 // Method to Insert Data to Binary Search Tree
@@ -208,6 +209,7 @@ void NumberBinarySearchTree<NodeType>::insert(NodeType data)
   // Assign p Node as Child to q Node
   if (data < p->data)
     p->lChild = q;
+
   else
     p->rChild = q;
 }
