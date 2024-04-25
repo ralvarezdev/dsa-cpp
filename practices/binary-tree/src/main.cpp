@@ -99,6 +99,19 @@ int main(int argc, char **argv)
       break;
 
     case binaryTrees::cmds::binRemove:
+      // Check if Binary  Tree has been Initialized
+      if (binTree == NULL)
+      {
+        pressEnterToCont(binNotInit, true);
+        break;
+      }
+
+      // Clear Screen
+      cout << terminal::clear;
+
+      // Remove Node Interactively
+      binTree->remove();
+
       break;
 
     case binaryTrees::cmds::binPrint:
@@ -144,6 +157,7 @@ int main(int argc, char **argv)
 
       // Initialize Binary Search Tree
       binSearchTree = new NumberBinarySearchTree<int>(&q, binaryTrees::error);
+
       break;
 
     case binaryTrees::cmds::binSearchInsert:
@@ -180,6 +194,7 @@ int main(int argc, char **argv)
 
       // Remove Nodes
       binSearchTree->remove(&q);
+
       break;
 
     case binaryTrees::cmds::binSearchFind:

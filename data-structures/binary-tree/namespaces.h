@@ -1,10 +1,12 @@
 #include <string>
 #include <iostream>
 #include <sstream>
+#include <stdexcept>
 
 using std::cin;
 using std::cout;
 using std::getline;
+using std::invalid_argument;
 using std::ostringstream;
 using std::string;
 
@@ -29,7 +31,7 @@ namespace binaryTree
 
     while (true)
     {
-      cout << "- " << message << " [y/N] ";
+      cout << "\n- " << message << " [y/N] ";
       getline(cin, input);
 
       c = tolower(input[0]);
@@ -47,7 +49,9 @@ namespace binaryTree
       }
 
       // Print Error Message
-      pressEnterToCont("ERROR: It's a Yes/No Question. You must type 'y', 'Y' or 'n', 'N'");
+      cout << "ERROR: It's a Yes/No Question. You must type 'y', 'Y' or 'n', 'N'";
+
+      pressEnterToCont("Press ENTER to Continue");
     }
   }
 
@@ -81,9 +85,9 @@ namespace binaryTree
           if (whitelist[i] == c)
             return c;
 
-        throw(-1);
+        throw invalid_argument("Invalid Character");
       }
-      catch (...)
+      catch (const invalid_argument &e)
       {
         // Ignore First Character if it's not in Whitelist
         cout << errMessage;

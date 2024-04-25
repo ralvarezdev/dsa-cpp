@@ -40,6 +40,7 @@ private:
 
   BinNodePtr<NodeType> root = NULL;
   NodeType error;
+  ostringstream childrenMessage;
 
   int whitelist[2] = {'l', 'r'};
   int length = 2;
@@ -53,17 +54,71 @@ public:
   NumberBinaryTree(NodeType);
   NumberBinaryTree() : NumberBinaryTree<NodeType>(-1){};
 
+  // Destructor
+  virtual ~NumberBinaryTree()
+  {
+    // Initialize Nodes to Remove Queue Linked List
+    QueueLinkedList<BinNodePtr<NodeType>> *toRemove = new QueueLinkedList<BinNodePtr<NodeType>>(NULL);
+
+    // Deallocate Memory
+    for (int toRemoveLength = toRemove->getLength(); toRemoveLength > 0; toRemoveLength--)
+      delete toRemove->dequeue();
+  }
+
   // Public Methods
-  void preorder() { this->root->preorder(); };
-  void inorder() { this->root->inorder(); };
-  void postorder() { this->root->postorder(); };
-  void levelOrder() { this->root->levelOrder(); };
-  int countNodes() { return this->root->countNodes(); };
-  int countTypeNodes(bool countLeafNodes) { return this->root->countTypeNodes(countLeafNodes); };
-  int getHeight() { return this->root->getHeight(); };
+  void preorder()
+  {
+    if (this->root != NULL)
+      this->root->preorder();
+  };
+
+  void inorder()
+  {
+    if (this->root != NULL)
+      this->root->inorder();
+  };
+
+  void postorder()
+  {
+    if (this->root != NULL)
+      this->root->postorder();
+  };
+
+  void levelOrder()
+  {
+    if (this->root != NULL)
+      this->root->levelOrder();
+  };
+
+  int countNodes()
+  {
+    if (this->root != NULL)
+      return this->root->countNodes();
+
+    return 0;
+  };
+
+  int countTypeNodes(bool countLeafNodes)
+  {
+    if (this->root != NULL)
+      return this->root->countTypeNodes(countLeafNodes);
+
+    return 0;
+  };
+
+  int getHeight()
+  {
+    if (this->root != NULL)
+      return this->root->getHeight();
+
+    return 0;
+  };
+
   NodeType getError() { return this->error; };
 
   void insert(NodeType data);
+  void remove();
+  BinNodePtr<NodeType> moveFromNode(BinNodePtr<NodeType>, int *);
 };
 
 // Binary Tree Constructors
@@ -77,14 +132,26 @@ NumberBinaryTree<NodeType>::NumberBinaryTree(NodeType error)
   BinNodePtr<NodeType> p, t;
   NodeType data;
   bool lockTree = false;
+  int l, r;
   string input;
   ostringstream message;
 
-  // Initialize Queue
+  // Get Valid Characters to Move throughout Binary Tree
+  l = this->whitelist[0];
+  r = this->whitelist[1];
+
+  // Initialize Queue Linked List
   QueueLinkedList<BinNodePtr<NodeType>> *q = new QueueLinkedList<BinNodePtr<NodeType>>(NULL);
 
   // Set Error
   this->error = error;
+
+  // Set Children Message
+  this->childrenMessage << "\nNOTES:\n"
+                        << "- Enter '" << char(l) << "' or '" << char(toupper(l))
+                        << "' for Node's Left Child\n"
+                        << "- Enter '" << char(r) << "' or '" << char(toupper(r))
+                        << "' for Node's Right Child\n";
 
   // Message
   cout << "CREATING BINARY TREE\n"
@@ -94,6 +161,9 @@ NumberBinaryTree<NodeType>::NumberBinaryTree(NodeType error)
 
   // Get Root Data
   data = getNodeType("Enter Root Node Data", false);
+
+  if (data == this->NULL_CHILD || data == this->LOCK_TREE)
+    return;
 
   // Create Root Node
   this->root = new BinNode<NodeType>(data);
@@ -145,26 +215,37 @@ NumberBinaryTree<NodeType>::NumberBinaryTree(NodeType error)
   delete q;
 }
 
+// Method to Ask to which Child to Move to
+template <class NodeType>
+BinNodePtr<NodeType> NumberBinaryTree<NodeType>::moveFromNode(BinNodePtr<NodeType> p, int *childPos)
+{
+  // Get to Which Child to Move
+  cout << "MOVING THROUGH TREE\n";
+
+  *childPos = binaryTree::getChar("Which Child do you want to Move to", this->whitelist, this->length, this->childrenMessage.str());
+
+  // Check if it's the Left Side the One that was Chosen
+  if (*childPos == this->whitelist[0])
+    return p->lChild;
+
+  return p->rChild;
+}
+
 // Method to Insert Node to Binary Tree, as the User Wants
 template <class NodeType>
 void NumberBinaryTree<NodeType>::insert(NodeType data)
 {
   BinNodePtr<NodeType> q, p, newNode;
   NodeInfoPtr<NodeType> info, t;
-  ostringstream message, errMessage;
-  int iter = 0, childPos, l, r;
+  ostringstream message;
+  bool isLeaf = false;
+  int iter = 0, childPos, l;
 
-  // Get Valid Characters to Move throughout Binary Tree
+  // Get Left Side Character
   l = this->whitelist[0];
-  r = this->whitelist[1];
 
-  // Initialize Doubly Linked List
+  // Initialize Nodes Information Doubly Linked List
   DoublyLinkedList<NodeInfoPtr<NodeType>> *list = new DoublyLinkedList<NodeInfoPtr<NodeType>>(NULL);
-
-  // Set Error Message
-  errMessage << "\nNOTES:\n"
-             << "- Enter '" << char(l) << "' or '" << char(toupper(l)) << "' for Node's Left Child\n"
-             << "- Enter '" << char(r) << "' or '" << char(toupper(r)) << "' for Node's Right Child\n";
 
   // Create Node
   newNode = new BinNode<NodeType>(data);
@@ -175,6 +256,8 @@ void NumberBinaryTree<NodeType>::insert(NodeType data)
     cout << "Inserting Node as Root\n";
     this->root = newNode;
 
+    binaryTree::pressEnterToCont("\nPress ENTER to Continue");
+
     // Deallocate Memory
     delete list;
 
@@ -184,8 +267,14 @@ void NumberBinaryTree<NodeType>::insert(NodeType data)
   // Set Root as p
   p = this->root;
 
-  while (p != NULL)
+  while (true)
   {
+    // Check if it's a Leaf Node
+    isLeaf = p != NULL;
+
+    if (isLeaf)
+      break;
+
     // Push Back Node Data to List
     info = new NodeInfo<NodeType>{p->data, iter};
     list->pushBack(info);
@@ -199,7 +288,7 @@ void NumberBinaryTree<NodeType>::insert(NodeType data)
          << "Level: " << iter << '\n'
          << message.str();
 
-    // Asks to the User to Insert Node at p
+    // Ask the User to Insert Node at p
     if (binaryTree::booleanQuestion("Do you want to Insert the Node here?"))
     {
       // Get Node's Data
@@ -209,7 +298,7 @@ void NumberBinaryTree<NodeType>::insert(NodeType data)
       if (p == this->root)
         this->root = newNode;
 
-      // Assign as Child from q Node
+      // Assign as q Node Child
       else if (childPos == l)
         q->lChild = newNode;
 
@@ -219,7 +308,7 @@ void NumberBinaryTree<NodeType>::insert(NodeType data)
       // Asks wether to Insert p Node as Either Left or Right Child of New Node
       cout << "INSERTING OLD NODE\n";
 
-      childPos = binaryTree::getChar("Where do you want to Insert Old Node", this->whitelist, this->length, errMessage.str());
+      childPos = binaryTree::getChar("Where do you want to Insert Old Node", this->whitelist, this->length, this->childrenMessage.str());
 
       if (childPos == l)
         newNode->lChild = p;
@@ -227,44 +316,155 @@ void NumberBinaryTree<NodeType>::insert(NodeType data)
       else
         newNode->rChild = p;
 
-      return;
+      break;
     }
-
-    // Get to Which Child to Move
-    cout << "MOVING THROUGH TREE\n";
-
-    childPos = binaryTree::getChar("Which Child do you want to Move to", this->whitelist, this->length, errMessage.str());
 
     // Move to Child
     q = p;
-
-    if (childPos == l)
-      p = p->lChild;
-
-    else
-      p = p->rChild;
+    p = this->moveFromNode(p, &childPos);
 
     // Increase Tree Level and Path Counter
     iter++;
   }
 
-  // Insert it as a New Child
-  if (p == NULL)
+  // Check if it's a Leaf Node
+  if (isLeaf)
   {
-    cout << "Inserting Leaf Node as a New Child [" << char(childPos) << "]\n";
+    // Insert it as a New Child
+    cout << "Inserting Leaf Node as a New Child [" << childPos << "]\n";
 
     if (childPos == l)
       q->lChild = newNode;
 
     else
       q->rChild = newNode;
+
+    binaryTree::pressEnterToCont("\nPress ENTER to Continue");
   }
 
   // Deallocate Memory
+  for (int listLength = list->getLength(); listLength > 0; listLength--)
+    delete list->remove();
+
   delete list;
 }
 
 // Method to Delete Node from Binary Tree, as the User Wants
+template <class NodeType>
+void NumberBinaryTree<NodeType>::remove()
+{
+  QueueLinkedList<BinNodePtr<NodeType>> *toRemove;
+  BinNodePtr<NodeType> q, p;
+  NodeInfoPtr<NodeType> info, t;
+  ostringstream message;
+  bool isLeaf;
+  int iter = 0, childPos, l;
+
+  // Get Left Side Character
+  l = this->whitelist[0];
+
+  // Initialize Nodes Information Doubly Linked List
+  DoublyLinkedList<NodeInfoPtr<NodeType>> *list = new DoublyLinkedList<NodeInfoPtr<NodeType>>(NULL);
+
+  // Set Root as p
+  p = this->root;
+
+  while (true)
+  {
+    // Check p Node
+    if (p == NULL)
+      break;
+
+    // Check if it's a Leaf Node
+    isLeaf = p->lChild == NULL && p->rChild == NULL;
+
+    if (isLeaf)
+      break;
+
+    // Push Back Node Data to List
+    info = new NodeInfo<NodeType>{p->data, iter};
+    list->pushBack(info);
+
+    // Get Parent Node Info
+    t = list->get(iter);
+    message << "Parent [" << t->desc << "]: " << t->data << '\n';
+
+    // Print Node Data
+    cout << binaryTree::clear
+         << "Level: " << iter << '\n'
+         << message.str();
+
+    // Ask the User to Remove Node at p
+    if (binaryTree::booleanQuestion("Do you want to Remove this Node?"))
+    {
+      // Check if it's Root Node
+      if (p == this->root)
+        this->root = NULL;
+
+      // Remove Child from q Node
+      else if (childPos == l)
+        q->lChild = NULL;
+
+      else
+        q->rChild = NULL;
+
+      // Get Nodes to Remove
+      toRemove = p->getLevelOrder(false);
+
+      break;
+    }
+
+    // Move to Child
+    q = p;
+    p = this->moveFromNode(p, &childPos);
+
+    // Increase Tree Level and Path Counter
+    iter++;
+  }
+
+  // Check if the Node doesn't Exist
+  if (p == NULL)
+  {
+    cout << "There's No Node at the Given Position [" << childPos << "]\n";
+
+    binaryTree::pressEnterToCont("\nPress ENTER to Continue");
+  }
+
+  // Check if it's a Leaf Node
+  else if (isLeaf)
+  {
+    // Remove Leaf Node
+    cout << "Removing Leaf Node [" << childPos << "]\n";
+
+    // Check if it's Root Node
+    if (p == this->root)
+      this->root = NULL;
+
+    // Remove Child from q Node
+    else if (childPos == l)
+      q->lChild = NULL;
+
+    else
+      q->rChild = NULL;
+
+    binaryTree::pressEnterToCont("\nPress ENTER to Continue");
+
+    // Initialize Nodes to Remove Queue Linked List
+    toRemove = new QueueLinkedList<BinNodePtr<NodeType>>(NULL);
+
+    // Push Node to Remove
+    toRemove->push(p);
+  }
+
+  // Deallocate Memory
+  for (int listLength = list->getLength(); listLength > 0; listLength--)
+    delete list->remove();
+
+  for (int toRemoveLength = toRemove->getLength(); toRemoveLength > 0; toRemoveLength--)
+    delete toRemove->dequeue();
+
+  delete list, toRemove;
+}
 
 // Method to Get Data of NodeType Data Type
 template <class NodeType>

@@ -29,10 +29,23 @@ public:
   NumberBinarySearchTree() : BinarySearchTree<NodeType>(-1){};
 
   // Public Methods
-  bool search(NodeType key) { return this->search(this->root, key); };
+  bool search(NodeType key)
+  {
+    if (this->root != NULL)
+      return this->search(this->root, key);
+
+    return false;
+  };
+
   void insert(NodeType);
   void insert(QueueLinkedList<NodeType> *);
-  void remove(NodeType key) { this->remove(this->root, key); };
+
+  void remove(NodeType key)
+  {
+    if (this->root != NULL)
+      this->remove(this->root, key);
+  };
+
   void remove(QueueLinkedList<NodeType> *);
 };
 
@@ -44,6 +57,10 @@ NumberBinarySearchTree<NodeType>::NumberBinarySearchTree(NodeType preArray[], in
 {
   BinNodePtr<NodeType> p, t;
   int i = 0;
+
+  // Check Array Length
+  if (length == 0)
+    return;
 
   // Initialize Stack Linked List
   StackLinkedList<BinNodePtr<NodeType>> *stack = new StackLinkedList<BinNodePtr<NodeType>>(NULL);

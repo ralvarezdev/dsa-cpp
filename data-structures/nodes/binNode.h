@@ -22,7 +22,7 @@ protected:
   int countNodes(BinNode<NodeType> *);
   int countTypeNodes(BinNode<NodeType> *, bool);
   int getHeight(BinNode<NodeType> *);
-  QueueLinkedList<NodeType> *getLevelOrder(BinNode<NodeType> *);
+  QueueLinkedList<BinNode<NodeType> *> *getLevelOrder(BinNode<NodeType> *p, bool printNodes = true);
 
 public:
   NodeType data;
@@ -41,6 +41,7 @@ public:
   int countNodes() { return this->countNodes(this); };
   int countTypeNodes(bool countLeafNodes) { return this->countTypeNodes(this, countLeafNodes); };
   int getHeight() { return this->getHeight(this); };
+  QueueLinkedList<BinNode<NodeType> *> *getLevelOrder(bool printItems = true) { return this->getLevelOrder(this, printItems); };
 
   // void printTree();
 };
@@ -240,7 +241,7 @@ int BinNode<NodeType>::getHeight(BinNodePtr<NodeType> p)
 
 // Method to Get Nodes through Level Order Traversal
 template <class NodeType>
-QueueLinkedList<NodeType> *BinNode<NodeType>::getLevelOrder(BinNodePtr<NodeType> p)
+QueueLinkedList<BinNodePtr<NodeType>> *BinNode<NodeType>::getLevelOrder(BinNodePtr<NodeType> p, bool printNodes)
 {
   QueueLinkedList<BinNodePtr<NodeType>> *q = new QueueLinkedList<BinNodePtr<NodeType>>(NULL);
   QueueLinkedList<BinNodePtr<NodeType>> *t = new QueueLinkedList<BinNodePtr<NodeType>>(NULL);
@@ -258,7 +259,8 @@ QueueLinkedList<NodeType> *BinNode<NodeType>::getLevelOrder(BinNodePtr<NodeType>
     if (p->lChild != NULL)
     {
       // Print Left Child Data
-      cout << p->lChild->data << '\n';
+      if (printNodes)
+        cout << p->lChild->data << '\n';
 
       // Push p's Left Child
       t->enqueue(p->lChild);
@@ -269,7 +271,8 @@ QueueLinkedList<NodeType> *BinNode<NodeType>::getLevelOrder(BinNodePtr<NodeType>
     if (p->rChild != NULL)
     {
       // Print Right Child Data
-      cout << p->rChild->data << '\n';
+      if (printNodes)
+        cout << p->rChild->data << '\n';
 
       // Push p's Right Child
       t->enqueue(p->rChild);
