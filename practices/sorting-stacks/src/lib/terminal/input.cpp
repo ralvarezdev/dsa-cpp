@@ -1,5 +1,6 @@
 #include <string>
 #include <iostream>
+#include <stdexcept>
 #include <sstream>
 
 #include "ansiEsc.h"
@@ -7,11 +8,13 @@
 using std::cin;
 using std::cout;
 using std::getline;
+using std::invalid_argument;
 using std::ostringstream;
+using std::out_of_range;
 using std::string;
 
 // --- Function Prototypes
-void pressEnterToCont(string message, bool warning);
+void pressEnterToCont(string message, bool warning = false);
 bool booleanQuestion(string message);
 int getInteger(string message, int low, int high);
 
@@ -60,13 +63,17 @@ int getInteger(string message, int low, int high)
       getline(cin, temp);
       amount = stoi(temp);
 
-      if (amount >= low && amount <= high)
-        return amount;
-      else
-        // Number Out of Range
-        throw(-1);
+      // Check it the Number Out of Range
+      if (amount < low || amount > high)
+        throw out_of_range("Amount Out of Range");
+
+      return amount;
     }
-    catch (...)
+    catch (const invalid_argument &e)
+    {
+      pressEnterToCont("ERROR: Invalid Argument. It Must be an Integer", true);
+    }
+    catch (const out_of_range &e)
     {
       ostringstream stream;
 
@@ -78,7 +85,7 @@ int getInteger(string message, int low, int high)
 }
 
 // Function to Stop the Program Flow while the User doesn't press the ENTER key
-void pressEnterToCont(string message, bool warning = false)
+void pressEnterToCont(string message, bool warning)
 {
   string _;
 

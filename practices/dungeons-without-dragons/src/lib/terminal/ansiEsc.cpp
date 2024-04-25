@@ -13,12 +13,12 @@ using std::string;
 using namespace terminal;
 
 // --- Functions Prototypes
-void printTitle(string message, bool warning);
+void printTitle(string message, bool warning= false);
 
 // --- Functions
 
 // Function to Print Title with Customed Colors
-void printTitle(string message, bool warning = false)
+void printTitle(string message, bool warning )
 {
   string sgr; // String that Stores the SGR Command to Change the Text Format
 

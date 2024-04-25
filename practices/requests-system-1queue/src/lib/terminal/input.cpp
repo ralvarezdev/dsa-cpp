@@ -1,17 +1,19 @@
 #include <string>
 #include <iostream>
 #include <sstream>
+#include <stdexcept>
 
 #include "ansiEsc.h"
 
 using std::cin;
 using std::cout;
 using std::getline;
+using std::invalid_argument;
 using std::ostringstream;
 using std::string;
 
 // --- Function Prototypes
-void pressEnterToCont(string message, bool warning);
+void pressEnterToCont(string message, bool warning= false);
 bool booleanQuestion(string message);
 int getInteger(string message, int low, int high);
 string getString(string askMessage, char restrictions[], int length, string errMessage);
@@ -92,11 +94,11 @@ string getString(string askMessage, char restrictions[], int length, string errM
       // Input Can't Contain Any Restricted Character
       for (int n = length; n > 0; n--)
         if (input.find(restrictions[n - 1]) != string::npos)
-          throw(-1);
+          throw invalid_argument("Input Contains Restricted Characters");
 
       return input;
     }
-    catch (...)
+    catch (const invalid_argument &e)
     {
       printTitle(errMessage, true); // Ignore String if it Contains Any Restricted Character
       cout << '\n';
@@ -104,7 +106,7 @@ string getString(string askMessage, char restrictions[], int length, string errM
 }
 
 // Function to Stop the Program Flow while the User doesn't press the ENTER key
-void pressEnterToCont(string message, bool warning = false)
+void pressEnterToCont(string message, bool warning )
 {
   string _;
 

@@ -68,7 +68,7 @@ int getInteger(string message, int low, int high, int exceptionInt = -1)
 
       // Check it the Number Out of Range
       if ((amount < low || amount > high) && amount != exceptionInt)
-        throw out_of_range("Number Out of Range");
+        throw out_of_range("Amount Out of Range");
 
       return amount;
     }

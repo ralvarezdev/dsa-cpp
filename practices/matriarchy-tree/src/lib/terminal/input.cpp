@@ -1,4 +1,5 @@
 #include <string>
+#include <stdexcept>
 #include <iostream>
 #include <sstream>
 
@@ -7,11 +8,13 @@
 using std::cin;
 using std::cout;
 using std::getline;
+using std::invalid_argument;
 using std::ostringstream;
+using std::out_of_range;
 using std::string;
 
 // --- Function Prototypes
-void pressEnterToCont(string message, bool warning);
+void pressEnterToCont(string message, bool warning= false);
 string getLower(string word);
 bool booleanQuestion(string message);
 int getInteger(string message, int low, int high, int exception);
@@ -49,7 +52,7 @@ bool booleanQuestion(string message)
 }
 
 // Function to Ask for Integer Input
-int getInteger(string message, int low, int high, int exception = -1)
+int getInteger(string message, int low, int high, int exceptionInt = -1)
 {
   string temp;
   int amount;
@@ -61,13 +64,17 @@ int getInteger(string message, int low, int high, int exception = -1)
       getline(cin, temp);
       amount = stoi(temp);
 
-      if ((amount >= low && amount <= high) || amount == exception)
-        return amount;
-      else
-        // Number Out of Range
-        throw(-1);
+      // Check it the Number Out of Range
+      if ((amount < low || amount > high) && amount != exceptionInt)
+        throw out_of_range("Amount Out of Range");
+
+      return amount;
     }
-    catch (...)
+    catch (const invalid_argument &e)
+    {
+      pressEnterToCont("ERROR: Invalid Argument. It Must be an Integer", true);
+    }
+    catch (const out_of_range &e)
     {
       ostringstream stream;
 
@@ -79,7 +86,7 @@ int getInteger(string message, int low, int high, int exception = -1)
 }
 
 // Function to Stop the Program Flow while the User doesn't press the ENTER key
-void pressEnterToCont(string message, bool warning = false)
+void pressEnterToCont(string message, bool warning )
 {
   string _;
 
